@@ -1,0 +1,145 @@
+.auth-body {
+  font-family: "Poppins", sans-serif;
+  height: 100vh;
+  min-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(119, 245, 151);
+  overflow: hidden;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 600px;
+  width: 1100px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.auth-container:hover .auth-body {
+  background-color: rgb(117, 117, 248);
+}
+
+.right-side {
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  background-image: url('/auth vector.jpg');
+  background-size: cover; 
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+  width: 100%;
+}
+
+
+.right-side h2 {
+  color: #fff;
+  font-size: 2.3rem;
+  font-weight: 900;
+  margin-top: 0;
+  margin-left: 12px;
+  text-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.right-side a {
+  color: #fff;
+  font-size: 0.5rem;
+  text-decoration: none;
+  margin-top: auto;
+}
+
+.left-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  flex-grow: 0.8;
+  background-color: rgb(2, 31, 146);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+}
+
+.left-side input {
+  padding: 14px 16px;
+  width: 100%;
+  font-size: 1.1rem;
+  margin-top: 6px;
+}
+
+.left-side h2 {
+  font-size: 1.8rem;
+  color: white;
+}
+
+.account-creation-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.left-side p {
+  margin-bottom: 4px;
+  color: white;
+}
+
+.auth-container button {
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: 'Poppins';
+  background-color: rgba(255, 255, 255, 0);
+  color: white;
+  border: solid 1px white;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+  margin-bottom: 5px;
+}
+
+.auth-container button:hover {
+  background-color: rgb(14, 65, 14);
+}
+
+.auth-container button:active {
+  background-color: rgba(109, 222, 109, 0.455);
+}
+
+@media (max-width: 700px) {
+  .auth-container {
+    flex-direction: column;
+  }
+
+  .right-side,
+  .left-side {
+    width: 100%;
+  }
+
+  .right-side h2 {
+    font-size: 1.8rem;
+  }
+  
+  .right-side a {
+    margin-top: auto;
+  }
+
+  .auth-container button,
+  .auth-container a {
+    margin-top: 15px;
+  }
+}

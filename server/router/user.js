@@ -2,14 +2,16 @@ const User = require('../models/user')
 const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
-const nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer')
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
+// User registration
 router.post('/registration', async (req, res) => {
   try {
-    const { email, username, password } = req.body;
-    const existingUser = await User.findOne({ username });
+    const { email,  password } = req.body;
+    const existingUser = await User.findOne({ email });
 
     const emailRegex = /^[a-zA-Z0-9._-]+@panpacificu\.edu\.ph$/;
 
@@ -48,6 +50,9 @@ router.post('/registration', async (req, res) => {
 
     await transporter.sendMail(mailOptions)
 
+    const usernameMatch = email.match(/^([a-zA-Z0-9._-]+)@panpacificu\.edu\.ph$/);
+    const username = usernameMatch ? usernameMatch[1].split('.')[0] : '';
+
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const newUser = User({
@@ -65,6 +70,7 @@ router.post('/registration', async (req, res) => {
   }
 })
 
+// Email Verification
 router.post('/verify-email', async (req, res) => {
   try {
     const { email, verificationCode } = req.body
@@ -89,6 +95,7 @@ router.post('/verify-email', async (req, res) => {
   }
 })
 
+// User Log In
 router.post('/login', async (req, res) => {
   try {
     const { email, password} = req.body 
@@ -104,7 +111,8 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ msg: 'Incorrect password. Please try again.'})
     }
 
-    res.status(200).json({ userID: user._id, msg: 'User logged in successfully' })
+    const token =  jwt.sign({ id: user._id}, process.env.SECRET_KEY)
+    res.status(200).json({ token, userID: user._id, msg: 'User logged in successfully' })
   } catch (error) {
     res.status(500).json({ msg: error.message })
   }

@@ -5,6 +5,7 @@ dotenv.config()
 
 const connectDB = require('./db/connect')
 const users = require('./router/user')
+const eLibrary = require('./router/e-library')
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 const port = process.env.PORT || 5000
 
 app.use('/users', users)
+app.use('/e-library', eLibrary)
 
 const start = async () => {
   try {

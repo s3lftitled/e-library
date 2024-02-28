@@ -1,0 +1,30 @@
+
+.home-container {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.introduction-section h1 {
+  background-color: aqua;
+  padding: 100px;
+  margin: 0;
+}
+
+.main-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  height: 100%;
+  width: 100%;
+}
+
+.profile-section {
+  flex-grow: 0.3;
+  background-color: blue;
+}
+
+.library-section {
+  flex-grow: 1.6;
+  background-color: red;
+}

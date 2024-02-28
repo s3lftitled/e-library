@@ -5,7 +5,7 @@ import { Register } from './Register'
 
 export const Authentication = () => {
   const [form, setForm] = useState(false)
-
+  
   return (
     <div className="auth-body">
       <div className="auth-container">

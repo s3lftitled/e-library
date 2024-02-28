@@ -31,17 +31,34 @@ const ProgramSchema = new mongoose.Schema({
         required: true
     },
     description: {
-        type: String
+        type: String,
+        required: true
     },
-    courses: [CourseSchema]
+    courses: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course',
+    }]
+})
+
+const DepartmentSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    }, 
+    programs: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Program'
+    }]
 })
 
 const LearningMaterial = mongoose.model('LearningMaterial', LearningMaterialSchema)
 const Course = mongoose.model('Course', CourseSchema)
 const Program = mongoose.model('Program', ProgramSchema)
+const Department = mongoose.model('Department', DepartmentSchema)
 
 module.exports = {
     LearningMaterial,
     Course,
-    Program
+    Program,
+    Department
 }

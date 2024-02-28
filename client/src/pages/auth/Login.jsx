@@ -13,6 +13,7 @@ export const Login = () => {
   const [loginTextOrigin, setLoginTextOrigin] = useState('Login')
 
   useEffect(() => {
+    console.log('login component rerendered')
     if (currentIndex < loginTextOrigin.length) {
       const timeout = setTimeout(() => {
         setLoginText((prevtext) => prevtext + loginTextOrigin[currentIndex])
@@ -23,17 +24,27 @@ export const Login = () => {
   }, [currentIndex, loginTextOrigin])
 
   const handleSubmission = async () => {
+    console.log('login submission func has been rerendered')
     try {
       const result = await api.post('users/login', 
       { email, password}
       )
 
-      setCookies('access_token', result.data.token)
-      localStorage.setItem('userID', result.data.userID)
-      alert('Logged in succesfully')
-      navigate('/home')
+      console.log(result)
+      
+      if (result.status === 200) {
+        setCookies('access_token', result.data.token)
+        localStorage.setItem('userID', result.data.userID)
+        alert('Logged in succesfully')
+        navigate('/home')
+      }
     } catch (err) {
-      if (err.response && err.response.data) {
+      console.log(err)
+      if (err.response.data.msg === 'Please verify your email first') {
+        alert(err.response.data.msg)
+        navigate(`/verify/${email}`)
+        console.log('navigate to verification')
+      } else {
         alert(err.response.data.msg)
       }
     }

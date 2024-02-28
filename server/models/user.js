@@ -8,9 +8,10 @@ const UserSchema = new mongoose.Schema({
   },
   password: { type: String, required: true },
   email: { type: String, unique: true, required: true },
+  department: { type: mongoose.Schema.Types.ObjectId, ref: 'Department'},
   verificationCode: { type: String },
   verified: { type: Boolean, default: false },
-  bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LearningMaterial' }],
+  notes: { type: String },
   bookshelf: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LearningMaterial' }],
 })
 

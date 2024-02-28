@@ -1,5 +1,5 @@
 import { useState ,useEffect } from "react"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import api from "../../../utils/api"
 
 export const Register = () => {
@@ -13,6 +13,7 @@ export const Register = () => {
   const [loginTextOrigin, setLoginTextOrigin] = useState('Register')
 
   useEffect(() => {
+    console.log('register component rerendered')
     if (currentIndex < loginTextOrigin.length) {
       const timeout = setTimeout(() => {
         setLoginText((prevtext) => prevtext + loginTextOrigin[currentIndex])
@@ -24,6 +25,7 @@ export const Register = () => {
 
   const handleSubmission = async () => {
     try {
+      console.log('registration submission func has been rerendered')
       if (isButtonDisabled) {
         return
       }
@@ -31,8 +33,11 @@ export const Register = () => {
       setIsButtonDisabled(true);
 
       const result = await api.post('users/registration', { email, password })
-      alert('Registered successfully, verification code sent to your email')
-      navigate(`/verify/${email}`)
+
+      if(result.status === 200) {
+        alert('Registered successfully, verification code sent to your email')
+        navigate(`/verify/${email}`)
+      }
     } catch (err) {
       if (err.response && err.response.data) {
         alert(err.response.data.msg)

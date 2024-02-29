@@ -17,14 +17,32 @@
   justify-content: space-around;
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .profile-section {
+  display: flex;
+  flex-direction: row;
   flex-grow: 0.3;
   background-color: blue;
+  position: relative;
 }
 
 .library-section {
   flex-grow: 1.6;
   background-color: red;
+}
+
+.show-profile-section {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 10;
+}
+
+.hide-profile-section {
+  position: absolute;
+  top: 50%;
+  right: -9%;
+  z-index: 10;
 }

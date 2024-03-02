@@ -5,7 +5,26 @@ const LearningMaterialSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: {
+    author: {
+        type: String,
+        required: true
+    },
+    copyright: {
+        type: String
+    },
+    license: {
+        type: {
+            type: String,
+            required: true,
+        },
+        version: {
+            type: String,
+        },
+        link: {
+            type: String,
+        },
+    },    
+    link: {
         type: String
     },
     fileUrl: {

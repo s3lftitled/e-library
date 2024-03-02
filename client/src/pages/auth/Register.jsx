@@ -5,6 +5,8 @@ import api from "../../../utils/api"
 export const Register = () => {
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
+  const [ departments, setDepartments ] = useState([])
+  const [ chosenDepartment, setChosenDepartment] = useState('')
   const navigate = useNavigate()
   const [isButtonDisabled, setIsButtonDisabled] = useState(false)
 
@@ -21,7 +23,22 @@ export const Register = () => {
       }, 200);
       return () => clearTimeout(timeout)
     }
+    fetchDepartments()
   }, [currentIndex, loginTextOrigin])
+
+  const fetchDepartments = async() => {
+    try {
+      const response = await api.get('/e-library/department')
+      
+       if (response.status === 200) {
+        setDepartments(response.data.department)
+       }
+    } catch (err) {
+      if (err.response && err.response.data) {
+        console.log(err.response.data.msg)
+      }
+    }
+  }
 
   const handleSubmission = async () => {
     try {
@@ -32,7 +49,7 @@ export const Register = () => {
 
       setIsButtonDisabled(true);
 
-      const result = await api.post('users/registration', { email, password })
+      const result = await api.post('users/registration', { email, password, chosenDepartment })
 
       if(result.status === 200) {
         alert('Registered successfully, verification code sent to your email')
@@ -65,6 +82,19 @@ export const Register = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <select
+            value={chosenDepartment}
+            onChange={(e) => setChosenDepartment(e.target.value)}
+            className="department-selection"
+          >
+            <option value='' disabled>Select your department</option>
+            {departments.length > 0 &&
+              departments.map((dept) => (
+                <option key={dept.id} value={dept.id}>
+                  {dept.title}
+                </option>
+              ))}
+          </select>
         </form>
         <button onClick={handleSubmission}>Register</button>
     </>

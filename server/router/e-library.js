@@ -214,7 +214,7 @@ router.get('/:userID/recommended-programs', async (req, res) => {
       return res.status(404).json({ msg: 'User not found'})
     }
 
-    const userDepartment = await Department.findById(user.department)
+    const userDepartment = await Department.findById(user.departmentID)
 
     if (!userDepartment) {
       return res.status(404).json({ msg: 'User department is not found' }).populate('programs',)

@@ -9,13 +9,37 @@ const jwt = require('jsonwebtoken') // Importing jsonwebtoken for user authentic
 require('dotenv').config() // Loading environment variables
 const { Department } = require('../models/e-book')
 
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers.authorization
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).send("Unauthorized: Missing or invalid token")
+  }
+
+  const token = authHeader.split(' ')[1]
+  const secretKey = process.env.SECRET_KEY
+
+  if (!secretKey) {
+    console.error("Missing secret key")
+    return res.status(500).send("Internal Server Error")
+  }
+
+  jwt.verify(token, secretKey, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(403).send("Forbidden: Token verification failed")
+    }
+    next()
+  })
+}
+
 // User registration endpoint
 router.post('/registration', async (req, res) => {
   try {
     // Extract email and password from the request body
-    const { email, password, departmentTitle } = req.body
+    const { email, password, chosenDepartment } = req.body
 
-    if (!email || !password || !departmentTitle) {
+    if (!email || !password || !chosenDepartment) {
       return res.status(404).json({ msg: 'Please fill in all the required fields' })
     }
 
@@ -28,7 +52,7 @@ router.post('/registration', async (req, res) => {
     }
 
     // Find the department and assign it to department variable
-    const department = await Department.findOne({ title: departmentTitle })
+    const department = await Department.findOne({ title: chosenDepartment })
 
     // Validate if department exists
     if(!department) {
@@ -89,7 +113,8 @@ router.post('/registration', async (req, res) => {
       username,
       password: hashedPassword,
       verificationCode,
-      department
+      departmentID: department,
+      departmentName: null
     })
 
     // Save the new user to the database
@@ -164,6 +189,38 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     // Handle errors
     res.status(500).json({ msg: error.message })
+  }
+})
+
+router.get('/get-user/:userID', async (req, res) => {
+  const { userID } = req.params
+  try {
+    if (!userID) {
+      return res.status(404).json({ msg: 'userID is not found'})
+    }
+
+    const user = await User.findById(userID)
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User with that ID is not found'})
+    }
+
+    const userDepartment = await Department.findOne({ _id: { $in: user.departmentID } })
+
+    if (!userDepartment) {
+      return res.status(404).json({ msg: 'User department is not found'})
+    }
+
+    const currentUser = ({
+      email: user.email,
+      username: user.username,
+      departmentName: userDepartment.title
+    })
+    
+    res.status(200).json({ currentUser })
+
+  } catch (err) {
+    res.status(500).json({ msg: err.message })
   }
 })
 

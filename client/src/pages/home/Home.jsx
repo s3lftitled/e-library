@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useCookies } from 'react-cookie'
 import { Programs } from './Programs'
 import './home.css'
 import { ProfileSection } from '../../components/ProfileSection';
@@ -6,6 +7,14 @@ import { ProfileSection } from '../../components/ProfileSection';
 export const Home = () => {
 
   const [ showProfileSection, setShowProfileSection ] = useState(false)
+  const [cookies] = useCookies(['access_token'])
+  const accessToken = cookies.access_token
+
+  useEffect(() => {
+    if (!accessToken) {
+      window.location.href = '/auth'
+    }
+  }, [accessToken])
 
   return (
     <>

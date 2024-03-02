@@ -10,8 +10,8 @@ function App() {
     <>
     <Router>
       <Routes>
-        <Route path="/" element={<Authentication />}/>
-        <Route path='/home' element={<Home /> } />
+        <Route path="/auth" element={<Authentication />}/>
+        <Route path='/' element={<Home /> } />
         <Route path='/verify/:email' element={<VerificationCodeInput />}/>
         <Route path='/form' element={<Form />}/>
         <Route />

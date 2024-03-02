@@ -1,70 +1,108 @@
-import { useEffect, useState } from "react"
+import React, { useState } from "react"
+import { FaBars } from 'react-icons/fa'
 import useUserData from "../../hooks/useUserData"
-import { FaBars } from 'react-icons/fa';
+import api from "../../utils/api"
 
 export const ProfileSection = ({ showProfileSection, setShowProfileSection }) => {
-
-  const [ isUploading, setIsUploading ] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+  const [base64Image, setBase64Image] = useState('')
   const { user } = useUserData()
+  const userID = localStorage.getItem("userID")
 
-  useEffect(() => {
-    console.log({user})
-  }, [])
+  const handleSubmission = async (e) => {
+    e.preventDefault()
+
+    try {
+      const response = await api.post(`/users/profile/upload-image/${userID}`, {
+        base64Image: base64Image,
+      })
+
+      if (response.status === 200) {
+        alert('Profile picture has been uploaded successfully. Refresh the page to see changes.')
+        setIsUploading(false)
+      }
+    } catch (err) {
+      console.error("Error uploading profile picture:", err)
+    }
+  }
 
   const convertToBase64 = (e) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(e.target.files[0])
-    reader.onload = () => {
-      console.log(reader.result)
-      setBase64Image(reader.result)
-    }
-    reader.onerror = () => {
-      console.log('Error:', error)
+    const file = e.target.files[0]
+
+    if (file) {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+
+      reader.onload = () => {
+        console.log(reader.result)
+        setBase64Image(reader.result)
+      }
+
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error)
+      }
     }
   }
 
   return (
     <>
-       { !showProfileSection ? 
-        <button
-          className='show-profile-section'
+      {!showProfileSection ? (
+        <div
+          className='user-icon'
           onClick={() => setShowProfileSection(true)}
         >
-          <FaBars />
-        </button>
-        :
+          <img className="user-icon" src={ user?.profilePic || "pfp.avif"} alt="user-profile"/>
+        </div>
+      ) : (
         <div className='profile-section'>
           <h2>Profile Section</h2>
-          {user ? (
             <div className="user-details">
-              <img src="pfp.avif" alt="user's profile picture" className="user-pic"></img>
-                { isUploading ?
-                  <form className="upload-pic-form">
-                    <input
-                      type="file"
-                      accept=".jpeg, .jpg, .png"
-                      onChange={convertToBase64}
-                    />
-                    <button type="submit" onClick={() => setIsUploading(false)}>Upload</button>
-                  </form>
-                  :
-                  <button className="change-pic-btn" onClick={() => setIsUploading(true)}>Change Profile Picture</button>
-                }
-              <h2 key={user._id} className="user-greeting">Hello! {user.username}</h2>
-              <h3 className="user-email">{user.email}</h3>
-              <h4 className="user-department">{user.departmentName}</h4>
+              <img
+                src={ user?.profilePic || "pfp.avif"}
+                alt="user's profile picture"
+                className="user-pic"
+              />
+              {isUploading ? (
+                <form className="upload-pic-form" onSubmit={handleSubmission}>
+                  <input
+                    type="file"
+                    accept=".jpeg, .jpg, .png"
+                    onChange={convertToBase64}
+                  />
+                  <div className="upload-btn-choices">
+                    <button type="submit">Upload</button>
+                    <button onClick={() => setIsUploading(false)}>Cancel</button>
+                  </div>
+                </form>
+              ) : (
+                <button
+                  className="change-pic-btn"
+                  onClick={() => setIsUploading(true)}
+                >
+                  Change Profile Picture
+                </button>
+              )}
+
+              <h2 key={user?._id} className="user-greeting">
+                Hello! {user?.username} 👋
+              </h2>
+              <h3 className="user-email">{user?.email}</h3>
+              <h4 className="user-department">{user?.departmentName}</h4>
+
+              <div className="separator-underline"></div>
 
               <div className="user-content-section">
                 <h2>NOTES</h2>
                 <h2>BOOKSHELF</h2>
               </div>
+
+              <div className="separator-underline"></div>
+
               <div className="log-out-section">
                 <button>LOG OUT</button>
               </div>
             </div>
-          ) : (
-            <p>Loading user data...</p>
-          )}
+    
           <button
             className='hide-profile-section'
             onClick={() => setShowProfileSection(false)}
@@ -72,7 +110,8 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
             x
           </button>
         </div>
-      }    
+      )}
     </>
   )
 }
+

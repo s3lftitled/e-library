@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt') // Importing bcrypt for password hashing
 const nodemailer = require('nodemailer') // Importing nodemailer for sending emails
 const crypto = require('crypto') // Importing crypto for generating random codes
 const jwt = require('jsonwebtoken') // Importing jsonwebtoken for user authentication
+const sharp = require('sharp')
 require('dotenv').config() // Loading environment variables
 const { Department } = require('../models/e-book')
 
@@ -214,13 +215,50 @@ router.get('/get-user/:userID', async (req, res) => {
     const currentUser = ({
       email: user.email,
       username: user.username,
-      departmentName: userDepartment.title
+      departmentName: userDepartment.title,
+      profilePic: user.profilePic
     })
     
     res.status(200).json({ currentUser })
 
   } catch (err) {
     res.status(500).json({ msg: err.message })
+  }
+})
+
+router.post('/profile/upload-image/:userId', async (req, res) => {
+  try {
+    const { base64Image } = req.body
+    const userId = req.params.userId
+
+    const allowedFormats = ['jpeg', 'jpg', 'png']
+    const detectedFormat = base64Image.match(/^data:image\/(\w+);base64,/)
+    const imageFormat = detectedFormat ? detectedFormat[1] : null
+
+    if (!imageFormat || !allowedFormats.includes(imageFormat.toLowerCase())) {
+      return res.status(400).json({ msg: 'Unsupported image format. Please upload a JPEG, JPG, or PNG image.' })
+    }
+
+    const imageBuffer = Buffer.from(base64Image.split(',')[1], 'base64')
+
+    const resizedImage = await sharp(imageBuffer)
+      .resize({
+        fit: 'cover',
+        width: 200,
+        height: 200,
+        withoutEnlargement: true,
+      })
+      .toFormat(imageFormat)
+      .toBuffer()
+
+    const resizedImageBase64 = `data:image/${imageFormat};base64,${resizedImage.toString('base64')}`
+
+    await User.findByIdAndUpdate(userId, { profilePic: resizedImageBase64 })
+
+    res.status(200).json({ msg: 'Profile picture uploaded successfully', resizedImage: resizedImageBase64 })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ msg: 'Internal Server Error' })
   }
 })
 

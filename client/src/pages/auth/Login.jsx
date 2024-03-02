@@ -36,7 +36,7 @@ export const Login = () => {
         setCookies('access_token', result.data.token)
         localStorage.setItem('userID', result.data.userID)
         alert('Logged in succesfully')
-        navigate('/home')
+        navigate('/')
       }
     } catch (err) {
       console.log(err)

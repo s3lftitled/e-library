@@ -200,33 +200,40 @@ router.get('/department', async (req, res) => {
   }
 })
 
-//Get recommended programs
-router.get('/:userID/recommended-programs', async (req, res) => {
-  const { userID } = req.params
+// Get programs + recommended programs
+router.get('/:userID/programs', async (req, res) => {
+  const { userID } = req.params;
+
   try {
     if (!userID) {
-      return res.status(404).json({ msg: 'User ID is not found'})
+      return res.status(404).json({ msg: 'User ID is not found' });
     }
 
-    const user = await User.findById(userID)
+    const user = await User.findById(userID);
 
     if (!user) {
-      return res.status(404).json({ msg: 'User not found'})
+      return res.status(404).json({ msg: 'User not found' });
     }
 
     const userDepartment = await Department.findById(user.departmentID)
 
     if (!userDepartment) {
-      return res.status(404).json({ msg: 'User department is not found' }).populate('programs',)
+      return res.status(404).json({ msg: 'User department is not found' })
     }
 
-    const recommendedPrograms = await Program.find({ _id: { $in: userDepartment.programs } })
-    
-    res.status(200).json({ msg: 'Recommended Programs:', recommendedPrograms})
+    const recommendedPrograms = await Program.find({ _id: { $in: userDepartment.programs } });
+    const restOfPrograms = await Program.find({ _id: { $nin: recommendedPrograms.map(p => p._id) } })
+
+    res.status(200).json({
+      msg: 'Recommended Programs and Rest of the Programs:',
+      recommendedPrograms,
+      restOfPrograms,
+    })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
 })
+
 
 // Export the router for use in other parts of the application
 module.exports = router

@@ -1,5 +1,4 @@
-import React, { useState } from "react"
-import { FaBars } from 'react-icons/fa'
+import React, { useState, useEffect } from "react"
 import useUserData from "../../hooks/useUserData"
 import api from "../../utils/api"
 
@@ -55,7 +54,6 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
         </div>
       ) : (
         <div className='profile-section'>
-          <h2>Profile Section</h2>
             <div className="user-details">
               <img
                 src={ user?.profilePic || "pfp.avif"}
@@ -87,8 +85,8 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
                 Hello! {user?.username} 👋
               </h2>
               <h3 className="user-email">{user?.email}</h3>
-              <h4 className="user-department">{user?.departmentName}</h4>
-
+              <h4 className="user-role">{user?.role}</h4>
+              { user.departmentName && <h4 className="user-department"><p>Department:</p> {user?.departmentName.title}</h4>}
               <div className="separator-underline"></div>
 
               <div className="user-content-section">
@@ -97,8 +95,9 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
               </div>
 
               <div className="separator-underline"></div>
-
+              
               <div className="log-out-section">
+                <a>Change password?</a>
                 <button>LOG OUT</button>
               </div>
             </div>

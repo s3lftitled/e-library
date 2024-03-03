@@ -5,9 +5,31 @@
   font-family: "Lato", sans-serif;
 }
 
+.introduction-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  background-color: #4E7133;
+  height: 230px;
+  margin: 0;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.introduction-section:hover {
+  background-color: #0C359E;
+}
+
+.welcome-greetings {
+  display: flex;
+  flex-direction: column;
+  margin-left: 80px;
+}
+
 .introduction-section h1 {
-  background-color: aqua;
-  padding: 100px;
+  font-weight: 900;
   margin: 0;
 }
 
@@ -27,6 +49,7 @@
   flex-direction: column;
   min-width: 300px;
   background-color: #ffff;
+  color: #3c5c24;
   box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 0;
@@ -40,6 +63,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  margin-top: 15px;
 }
 
 .user-pic {
@@ -52,6 +76,7 @@
 }
 
 .user-greeting {
+  font-weight: 700;
   font-size: 1.6rem;
 }
 
@@ -59,10 +84,23 @@
   font-size: 1.1rem;
   padding: 5px;
   margin: 5px;
+  font-weight: 700;
+}
+
+.user-role {
+  font-size: 1.3rem;
+  margin: 5px;
 }
 
 .user-department {
-  font-size: 1.3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
+}
+
+.user-department p {
+  color: #4e7133ad;
   margin: 5px;
 }
 
@@ -75,11 +113,11 @@
 
 .hide-profile-section {
   position: absolute;
-  top: 45%;
-  right: -7%;
+  top: 1%;
+  left: 92%;
   z-index: 0;
-  padding: 10px;
-  background-color: black;
+  background-color: #4E7133;
+  padding: 8px;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -89,7 +127,7 @@
 .upload-pic-form button,
 .change-pic-btn {
   padding: 10px;
-  background-color: black;
+  background-color: #4E7133;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -108,26 +146,47 @@
   padding: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease; 
+  font-weight: 800;
 }
 
 .user-content-section h2:hover {
-  background-color: grey;
+  background-color: rgb(183, 162, 162);
 }
 
 .log-out-section {
+  display: flex;
+  flex-direction: column;
   margin-top: 50px;
+}
+
+.log-out-section a {
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.log-out-section a:hover {
+  text-decoration: underline;
 }
 
 .upload-pic-form button,
 .change-pic-btn,
-.log-out-section button {
-  transition: 0.2s ease-in;
+.log-out-section button,
+.hide-profile-section {
+  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
 
 .upload-pic-form button:hover,
 .change-pic-btn:hover,
-.log-out-section button:hover {
-  background-color: rgb(38, 38, 38);
+.log-out-section button:hover,
+.hide-profile-section:hover {
+  background-color: #0C359E;
+}
+
+.upload-pic-form button:focus,
+.change-pic-btn:focus,
+.log-out-section button:focus,
+.hide-profile-section:focus {
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
 }
 
 .upload-btn-choices {
@@ -138,7 +197,7 @@
 
 .log-out-section button {
   padding: 10px;
-  background-color: black;
+  background-color: #4E7133;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -149,7 +208,6 @@
   position: absolute;
   top: 1%;
   left: 1%;
-  background-color: black;
   padding: 8px;
   color: #fff;
   border: none;
@@ -160,12 +218,12 @@
 .user-icon {
   position: absolute;
   top: 1%;
-  left: 1%;
+  left: 0.5%;
   z-index: 10;
   cursor: pointer;
   border: none;
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -201,7 +259,7 @@
 .program-card {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 320px;
   border: solid 1px black;
   margin: 10px;
 }

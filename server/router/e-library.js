@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const { LearningMaterial, Course, Program, Department } = require('../models/e-book')
+const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const User = require('../models/user')
+const { verifyToken } = require('../middleware/verifyToken')
 
 // Create a learning material within course subjects
 router.post('/programs/:programId/courses/:courseId/learningMaterials', async (req, res) => {
@@ -173,7 +175,7 @@ router.post('/department/:departmentID/programs/:programID', async (req, res) =>
 })
 
 // GET all the programs
-router.get('/programs', async (req, res) => {
+router.get('/programs', verifyToken, checkRole([ROLES.STAFF]), async (req, res) => {
   try {
     // Retrieve all programs from the database
     const programs = await Program.find({})
@@ -201,7 +203,7 @@ router.get('/department', async (req, res) => {
 })
 
 // Get programs + recommended programs
-router.get('/:userID/programs', async (req, res) => {
+router.get('/:userID/programs', verifyToken, checkRole([ROLES.STUDENT]), async (req, res) => {
   const { userID } = req.params;
 
   try {

@@ -7,6 +7,7 @@ export const Register = () => {
   const [ password, setPassword ] = useState('')
   const [ departments, setDepartments ] = useState([])
   const [ chosenDepartment, setChosenDepartment] = useState('')
+  const [ chosenRole, setChosenRole ] = useState('')
   const navigate = useNavigate()
   const [isButtonDisabled, setIsButtonDisabled] = useState(false)
 
@@ -47,11 +48,17 @@ export const Register = () => {
         return
       }
 
-      setIsButtonDisabled(true);
+      setIsButtonDisabled(true)
 
-      const result = await api.post('users/registration', { email, password, chosenDepartment })
+      let response
 
-      if(result.status === 200) {
+      if (chosenRole === 'Student') {
+        response = await api.post('users/student-registration', { email, password, chosenDepartment, chosenRole })
+      } else {
+       response = await api.post('users/staff-registration', { email, password, chosenRole })
+      }
+     
+      if(response.status === 200) {
         alert('Registered successfully, verification code sent to your email')
         navigate(`/verify/${email}`)
       }
@@ -77,24 +84,36 @@ export const Register = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <input 
-            type='text'
+            type='password'
             placeholder='Password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <select
-            value={chosenDepartment}
-            onChange={(e) => setChosenDepartment(e.target.value)}
-            className="department-selection"
+          <select 
+            value={chosenRole}
+            onChange={(e) => setChosenRole(e.target.value)}
+            className="role-selection"
           >
-            <option value='' disabled>Select your department</option>
-            {departments.length > 0 &&
-              departments.map((dept) => (
-                <option key={dept.id} value={dept.id}>
-                  {dept.title}
-                </option>
-              ))}
+            <option value='' disabled>Select your role</option>
+            <option>Student</option>
+            <option>Staff</option>
+            <option>Librarian</option>
           </select>
+          { chosenRole === 'Student' &&
+             <select
+             value={chosenDepartment}
+             onChange={(e) => setChosenDepartment(e.target.value)}
+             className="department-selection"
+           >
+             <option value='' disabled>Select your department</option>
+             {departments.length > 0 &&
+               departments.map((dept) => (
+                 <option key={dept.id} value={dept.id}>
+                   {dept.title}
+                 </option>
+               ))}
+           </select>
+          }
         </form>
         <button onClick={handleSubmission}>Register</button>
     </>

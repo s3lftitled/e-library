@@ -1,3 +1,4 @@
+const { ROLES } = require('../middleware/auth-middleWare')
 const mongoose = require('mongoose')
 
 const UserSchema = new mongoose.Schema({
@@ -12,6 +13,7 @@ const UserSchema = new mongoose.Schema({
   departmentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Department'},
   departmentName: { type: String },
   verificationCode: { type: String },
+  role: { type: String, required: true, enum: Object.values(ROLES)},
   verified: { type: Boolean, default: false },
   notes: { type: String },
   bookshelf: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LearningMaterial' }],

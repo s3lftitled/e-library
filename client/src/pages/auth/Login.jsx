@@ -26,16 +26,19 @@ export const Login = () => {
   const handleSubmission = async () => {
     console.log('login submission func has been rerendered')
     try {
-      const result = await api.post('users/login', 
-      { email, password}
-      )
-
+      const result = await api.post('users/login', { email, password })
+  
       console.log(result)
-      
+  
       if (result.status === 200) {
+        console.log('User ID:', result.data.userID)
+        console.log('User Role:', result.data.role)
+  
         setCookies('access_token', result.data.token)
         localStorage.setItem('userID', result.data.userID)
-        alert('Logged in succesfully')
+        localStorage.setItem('userRole', result.data.role) 
+  
+        alert('Logged in successfully')
         navigate('/')
       }
     } catch (err) {
@@ -43,12 +46,13 @@ export const Login = () => {
       if (err.response.data.msg === 'Please verify your email first') {
         alert(err.response.data.msg)
         navigate(`/verify/${email}`)
-        console.log('navigate to verification')
+        console.log('Navigate to verification')
       } else {
         alert(err.response.data.msg)
       }
     }
   }
+  
 
   return (
     <>
@@ -61,7 +65,7 @@ export const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <input 
-            type='text'
+            type='password'
             placeholder='Password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}

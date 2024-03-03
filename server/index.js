@@ -8,7 +8,9 @@ const connectDB = require('./db/connect')
 
 // Import user and e-library routes
 const users = require('./router/user')
-const eLibrary = require('./router/e-library')
+const departments = require('./router/departments')
+const programs = require('./router/programs')
+const courses = require('./router/courses')
 
 // Create an Express application
 const app = express()
@@ -25,7 +27,9 @@ const port = process.env.PORT || 5000
 
 // Use the user and e-library routes in the application
 app.use('/users', users)
-app.use('/e-library', eLibrary)
+app.use('/department', departments)
+app.use('/programs', programs)
+app.use('/courses', courses)
 
 // Function to start the server
 const start = async () => {

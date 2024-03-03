@@ -21,12 +21,12 @@ export const Programs = () => {
           },
         }
         if (user.role === 'Student') {
-          const response = await api.get(`/e-library/${userID}/programs`, config)
+          const response = await api.get(`/users/${userID}/programs`, config)
 
           setPrograms(response.data.restOfPrograms)
           setRecommendedPrograms(response.data.recommendedPrograms)
         } else {
-          const response = await api.get(`/e-library/programs`, config)
+          const response = await api.get(`/programs/get-programs`, config)
           setPrograms(response.data.programs)
         }
       } catch (err) {
@@ -45,8 +45,13 @@ export const Programs = () => {
           <div className="recommended-programs">
           { recommendedPrograms.map((program) => (
             <div className="program-card">
-              <p>{program.title}</p>
-              <p>{program.description}</p>
+              <div className="book-img-div">
+                <img className='book-img' src='book.png' alt="books" /> 
+              </div>
+              <div className="program-details">
+                <p className="program-title"><strong>{program.title}</strong></p>
+                <p>{program.description}</p>
+              </div>
             </div>
           ))}
           </div> 
@@ -56,8 +61,13 @@ export const Programs = () => {
       <div className="other-programs">
       { programs.map((program) => (
         <div className="program-card">
-          <p>{program.title}</p>
-          <p>{program.description}</p>
+          <div className="book-img-div">
+            <img className='book-img' src='book.png' alt="books" /> 
+          </div>
+          <div className="program-details">
+            <h1 className="program-title">{program.title}</h1>
+            <p>{program.description}</p>
+          </div>
         </div>
       ))}
       </div>

@@ -29,7 +29,7 @@ export const Register = () => {
 
   const fetchDepartments = async() => {
     try {
-      const response = await api.get('/e-library/department')
+      const response = await api.get('/department/get-departments')
       
        if (response.status === 200) {
         setDepartments(response.data.department)

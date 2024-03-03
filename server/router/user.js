@@ -8,7 +8,7 @@ const crypto = require('crypto') // Importing crypto for generating random codes
 const jwt = require('jsonwebtoken') // Importing jsonwebtoken for user authentication
 const sharp = require('sharp')
 require('dotenv').config() // Loading environment variables
-const { Department } = require('../models/e-book')
+const { Department, Program } = require('../models/e-book')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const { verifyToken, generateTokens } = require('../middleware/verifyToken')
 
@@ -386,6 +386,121 @@ router.delete('/delete-user/:userId', checkRole([ROLES.STAFF]), async (req, res)
   } catch (error) {
     // Handle errors
     res.status(500).json({ msg: error.message });
+  }
+})
+
+// Get programs + recommended programs
+router.get('/:userID/programs', verifyToken, checkRole([ROLES.STUDENT]), async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    if (!userID) {
+      return res.status(404).json({ msg: 'User ID is not found' });
+    }
+
+    const user = await User.findById(userID);
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    const userDepartment = await Department.findById(user.departmentID)
+
+    if (!userDepartment) {
+      return res.status(404).json({ msg: 'User department is not found' })
+    }
+
+    const recommendedPrograms = await Program.find({ _id: { $in: userDepartment.programs } });
+    const restOfPrograms = await Program.find({ _id: { $nin: recommendedPrograms.map(p => p._id) } })
+
+    res.status(200).json({
+      msg: 'Recommended Programs and Rest of the Programs:',
+      recommendedPrograms,
+      restOfPrograms,
+    })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+router.get('/admin-dashboard', async (req, res) => {
+  try {
+    const departmentStats = await User.aggregate([
+      {
+        $group: {
+          _id: '$departmentID',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalUsers: { $sum: '$count' },
+          departments: {
+            $push: {
+              departmentID: '$_id',
+              count: '$count',
+            },
+          },
+        },
+      },
+      {
+        $unwind: { path: '$departments', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $lookup: {
+          from: 'departments',
+          localField: 'departments.departmentID',
+          foreignField: '_id',
+          as: 'department',
+        },
+      },
+      {
+        $unwind: { path: '$department', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $project: {
+          department: {
+            $ifNull: ['$department.title', 'Others'],
+          },
+          percentage: {
+            $multiply: [
+              { $cond: [{ $eq: ['$totalUsers', 0] }, 0, { $divide: ['$departments.count', '$totalUsers'] }] },
+              100,
+            ],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$department',
+          percentage: { $max: '$percentage' },
+        },
+      },
+      {
+        $project: {
+          department: '$_id',
+          percentage: 1,
+          _id: 0,
+        },
+      },
+    ]);
+
+    const allDepartments = await Department.find({})
+
+    const result = allDepartments.map(department => {
+      const matchingStat = departmentStats.find(stat => stat.department === department.title)
+      return {
+        department: department.title,
+        percentage: matchingStat ? matchingStat.percentage : 0,
+      }
+    })
+
+    res.status(200).json({
+      departmentStats: result,
+    })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
 })
 

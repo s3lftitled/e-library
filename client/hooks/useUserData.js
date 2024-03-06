@@ -23,6 +23,7 @@ const useUserData = () => {
         )
         setUser(response.data.currentUser)
         console.log(user.departmentName)
+        console.log({ user })
       } catch (error) {
         console.log(error)
       }

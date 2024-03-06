@@ -2,6 +2,7 @@
   height: 100%;
   margin: 0;
   padding: 0;
+<<<<<<< HEAD
   font-family: "Lato", sans-serif;
   color: #fff;
 }
@@ -13,6 +14,36 @@
   background-size: 30vh;
   background-repeat: no-repeat;
   padding: 100px;
+=======
+  font-family: "Lexend", sans-serif;
+}
+
+.introduction-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  background-color: #4E7133;
+  height: 230px;
+  margin: 0;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.introduction-section:hover {
+  background-color: #0C359E;
+}
+
+.welcome-greetings {
+  display: flex;
+  flex-direction: column;
+  margin-left: 80px;
+}
+
+.introduction-section h1 {
+  font-weight: 900;
+>>>>>>> 11df758610e2f5265c1c380b792286b7df2cafb3
   margin: 0;
   font-family: "Berkshire Swash", serif;
   font-size: 40px;
@@ -37,7 +68,12 @@
   display: flex;
   flex-direction: column;
   min-width: 300px;
+<<<<<<< HEAD
   background-color: #fff;
+=======
+  background-color: #ffff;
+  color: #3c5c24;
+>>>>>>> 11df758610e2f5265c1c380b792286b7df2cafb3
   box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 0;
@@ -52,6 +88,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  margin-top: 15px;
 }
 
 .user-pic {
@@ -64,6 +101,7 @@
 }
 
 .user-greeting {
+  font-weight: 700;
   font-size: 1.6rem;
 }
 
@@ -71,10 +109,23 @@
   font-size: 1.1rem;
   padding: 5px;
   margin: 5px;
+  font-weight: 700;
+}
+
+.user-role {
+  font-size: 1.3rem;
+  margin: 5px;
 }
 
 .user-department {
-  font-size: 1.3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
+}
+
+.user-department p {
+  color: #4e7133ad;
   margin: 5px;
 }
 
@@ -87,11 +138,11 @@
 
 .hide-profile-section {
   position: absolute;
-  top: 45%;
-  right: -7%;
+  top: 1%;
+  left: 92%;
   z-index: 0;
-  padding: 10px;
-  background-color: black;
+  background-color: #4E7133;
+  padding: 8px;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -101,7 +152,7 @@
 .upload-pic-form button,
 .change-pic-btn {
   padding: 10px;
-  background-color: black;
+  background-color: #4E7133;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -120,26 +171,47 @@
   padding: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease; 
+  font-weight: 800;
 }
 
 .user-content-section h2:hover {
-  background-color: grey;
+  background-color: rgb(183, 162, 162);
 }
 
 .log-out-section {
+  display: flex;
+  flex-direction: column;
   margin-top: 50px;
+}
+
+.log-out-section a {
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.log-out-section a:hover {
+  text-decoration: underline;
 }
 
 .upload-pic-form button,
 .change-pic-btn,
-.log-out-section button {
-  transition: 0.2s ease-in;
+.log-out-section button,
+.hide-profile-section {
+  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
 
 .upload-pic-form button:hover,
 .change-pic-btn:hover,
-.log-out-section button:hover {
-  background-color: rgb(38, 38, 38);
+.log-out-section button:hover,
+.hide-profile-section:hover {
+  background-color: #0C359E;
+}
+
+.upload-pic-form button:focus,
+.change-pic-btn:focus,
+.log-out-section button:focus,
+.hide-profile-section:focus {
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
 }
 
 .upload-btn-choices {
@@ -150,7 +222,7 @@
 
 .log-out-section button {
   padding: 10px;
-  background-color: black;
+  background-color: #4E7133;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -161,7 +233,6 @@
   position: absolute;
   top: 1%;
   left: 1%;
-  background-color: black;
   padding: 8px;
   color: #fff;
   border: none;
@@ -172,12 +243,12 @@
 .user-icon {
   position: absolute;
   top: 1%;
-  left: 1%;
+  left: 0.5%;
   z-index: 10;
   cursor: pointer;
   border: none;
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -198,6 +269,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  margin-left: 25px;
 }
 
 .programs {
@@ -211,9 +283,11 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .program-card {
+<<<<<<< HEAD
   background-color: #050505e7;
   text-align: center;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -279,4 +353,48 @@
 .main-section .library-section h2 {
   margin: 2ch;
   font-family: "Oswald", sans-serif;
+=======
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 170px;
+  width: 400px;
+  border: none;
+  box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.2), 2px 6px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  margin: 10px;
+  background-color: #fff;
+  color: #000;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.program-card:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.2), 0px 10px 10px rgba(0, 0, 0, 0.2);
+}
+
+.program-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
+  padding: 10px;
+  margin-left: 2px;
+}
+
+.program-title {
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-bottom: 0;
+}
+
+.book-img {
+  align-self: center;
+  height: 80px;
+  width: 80px;
+  object-fit: cover; 
+  overflow: hidden;
+  padding: 0;
+>>>>>>> 11df758610e2f5265c1c380b792286b7df2cafb3
 }

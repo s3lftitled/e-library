@@ -119,16 +119,16 @@ form {
   background-color: rgba(109, 222, 109, 0.455);
 }
 
-.department-selection {
+.department-selection,
+.role-selection {
   width: 100%;
   padding: 8px;
-  margin-top: 10px;
-  margin-bottom: 15px;
+  margin-top: 8px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
 }
-
 
 /* VerificationCodeInput.css */
 

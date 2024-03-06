@@ -3,13 +3,24 @@
   margin: 0;
   padding: 0;
   font-family: "Lato", sans-serif;
+  color: #fff;
 }
 
 .introduction-section h1 {
-  background-color: aqua;
+  background-color: #030303f3;
+  background-image: url('C:\Users\Admin\Documents\E-library System\e-library\client\public\pu-logo.png');
+  background-position: right 0px;
+  background-size: 30vh;
+  background-repeat: no-repeat;
   padding: 100px;
   margin: 0;
+  font-family: "Berkshire Swash", serif;
+  font-size: 40px;
+  font-weight: 50;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
+
 
 .main-section {
   display: flex;
@@ -26,13 +37,14 @@
   display: flex;
   flex-direction: column;
   min-width: 300px;
-  background-color: #ffff;
+  background-color: #fff;
   box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   z-index: 10;
+  color: #000000;
 }
 
 .user-details {
@@ -175,9 +187,11 @@
 /* Library Section CSS */
 
 .library-section {
+  background-color: #f0ecec;
   min-height: 100%;
   position: relative; 
   z-index: 0; 
+  color: #050505;
 }
 
 .recommended-programs {
@@ -187,9 +201,10 @@
 }
 
 .programs {
-  display: flex;
+  display: column;
   flex-direction: column;
   height: 100%;
+  color: #fff;
 }
 
 .other-programs {
@@ -199,10 +214,69 @@
 }
 
 .program-card {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  border: solid 1px black;
-  margin: 10px;
+  background-color: #050505e7;
+  text-align: center;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.5s;
+  border-radius: 10px;
+  display: column;
+  flex-direction: row;
+  width: 275px;
+  margin: 15px;
+  position: relative;
 }
 
+.book {
+  width: 75px;
+  height: auto;
+  position: relative; 
+}
+
+.library-section::-webkit-scrollbar {
+  width: 5px;
+}
+
+.library-section::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+.library-section::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 5px; 
+}
+
+.library-section::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+
+.program-title {
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.program-description {
+  display: block;
+  position: absolute;
+  bottom: 0; 
+  left: 0;
+  right: 0;
+  padding: 10px;
+  font-size: 14px;
+  background-color: rgba(3, 3, 3, 0.699);
+}
+
+
+  
+
+
+/* Programs h2 */
+.programs h2 {
+  margin: 2ch;
+  font-family: "Oswald", sans-serif;
+}
+
+.main-section .library-section h2 {
+  margin: 2ch;
+  font-family: "Oswald", sans-serif;
+}

@@ -20,15 +20,15 @@ export const Home = () => {
     <>
       <div className='home-container'>
         <ProfileSection 
-          showProfileSection = {showProfileSection}
-          setShowProfileSection = {setShowProfileSection}
+          showProfileSection={showProfileSection}
+          setShowProfileSection={setShowProfileSection}
         />
-        <div className='introduction-section'>
+        <div className='introduction-section h1'>
           <h1>Welcome to PanpacificU's E-Library</h1>
         </div>
         <div className='main-section'>
-          <div className='library-section'>
-            <h2>Library Section</h2>
+          <div className='library-section' style={{ maxHeight: '725px', overflowY: 'auto' }}>
+            <h2><u>Library Section</u></h2>
             <div className='programs-div'>
               <Programs />
             </div>
@@ -36,5 +36,5 @@ export const Home = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};

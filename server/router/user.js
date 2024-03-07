@@ -11,6 +11,8 @@ require('dotenv').config() // Loading environment variables
 const { Department, Program } = require('../models/e-book')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const { verifyToken, generateTokens } = require('../middleware/verifyToken')
+const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
+
 
 // User registration endpoint
 router.post('/student-registration', async (req, res) => {
@@ -271,8 +273,8 @@ router.post('/login', async (req, res) => {
 
     const tokens = generateTokens(user)
 
-    const token = tokens.accessToken;
-    const refreshToken = tokens.refreshToken;
+    const token = tokens.accessToken
+    const refreshToken = tokens.refreshToken
 
     res.status(200).json({
       token,
@@ -287,46 +289,61 @@ router.post('/login', async (req, res) => {
   }
 })
 
-router.get('/get-user/:userID', async (req, res) => {
+router.get('/get-user/:userID', verifyToken, async (req, res) => {
   const { userID } = req.params
+
   try {
     if (!userID) {
-      return res.status(404).json({ msg: 'userID is not found'})
+      return res.status(404).json({ msg: 'userID is not found' })
+    }
+
+    const cachedUser = await redisClient.get(`user-details:${userID}`)
+
+    if (cachedUser) {
+      try {
+        const currentUser = JSON.parse(cachedUser)
+        res.status(200).json({ currentUser })
+        return
+      } catch (err) {
+        console.error('Error parsing cached programs:', err)
+        res.status(500).json({ msg: 'Error retrieving programs from Redis' })
+        return
+      }
     }
 
     const user = await User.findById(userID)
 
     if (!user) {
-      return res.status(404).json({ msg: 'User with that ID is not found'})
+      return res.status(404).json({ msg: 'User with that ID is not found' })
     }
 
-    let userDepartment;
+    let userDepartment
 
     if (user.role !== ROLES.STAFF && user.role !== ROLES.LIBRARIAN) {
       // Find the department for non-staff and non-librarian users
       userDepartment = await Department.findOne({ _id: { $in: user.departmentID } })
 
       if (!userDepartment) {
-        return res.status(404).json({ msg: 'User department is not found'})
+        return res.status(404).json({ msg: 'User department is not found' })
       }
     }
 
     const currentUser = ({
       email: user.email,
       username: user.username,
-      departmentName: userDepartment ? userDepartment : 'N/A',
+      departmentName: userDepartment ? userDepartment.name : 'N/A',
       profilePic: user.profilePic,
-      role: user.role
+      role: user.role,
     })
-    
-    res.status(200).json({ currentUser })
 
+    await redisClient.SET(`user-details:${userID}`, JSON.stringify(currentUser), {EX: DEFAULT_EXP})
+    res.status(200).json({ currentUser })
   } catch (err) {
     res.status(500).json({ msg: err.message })
   }
 })
 
-router.post('/profile/upload-image/:userId', async (req, res) => {
+router.post('/profile/upload-image/:userId', verifyToken, async (req, res) => {
   try {
     const { base64Image } = req.body
     const userId = req.params.userId
@@ -355,6 +372,8 @@ router.post('/profile/upload-image/:userId', async (req, res) => {
 
     await User.findByIdAndUpdate(userId, { profilePic: resizedImageBase64 })
 
+    await redisClient.del(`user-details:${userId}`)
+
     res.status(200).json({ msg: 'Profile picture uploaded successfully', resizedImage: resizedImageBase64 })
   } catch (error) {
     console.error(error)
@@ -378,7 +397,6 @@ router.delete('/delete-user/:userId', checkRole([ROLES.STAFF]), async (req, res)
       return res.status(404).json({ msg: 'User not found' });
     }
 
-
     // Perform the deletion
     await User.findByIdAndDelete(userId);
 
@@ -391,17 +409,31 @@ router.delete('/delete-user/:userId', checkRole([ROLES.STAFF]), async (req, res)
 
 // Get programs + recommended programs
 router.get('/:userID/programs', verifyToken, checkRole([ROLES.STUDENT]), async (req, res) => {
-  const { userID } = req.params;
+  const { userID } = req.params
 
   try {
     if (!userID) {
-      return res.status(404).json({ msg: 'User ID is not found' });
+      return res.status(404).json({ msg: 'User ID is not found' })
     }
 
-    const user = await User.findById(userID);
+    const cachedPrograms = await redisClient.get(`programs:${userID}`)
+
+    if (cachedPrograms) {
+      try {
+        const response = JSON.parse(cachedPrograms)
+        res.status(200).json({ response })
+        return
+      } catch (err) {
+        console.error('Error parsing cached programs:', err)
+        res.status(500).json({ msg: 'Error retrieving programs from Redis' })
+        return
+      }
+    }
+
+    const user = await User.findById(userID)
 
     if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+      return res.status(404).json({ msg: 'User not found' })
     }
 
     const userDepartment = await Department.findById(user.departmentID)
@@ -410,14 +442,17 @@ router.get('/:userID/programs', verifyToken, checkRole([ROLES.STUDENT]), async (
       return res.status(404).json({ msg: 'User department is not found' })
     }
 
-    const recommendedPrograms = await Program.find({ _id: { $in: userDepartment.programs } });
+    const recommendedPrograms = await Program.find({ _id: { $in: userDepartment.programs } })
     const restOfPrograms = await Program.find({ _id: { $nin: recommendedPrograms.map(p => p._id) } })
 
-    res.status(200).json({
+    const response = {
       msg: 'Recommended Programs and Rest of the Programs:',
       recommendedPrograms,
       restOfPrograms,
-    })
+    }
+
+    await redisClient.SET(`programs:${userID}`, JSON.stringify(response), {EX: DEFAULT_EXP})
+    res.status(200).json({ response })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }

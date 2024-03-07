@@ -4,6 +4,21 @@ const { Program } = require('../models/e-book')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const User = require('../models/user')
 const { verifyToken } = require('../middleware/verifyToken')
+const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
+
+const clearAllProgramsCache = async () => {
+  try {
+    const allUserIds = await User.find({}, '_id');
+
+    for (const userIdObj of allUserIds) {
+      const userId = userIdObj._id.toString();
+      await redisClient.del(`programs:${userId}`)
+      await redisClient.del("programs")
+    }
+  } catch (error) {
+    console.error('Error clearing programs cache for all users:', error);
+  }
+}
 
 // Create a program
 router.post('/create-programs', async (req, res) => {
@@ -26,6 +41,8 @@ router.post('/create-programs', async (req, res) => {
     const program = new Program({ title, description, courses: [] })
     await program.save()
 
+    await clearAllProgramsCache()
+
     // Respond with the created program
     res.status(201).json(program)
   } catch (error) {
@@ -35,11 +52,24 @@ router.post('/create-programs', async (req, res) => {
 })
 
 // GET all the programs
-router.get('/get-programs', verifyToken, checkRole([ROLES.STAFF]), async (req, res) => {
+router.get('/get-programs', verifyToken, checkRole([ROLES.STAFF, ROLES.LIBRARIAN]), async (req, res) => {
   try {
+    const cachedPrograms = await redisClient.get(`programs`)
+
+    if (cachedPrograms) {
+      try {
+        const programs = JSON.parse(cachedPrograms)
+        res.status(200).json({ programs })
+      } catch (err) {
+        console.error('Error parsing cached programs:', err)
+        res.status(500).json({ msg: 'Error retrieving programs from Redis' })
+        return
+      }
+    }
     // Retrieve all programs from the database
     const programs = await Program.find({})
 
+    await redisClient.SET("programs", JSON.stringify(programs), {EX: DEFAULT_EXP})
     // Respond with the list of programs
     res.status(200).json({ programs })
   } catch (error) {

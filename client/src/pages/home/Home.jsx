@@ -32,7 +32,6 @@ export const Home = () => {
         </div>
         <div className='main-section'>
           <div className='library-section'>
-            <h2>Library Section</h2>
             <div className='programs-div'>
               <Programs />
             </div>

@@ -7,7 +7,7 @@ const generateTokens = (user) => {
   const accessToken = jwt.sign(
     { id: user._id, role: user.role },
     secretKey,
-    { expiresIn: '30s' } 
+    { expiresIn: '30m' } 
   )
 
   const refreshToken = jwt.sign(
@@ -46,9 +46,9 @@ const verifyToken = (req, res, next) => {
     }
 
     // Attach the decoded user information to the request object
-    req.user = decoded;
-    next();
-  });
-};
+    req.user = decoded
+    next()
+  })
+}
 
 module.exports = { verifyToken, generateTokens }

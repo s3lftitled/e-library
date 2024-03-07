@@ -21,13 +21,14 @@ export const Programs = () => {
           },
         }
         if (user.role === 'Student') {
-          const response = await api.get(`/users/${userID}/programs`, config)
+          const response = await api.get(`/users/${userID}/programs`, config, user.role)
+          console.log({response})
 
-          setPrograms(response.data.restOfPrograms)
-          setRecommendedPrograms(response.data.recommendedPrograms)
-        } else {
+          setPrograms(response.data.response.restOfPrograms)
+          setRecommendedPrograms(response.data.response.recommendedPrograms)
+        } else if (user.role === 'Staff') {
           const response = await api.get(`/programs/get-programs`, config)
-          setPrograms(response.data.programs)
+          setPrograms(response.data.response.programs)
         }
       } catch (err) {
         console.log(err)
@@ -44,7 +45,7 @@ export const Programs = () => {
           <h2>Recommended</h2>
           <div className="recommended-programs">
           { recommendedPrograms.map((program) => (
-            <div className="program-card">
+            <div className="program-card" key={program._id}>
               <div className="book-img-div">
                 <img className='book-img' src='book.png' alt="books" /> 
               </div>
@@ -60,7 +61,7 @@ export const Programs = () => {
       { recommendedPrograms.length > 0 && <h2>Others</h2> }
       <div className="other-programs">
       { programs.map((program) => (
-        <div className="program-card">
+        <div className="program-card" key={program._id}>
           <div className="book-img-div">
             <img className='book-img' src='book.png' alt="books" /> 
           </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { useCookies } from "react-cookie"
 import useUserData from "../../hooks/useUserData"
 import api from "../../utils/api"
 
@@ -7,14 +8,22 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
   const [base64Image, setBase64Image] = useState('')
   const { user } = useUserData()
   const userID = localStorage.getItem("userID")
+  const [cookies] = useCookies(["access_token"])
+  const access_token = cookies.access_token
 
   const handleSubmission = async (e) => {
     e.preventDefault()
 
     try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${access_token}`, 
+        },
+      }
+
       const response = await api.post(`/users/profile/upload-image/${userID}`, {
-        base64Image: base64Image,
-      })
+        base64Image: base64Image
+      }, config)
 
       if (response.status === 200) {
         alert('Profile picture has been uploaded successfully. Refresh the page to see changes.')

@@ -83,13 +83,13 @@
 .user-email {
   font-size: 1.1rem;
   padding: 5px;
-  margin: 5px;
+  margin: 3px;
   font-weight: 700;
 }
 
 .user-role {
   font-size: 1.3rem;
-  margin: 5px;
+  margin: 4px;
 }
 
 .user-department {
@@ -235,6 +235,7 @@
 .library-section {
   min-height: 100%;
   position: relative; 
+  overflow-y: auto;
   z-index: 0; 
 }
 
@@ -242,7 +243,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-left: 25px;
+  justify-content: space-around;
 }
 
 .programs {

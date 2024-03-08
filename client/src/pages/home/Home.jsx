@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react'
-import { useCookies } from 'react-cookie'
 import { Programs } from './Programs'
 import './home.css'
-import { ProfileSection } from '../../components/ProfileSection';
+import { ProfileSection } from '../../components/ProfileSection'
+import { useCookies } from 'react-cookie'
+import { useNavigate } from 'react-router-dom'
 
 export const Home = () => {
 
   const [ showProfileSection, setShowProfileSection ] = useState(false)
-  const [cookies] = useCookies(['access_token'])
-  const accessToken = cookies.access_token
+  const [ cookies ] = useCookies(["access_token"])
+  const access_token = cookies.access_token
+  const navigate = useNavigate()
 
   useEffect(() => {
-    if (!accessToken) {
-      window.location.href = '/auth'
+    if (!access_token) {
+      navigate('/auth')
     }
-  }, [accessToken])
+  })
 
   return (
     <>

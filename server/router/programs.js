@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { Program } = require('../models/e-book')
+const { Program, Department } = require('../models/e-book')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const User = require('../models/user')
 const { verifyToken } = require('../middleware/verifyToken')
@@ -70,6 +70,30 @@ router.get('/get-programs', verifyToken, checkRole([ROLES.STAFF, ROLES.LIBRARIAN
     const programs = await Program.find({})
 
     await redisClient.SET("programs", JSON.stringify(programs), {EX: DEFAULT_EXP})
+    // Respond with the list of programs
+    res.status(200).json({ programs })
+  } catch (error) {
+    // Handle errors and respond with an error message
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// Get programs of a department
+router.get('/get-department-programs/:departmentID', async (req, res) => {
+  const { departmentID } = req.params
+
+  try {
+    // Find the department by ID
+    const department = await Department.findById(departmentID)
+
+    if (!department) {
+      return res.status(404).json({ msg: 'Department not found' })
+    }
+
+    // Retrieve the details of the programs within the department
+    const programIds = department.programs;
+    const programs = await Program.find({ _id: { $in: programIds } })
+
     // Respond with the list of programs
     res.status(200).json({ programs })
   } catch (error) {

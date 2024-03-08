@@ -11,12 +11,22 @@ const users = require('./router/user')
 const departments = require('./router/departments')
 const programs = require('./router/programs')
 const courses = require('./router/courses')
+const token = require('./router/token')
+const cookieParser = require('cookie-parser')
 
 // Create an Express application
 const app = express()
 
-// Enable CORS middleware for handling cross-origin requests
-app.use(cors())
+const corsOptions = {
+  origin: 'http://localhost:5173', // replace with your frontend URL
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+}
+
+app.use(cors(corsOptions))
+
+app.use(cookieParser())
 
 // Configure Express to parse JSON requests with a maximum size limit of 50mb
 app.use(express.json({ limit: '50mb' }))
@@ -30,6 +40,7 @@ app.use('/users', users)
 app.use('/department', departments)
 app.use('/programs', programs)
 app.use('/courses', courses)
+app.use('/token', token)
 
 // Function to start the server
 const start = async () => {

@@ -8,6 +8,8 @@ export const Register = () => {
   const [ departments, setDepartments ] = useState([])
   const [ chosenDepartment, setChosenDepartment] = useState('')
   const [ chosenRole, setChosenRole ] = useState('')
+  const [ programs, setPrograms ] = useState([])
+  const [ chosenProgram, setChosenProgram ] = useState('')
   const navigate = useNavigate()
   const [isButtonDisabled, setIsButtonDisabled] = useState(false)
 
@@ -25,7 +27,12 @@ export const Register = () => {
       return () => clearTimeout(timeout)
     }
     fetchDepartments()
-  }, [currentIndex, loginTextOrigin])
+
+    if (chosenDepartment) {
+      console.log(chosenDepartment)
+      fetchPrograms()
+    }
+  }, [currentIndex, loginTextOrigin, chosenDepartment])
 
   const fetchDepartments = async() => {
     try {
@@ -34,6 +41,20 @@ export const Register = () => {
        if (response.status === 200) {
         setDepartments(response.data.department)
        }
+    } catch (err) {
+      if (err.response && err.response.data) {
+        console.log(err.response.data.msg)
+      }
+    }
+  }
+
+  const fetchPrograms = async () => {
+    try {
+      const response = await api.get(`/programs/get-department-programs/${chosenDepartment}`)
+
+      if (response.status === 200) {
+        setPrograms(response.data.programs)
+      }
     } catch (err) {
       if (err.response && err.response.data) {
         console.log(err.response.data.msg)
@@ -53,7 +74,7 @@ export const Register = () => {
       let response
 
       if (chosenRole === 'Student') {
-        response = await api.post('users/student-registration', { email, password, chosenDepartment, chosenRole })
+        response = await api.post('users/student-registration', { email, password, chosenDepartment, chosenRole, chosenProgram })
       } else {
        response = await api.post('users/staff-registration', { email, password, chosenRole })
       }
@@ -108,11 +129,26 @@ export const Register = () => {
              <option value='' disabled>Select your department</option>
              {departments.length > 0 &&
                departments.map((dept) => (
-                 <option key={dept.id} value={dept.id}>
+                 <option key={dept._id} value={dept._id}>
                    {dept.title}
                  </option>
                ))}
            </select>
+          }
+          { chosenDepartment && 
+            <select
+              value={chosenProgram}
+              onChange={(e) => setChosenProgram(e.target.value)}
+              className="program-selection"
+            >
+              <option value='' disabled>Select your Program</option>
+              {programs.length > 0 &&
+                programs.map((prog) => (
+                 <option key={prog._id} value={prog._id}>
+                   {prog.title}
+                 </option>
+               ))}
+            </select>
           }
         </form>
         <button onClick={handleSubmission}>Register</button>

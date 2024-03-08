@@ -7,7 +7,6 @@ import Form from './pages/home/form-sample'
 
 function App() {
   return (
-    <>
     <Router>
       <Routes>
         <Route path="/auth" element={<Authentication />}/>
@@ -18,7 +17,6 @@ function App() {
         <Route />
       </Routes>
     </Router>
-    </>
   )
 }
 

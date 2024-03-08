@@ -70,6 +70,7 @@ form {
   align-items: center;
   justify-content: center;
   margin: 10px;
+  width: 300px;
 }
 
 .left-side input {
@@ -120,7 +121,8 @@ form {
 }
 
 .department-selection,
-.role-selection {
+.role-selection,
+.program-selection {
   width: 100%;
   padding: 8px;
   margin-top: 8px;

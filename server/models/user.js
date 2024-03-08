@@ -12,6 +12,8 @@ const UserSchema = new mongoose.Schema({
   profilePic: { type: String },
   departmentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Department'},
   departmentName: { type: String },
+  programID: { type: mongoose.Schema.Types.ObjectId, ref: 'Program'},
+  programName: { type: String },
   verificationCode: { type: String },
   role: { type: String, required: true, enum: Object.values(ROLES)},
   verified: { type: Boolean, default: false },

@@ -95,7 +95,8 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
               </h2>
               <h3 className="user-email">{user?.email}</h3>
               <h4 className="user-role">{user?.role}</h4>
-              { user.departmentName && <h4 className="user-department"><p>Department:</p> {user?.departmentName.title}</h4>}
+              { user.departmentName && <h4 className="user-department"><p>Department:</p> {user?.departmentName}</h4>}
+              { user.programName && <h4 className="user-department"><p>Program:</p> {user?.programName}</h4>}
               <div className="separator-underline"></div>
 
               <div className="user-content-section">

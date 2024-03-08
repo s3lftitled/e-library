@@ -29,7 +29,7 @@ router.post('/create-department', async (req, res) => {
   }
 })
 
-router.post('/department/:departmentID/programs/:programID', async (req, res) => {
+router.post('/:departmentID/programs/:programID', async (req, res) => {
   const { departmentID, programID } = req.params
 
   try {
@@ -67,6 +67,7 @@ router.get('/get-departments', async (req, res) => {
 
     // Respond with the list of programs
     res.status(200).json({ department })
+    console.log({ department })
   } catch (error) {
     // Handle errors and respond with an error message
     res.status(500).json({ error: error.message })

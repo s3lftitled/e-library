@@ -13,7 +13,7 @@ const generateTokens = (user) => {
   const refreshToken = jwt.sign(
     { id: user._id, role: user.role },
     secretKey,
-    { expiresIn: '1d' } 
+    { expiresIn: '3h' } 
   )
 
   return { accessToken, refreshToken }
@@ -27,6 +27,7 @@ const verifyToken = (req, res, next) => {
   }
 
   const token = authHeader.split(' ')[1]
+  console.log('Received token:', token)
   const secretKey = process.env.SECRET_KEY
 
   if (!secretKey) {
@@ -34,7 +35,13 @@ const verifyToken = (req, res, next) => {
     return res.status(500).send("Internal Server Error: Missing secret key");
   }
 
+  if (!token) {
+    console.error("Token is missing");
+    return res.status(401).send("Unauthorized: Missing token");
+  }
+
   jwt.verify(token, secretKey, (err, decoded) => {
+    console.log(token)
     if (err) {
       console.error(err);
 

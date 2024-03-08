@@ -276,6 +276,9 @@ router.post('/login', async (req, res) => {
     const token = tokens.accessToken
     const refreshToken = tokens.refreshToken
 
+    console.log('access:', token)
+    console.log("refresh:", refreshToken)
+
     res.status(200).json({
       token,
       refreshToken,
@@ -328,10 +331,24 @@ router.get('/get-user/:userID', verifyToken, async (req, res) => {
       }
     }
 
+    let userProgram
+
+    if (user.role !== ROLES.STAFF && user.role !== ROLES.LIBRARIAN) {
+      // Find the department for non-staff and non-librarian users
+      userProgram= await Program.findOne({ _id: { $in: user.programID } })
+
+      if (!userProgram) {
+        return res.status(404).json({ msg: 'User program is not found' })
+      }
+    }
+
+    console.log(userProgram)
+
     const currentUser = ({
       email: user.email,
       username: user.username,
-      departmentName: userDepartment ? userDepartment.name : 'N/A',
+      departmentName: userDepartment ? userDepartment.title : 'N/A',
+      programName: userProgram ? userProgram.title : 'N/A',
       profilePic: user.profilePic,
       role: user.role,
     })
@@ -382,7 +399,7 @@ router.post('/profile/upload-image/:userId', verifyToken, async (req, res) => {
 })
 
 // Delete user endpoint (accessible only by staff)
-router.delete('/delete-user/:userId', checkRole([ROLES.STAFF]), async (req, res) => {
+router.delete('/delete-user/:userId', verifyToken, checkRole([ROLES.STAFF]), async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -436,14 +453,15 @@ router.get('/:userID/programs', verifyToken, checkRole([ROLES.STUDENT]), async (
       return res.status(404).json({ msg: 'User not found' })
     }
 
-    const userDepartment = await Department.findById(user.departmentID)
+    const userProgram = await Program.findById(user.programID)
 
-    if (!userDepartment) {
-      return res.status(404).json({ msg: 'User department is not found' })
+    if (!userProgram) {
+      return res.status(404).json({ msg: 'User program is not found' })
     }
 
-    const recommendedPrograms = await Program.find({ _id: { $in: userDepartment.programs } })
-    const restOfPrograms = await Program.find({ _id: { $nin: recommendedPrograms.map(p => p._id) } })
+    const restOfPrograms = await Program.find({ _id: { $ne: userProgram._id } })
+
+    const recommendedPrograms = userProgram
 
     const response = {
       msg: 'Recommended Programs and Rest of the Programs:',

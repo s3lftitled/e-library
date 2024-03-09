@@ -187,9 +187,9 @@ input {
 .typewriter-text {
   font-family: "Courier Prime", monospace;
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #4E7133;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .spinner {
@@ -197,7 +197,7 @@ input {
   height: 44px;
   animation: spinner-y0fdc1 2s infinite ease;
   transform-style: preserve-3d;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
  }
  
  .spinner > div {

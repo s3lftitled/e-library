@@ -257,7 +257,7 @@ router.post('/login', async (req, res) => {
 
     // If user not found
     if (!user) {
-      res.status(404).json({ msg: 'User not found' })
+      return res.status(404).json({ msg: 'User not found' })
     }
 
     // Compare passwords

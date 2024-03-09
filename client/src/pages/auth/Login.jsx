@@ -21,7 +21,7 @@ export const Login = () => {
         localStorage.setItem('userRole', role)
 
         alert('Logged in successfully')
-        navigate('/')
+        navigate('/welcome')
     } catch (err) {
       console.error(err);
       if (err.response?.data?.msg === 'Please verify your email first') {
@@ -52,5 +52,5 @@ export const Login = () => {
       </form>
       <button onClick={handleSubmission}>Login</button>
     </>
-  );
-};
+  )
+}

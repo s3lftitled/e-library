@@ -43,7 +43,7 @@ export const Programs = () => {
   }, [user, login.accessToken])
 
   return (
-    <div className="programs">
+    <div className={`programs`}>
       <SearchInput />
       {recommendedProgram && (
         <>

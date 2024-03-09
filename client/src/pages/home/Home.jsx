@@ -6,7 +6,6 @@ import { ProfileSection } from '../../components/ProfileSection'
 export const Home = () => {
   const [ showProfileSection, setShowProfileSection ] = useState(false)
 
-
   return (
     <>
       <div className='home-container'>

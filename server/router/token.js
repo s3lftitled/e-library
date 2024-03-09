@@ -21,7 +21,7 @@ router.post('/refresh', async (req, res) => {
     const newAccessToken = jwt.sign(
       { id: decoded.id, role: decoded.role },
       process.env.SECRET_KEY,
-      { expiresIn: '10s' }
+      { expiresIn: '30m' }
     )
 
     console.log('Token refreshed')

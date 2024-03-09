@@ -5,33 +5,37 @@ import { privateAxios } from "../utils/api"
 
 const usePrivateApi = () => {
   const refreshAccessToken = useTokenRefresh()
-  const login = useAuth()
+  const login= useAuth()
 
-  useEffect(() => { 
-    console.log('usePrivateApi is running')
-    console.log('login:', login.accessToken)
+  useEffect(() => {
     const requestIntercept = privateAxios.interceptors.request.use(
-      config => {
-        console.log('request')
+      (config) => {
         if (!config.headers['Authorization']) {
-        config.headers['Authorization'] = `Bearer ${login?.accessToken}`
+          config.headers['Authorization'] = `Bearer ${login?.accessToken}`
         }
         return config
-      }, (error) => Promise.reject(error)
+      },
+      (error) => Promise.reject(error)
     )
 
     const responseIntercept = privateAxios.interceptors.response.use(
-      response => response,
-      console.log('response'),
+      (response) => response,
       async (error) => {
         const prevRequest = error?.config
+
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true
-          const newAccessToken = refreshAccessToken()
-          console.log('new token:', newAccessToken)
-          prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
-          return privateAxios(prevRequest)
+
+          try {
+            const newAccessToken = await refreshAccessToken()
+            prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
+            return privateAxios(prevRequest);
+          } catch (refreshError) {
+            console.error('Failed to refresh access token:', refreshError)
+            return Promise.reject(error)
+          }
         }
+
         return Promise.reject(error)
       }
     )

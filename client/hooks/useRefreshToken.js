@@ -1,19 +1,24 @@
 import api from "../utils/api"
-import { useCookies } from "react-cookie"
+import { useAuth } from "../context/AuthContext"
 
 const useTokenRefresh = () => {
-  const [ cookies ] = useCookies(["refresh_token"])
-  const refresh_token = cookies.refresh_token
+  const { login } = useAuth()
 
   const refreshAccessToken = async () => {
     try {
-      console.log(refresh_token)
+      console.log('Refreshing token...');
       const refreshResponse = await api.post(
-        '/token/refresh',
-        { refresh_token }
+        '/token/refresh', {},
+        { withCredentials: true }
       )
-      console.log("New token:", refreshResponse.data.accessToken)
-      return refreshResponse.data.accessToken
+
+      const newAccessToken = (refreshResponse.data.accessToken)
+
+      await login({ accessToken: newAccessToken})
+      console.log('login', login)
+     
+      console.log("New token:", newAccessToken)
+      return newAccessToken
     } catch (refreshError) {
       console.error("Error refreshing token:", refreshError)
     }

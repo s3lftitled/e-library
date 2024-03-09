@@ -1,31 +1,25 @@
 import { useEffect, useState } from "react"
-import { useCookies } from "react-cookie"
 import useUserData from "../../../hooks/useUserData"
-import usePrivateApi from "../../../hooks/usePrivateApi"
+import usePrivateApi from '../../../hooks/usePrivateApi'
 import { SearchInput } from "./SearchInput"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../../context/AuthContext"
 
 export const Programs = () => {
   const [recommendedProgram, setRecommendedProgram] = useState()
   const [programs, setPrograms] = useState([])
   const { user } = useUserData()
   const privateAxios = usePrivateApi()
-  const [ cookies ] = useCookies(["access_token"])
-  const access_token = cookies.access_token
+  const { login } = useAuth()
   const userID = localStorage.getItem('userID')
   const userRole = localStorage.getItem('userRole')
   const navigate = useNavigate()
 
   const fetchPrograms = async () => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
       if (user.role === "Student") {
-        const response = await privateAxios.get(`/users/${userID}/programs`, config,  userRole )
-
+        const response = await privateAxios.get(`/users/${userID}/programs`, userRole, { withCredentials: true } )
+        console.log({ login})
         setPrograms(response.data.response.restOfPrograms)
         setRecommendedProgram(response.data.response.recommendedPrograms)
       } else if (user.role === "Staff") {
@@ -35,15 +29,18 @@ export const Programs = () => {
     } catch (err) {
       console.log(err)
       if (err.response && err.response.status === 403) {
+        console.log("Token expired. Navigating to /auth")
         navigate('/auth')
        }
     }
   }
 
   useEffect(() => {
-    fetchPrograms()
-    console.log(programs)
-  }, [user, access_token])
+    const awaitFetchPrograms = async () => {
+      await fetchPrograms()
+    }
+    awaitFetchPrograms()
+  }, [user, login.accessToken])
 
   return (
     <div className="programs">

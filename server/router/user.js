@@ -273,14 +273,17 @@ router.post('/login', async (req, res) => {
 
     const tokens = generateTokens(user)
 
-    const token = tokens.accessToken
+    const accessToken = tokens.accessToken
     const refreshToken = tokens.refreshToken
 
-    console.log('access:', token)
+    res.cookie('refreshToken', refreshToken, { httpOnly: true });
+    res.cookie('accessToken', accessToken, { httpOnly: true })
+
+    console.log('access:', accessToken)
     console.log("refresh:", refreshToken)
 
     res.status(200).json({
-      token,
+      accessToken,
       refreshToken,
       userID: user._id,
       role: user.role,

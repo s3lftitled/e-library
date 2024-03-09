@@ -318,6 +318,8 @@
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
+  z-index: 10;
+  height: 50px;
 }
 .search-input {
   width: 180px;

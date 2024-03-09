@@ -1,24 +1,18 @@
 import { useState, useEffect } from "react"
-import { useCookies } from "react-cookie"
-import api from "../utils/api"
+import { privateAxios } from "../utils/api"
+import { useNavigate } from "react-router-dom"
 
 const useUserData = () => {
   const [user, setUser] = useState({})
-  const [ cookies ] = useCookies(["access_token"])
-  const access_token = cookies.access_token
   const userID = localStorage.getItem('userID')
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-        const response = await api.get(
+        const response = await privateAxios.get(
           `/users/get-user/${userID}`,
-          config
+          { withCredentials: true }
         )
         setUser(response.data.currentUser)
         console.log(user.departmentName)
@@ -26,6 +20,10 @@ const useUserData = () => {
         console.log({ user })
       } catch (error) {
         console.log(error)
+        if (error.response && error.response.status === 403) {
+          console.log("Token expired. Navigating to /auth")
+          navigate('/auth')
+        }
       }
     }
     fetchUserData()

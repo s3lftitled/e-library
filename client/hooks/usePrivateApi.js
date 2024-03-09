@@ -1,18 +1,20 @@
-import { privateAxios } from "../utils/api"
 import { useEffect } from "react"
-import { useCookies } from "react-cookie";
-import useTokenRefresh from "./useRefreshToken";
+import useTokenRefresh from "./useRefreshToken"
+import { useAuth } from "../context/AuthContext"
+import { privateAxios } from "../utils/api"
 
 const usePrivateApi = () => {
   const refreshAccessToken = useTokenRefresh()
-  const [ cookies ] = useCookies(["access_token"])
-  const access_token = cookies.access_token
+  const login = useAuth()
 
   useEffect(() => { 
+    console.log('usePrivateApi is running')
+    console.log('login:', login.accessToken)
     const requestIntercept = privateAxios.interceptors.request.use(
       config => {
+        console.log('request')
         if (!config.headers['Authorization']) {
-          config.headers['Authorization'] = `Bearer ${access_token}`
+        config.headers['Authorization'] = `Bearer ${login?.accessToken}`
         }
         return config
       }, (error) => Promise.reject(error)
@@ -20,11 +22,13 @@ const usePrivateApi = () => {
 
     const responseIntercept = privateAxios.interceptors.response.use(
       response => response,
+      console.log('response'),
       async (error) => {
         const prevRequest = error?.config
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true
-          const newAccessToken = await refreshAccessToken()
+          const newAccessToken = refreshAccessToken()
+          console.log('new token:', newAccessToken)
           prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
           return privateAxios(prevRequest)
         }
@@ -36,7 +40,7 @@ const usePrivateApi = () => {
       privateAxios.interceptors.response.eject(responseIntercept)
       privateAxios.interceptors.request.eject(requestIntercept)
     }
-  }, [refreshAccessToken])
+  }, [refreshAccessToken, login])
 
   return privateAxios
 }

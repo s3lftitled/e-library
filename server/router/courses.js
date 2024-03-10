@@ -4,6 +4,7 @@ const { LearningMaterial, Course, Program } = require('../models/e-book')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const User = require('../models/user')
 const { verifyToken } = require('../middleware/verifyToken')
+const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
 
 // Create a course within a program
 router.post('/programs/:programId/courses', async (req, res) => {
@@ -74,7 +75,21 @@ router.get('/:programId/courses', async (req, res) => {
   const { programId } = req.params;
 
   try {
+
+      const cachedCourses = await redisClient.get(`courses:${programId}`)
       // Find the program by ID and populate the courses field
+      if (cachedCourses) {
+        try {
+          const courses = JSON.parse(cachedCourses)
+          res.status(200).json({ courses })
+          return
+        } catch (err) {
+          console.error('Error parsing cached programs:', err)
+          res.status(500).json({ msg: 'Error retrieving programs from Redis' })
+          return
+        }
+      }
+
       const program = await Program.findById(programId).populate('courses',)
 
       // If program not found, return an error
@@ -84,6 +99,7 @@ router.get('/:programId/courses', async (req, res) => {
 
       // Extract the courses from the program and respond
       const courses = program.courses
+      await redisClient.SET(`courses:${programId}`, JSON.stringify(courses), {EX: DEFAULT_EXP})
       res.status(200).json({ courses })
   } catch (error) {
       // Handle errors and respond with an error message

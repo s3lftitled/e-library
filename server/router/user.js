@@ -479,6 +479,7 @@ router.get('/:userID/programs', verifyToken, checkRole([ROLES.STUDENT]), async (
   }
 })
 
+// Get user statistics (accessible only by librarian)
 router.get('/admin-dashboard', async (req, res) => {
   try {
     const departmentStats = await User.aggregate([

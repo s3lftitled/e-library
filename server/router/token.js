@@ -1,15 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const express = require('express')
+const router = express.Router()
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 // POST /refresh
 router.post('/refresh', async (req, res) => {
   try {
 
     const { refreshToken } = req.cookies
-
-    console.log("refresh" , refreshToken  )
 
     if (!refreshToken) {
       console.error("Missing refresh token")
@@ -24,10 +22,8 @@ router.post('/refresh', async (req, res) => {
       { expiresIn: '30m' }
     )
 
-    console.log('Token refreshed')
-    res.cookie('accessToken', newAccessToken, { httpOnly: true, secure: true, sameSite: 'none' });
-    res.setHeader('Authorization', `Bearer ${newAccessToken}`);
-    console.log(newAccessToken)
+    res.cookie('accessToken', newAccessToken, { httpOnly: true, secure: true, sameSite: 'none' })
+    res.setHeader('Authorization', `Bearer ${newAccessToken}`)
     res.status(200).json({ msg: 'token refreshed'})
   } catch (error) {
     console.error('Error refreshing token:', error)

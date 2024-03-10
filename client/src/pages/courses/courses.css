@@ -62,6 +62,7 @@ ion-icon {
   color: #000;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;
+  margin: 20px;
 }
 
 .course-title {

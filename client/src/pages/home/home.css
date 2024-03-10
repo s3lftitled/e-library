@@ -235,10 +235,10 @@
 
 .library-section {
   max-height: 750px;
-  overflow-y: auto;
   position: relative; 
   overflow-y: auto;
   z-index: 0; 
+  padding-bottom: 30px;
 }
 
 .recommended-programs {
@@ -322,10 +322,10 @@
   z-index: 10;
   height: 50px;
 }
+
 .search-input {
   width: 180px;
   margin-top: 10px;
-  align-self: self-end;
 }
 
 .search-icon {
@@ -338,7 +338,7 @@
   border-radius: 2px;
   margin-left: -1px;
   margin-right: 10px;
+  padding: 5px;
   margin-top: 0;
   cursor: pointer;
-  align-self: self-end;
 }

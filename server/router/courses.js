@@ -70,7 +70,7 @@ router.post('/programs/:programId/courses/:courseId/learningMaterials', async (r
 })
 
 // GET courses within a program
-router.get('/programs/:programId/courses', async (req, res) => {
+router.get('/:programId/courses', async (req, res) => {
   const { programId } = req.params;
 
   try {

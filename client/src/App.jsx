@@ -6,7 +6,8 @@ import { Home } from './pages/home/Home'
 import VerificationCodeInput from './pages/auth/Verification'
 import Form from './pages/home/form-sample'
 import PersistLogin from './components/PersistLogin'
-import { Loader } from './components/Loader'
+import { Spinner } from './components/Spinner'
+import { Courses } from './pages/courses/Courses'
 
 function App() {
   return (
@@ -14,9 +15,10 @@ function App() {
       <Router>
         <Routes>
           <Route path="/auth" element={<Authentication />}/>
-          <Route path='/welcome' element={<Loader text="Welcome to our E-Library..."/>} />
+          <Route path='/welcome' element={<Spinner text="Welcome to our E-Library..."/>} />
           <Route element={<PersistLogin />}>
             <Route path='/' element={<Home /> } />
+            <Route path='/courses/:programID' element={<Courses />} />
             <Route path='/verify/:email' element={<VerificationCodeInput />}/>
             <Route path='/form' element={<Form />}/>
             <Route />

@@ -35,6 +35,10 @@ export const Programs = () => {
     }
   }
 
+  const navigateToCourses = (programID) => {
+    navigate(`/courses/${programID}`)
+  }
+
   useEffect(() => {
     const awaitFetchPrograms = async () => {
       await fetchPrograms()
@@ -49,7 +53,11 @@ export const Programs = () => {
         <>
           <h2>Recommended</h2>
           <div className="recommended-programs">
-              <div className="program-card recommended-program" key={recommendedProgram._id}>
+              <div 
+                className="program-card recommended-program" 
+                key={recommendedProgram._id} 
+                onClick={() => navigateToCourses(recommendedProgram._id)}
+              >
                 <div className="book-img-div">
                   <img className="book-img" src="book.png" alt="books" />
                 </div>
@@ -64,7 +72,7 @@ export const Programs = () => {
       {recommendedProgram && <h2>Others</h2>}
       <div className="other-programs">
         {programs.map((program) => (
-          <div className="program-card" key={program._id}>
+          <div className="program-card" key={program._id} onClick={() => navigateToCourses(program._id)}>
             <div className="book-img-div">
               <img className="book-img" src="book.png" alt="books" />
             </div>

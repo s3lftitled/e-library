@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
-export const Loader = ({ text }) => {
+export const Spinner= ({ text }) => {
   const [typedText, setTypedText] = useState('')
   const navigate = useNavigate()
 

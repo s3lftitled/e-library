@@ -18,7 +18,7 @@ const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
 router.post('/student-registration', async (req, res) => {
   try {
     // Extract email and password from the request body
-    const { email, password, chosenDepartment, chosenRole } = req.body
+    const { email, password, chosenDepartment, chosenRole, chosenProgram } = req.body
 
     if (!email || !password || !chosenRole || !chosenDepartment ) {
       return res.status(404).json({ msg: 'Please fill in all the required fields' })
@@ -42,6 +42,13 @@ router.post('/student-registration', async (req, res) => {
     // Validate if department exists
     if(!department) {
       return res.status(404).json({ msg: 'Department doesnt exists' })
+    }
+
+    const program = await Program.findById(chosenProgram)
+
+    // Validate if department exists
+    if(!program) {
+      return res.status(404).json({ msg: 'Program doesnt exists' })
     }
 
     // Regular expression to match panpacific email format
@@ -100,7 +107,9 @@ router.post('/student-registration', async (req, res) => {
       verificationCode,
       departmentID: department,
       departmentName: null,
-      role: chosenRole
+      programID: program, 
+      programeName: null,
+      role: chosenRole,
     })
 
     setTimeout(async () => {
@@ -108,7 +117,7 @@ router.post('/student-registration', async (req, res) => {
       if (expiredUser) {
         console.log(`Account for ${email} deleted due to expiration`);
       }
-    }, 30 * 60 * 1000);
+    }, 30 * 60 * 1000)
 
     // Save the new user to the database
     await newUser.save()
@@ -338,7 +347,7 @@ router.get('/get-user/:userID', verifyToken, async (req, res) => {
 
     if (user.role !== ROLES.STAFF && user.role !== ROLES.LIBRARIAN) {
       // Find the department for non-staff and non-librarian users
-      userProgram= await Program.findOne({ _id: { $in: user.programID } })
+      userProgram = await Program.findOne({ _id: { $in: user.programID } })
 
       if (!userProgram) {
         return res.status(404).json({ msg: 'User program is not found' })

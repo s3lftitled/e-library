@@ -65,6 +65,7 @@ export const Register = () => {
   const handleSubmission = async () => {
     try {
       console.log('registration submission func has been rerendered')
+      console.log(chosenDepartment)
       if (isButtonDisabled) {
         return
       }

@@ -37,7 +37,7 @@ router.post('/student-registration', async (req, res) => {
     }
 
     // Find the department and assign it to department variable
-    const department = await Department.findOne({ title: chosenDepartment })
+    const department = await Department.findById(chosenDepartment)
 
     // Validate if department exists
     if(!department) {

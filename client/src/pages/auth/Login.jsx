@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../../../context/AuthContext";
 import api from "../../../utils/api"
@@ -8,6 +8,20 @@ export const Login = () => {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
   const { login } = useAuth()
+
+  const [loginText, setLoginText] = useState('')
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [loginTextOrigin, setLoginTextOrigin] = useState('Login')
+
+  useEffect(() => {
+    if (currentIndex < loginTextOrigin.length) {
+      const timeout = setTimeout(() => {
+        setLoginText((prevtext) => prevtext + loginTextOrigin[currentIndex])
+        setCurrentIndex((prevIndex) => prevIndex + 1)
+      }, 200);
+      return () => clearTimeout(timeout)
+    }
+  }, [currentIndex, loginTextOrigin])
 
   const handleSubmission = async () => {
     try {
@@ -35,7 +49,7 @@ export const Login = () => {
 
   return (
     <>
-      <h2>Login</h2>
+      <h2>{loginText}</h2>
       <form>
         <input
           type='text'

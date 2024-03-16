@@ -42,34 +42,6 @@ router.post('/programs/:programId/courses', async (req, res) => {
   }
 })
 
-// Create a learning material within course subjects
-router.post('/programs/:programId/courses/:courseId/learningMaterials', async (req, res) => {
-  const { programId, courseId } = req.params
-
-  try {
-      // Find the course within the specified program
-      const course = await Course.findOne({ _id: courseId, program: programId })
-
-      // If course not found, return an error
-      if (!course) {
-          return res.status(404).json({ error: 'Course not found in the specified program' })
-      }
-
-      // Create a new learning material using the request body
-      const learningMaterial = await LearningMaterial.create(req.body)
-
-      // Add the learning material to the course's list of materials
-      course.learningMaterials.push(learningMaterial._id)
-      await course.save()
-
-      // Respond with the created learning material
-      res.status(201).json(learningMaterial)
-  } catch (error) {
-      // Handle errors and respond with an error message
-      res.status(500).json({ error: error.message })
-  }
-})
-
 // GET courses within a program
 router.get('/:programId/courses', async (req, res) => {
   const { programId } = req.params;

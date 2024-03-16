@@ -35,6 +35,10 @@ export const Courses = () => {
     navigate('/')
   }
 
+  const navigateToLearningMaterials = (courseID) => {
+    navigate(`/learning-materials/${courseID}`)
+  }
+
   return (
     <div className="courses-div">
       <header>
@@ -53,7 +57,7 @@ export const Courses = () => {
         ) : (
           <div className="courses">
             {programCourses.map((course) => (
-              <div className="course-card" key={course._id}>
+              <div className="course-card" key={course._id} onClick={() => navigateToLearningMaterials(course._id)} >
                 <p className="course-title">{course.title}</p>
               </div>
             ))}

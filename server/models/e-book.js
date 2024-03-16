@@ -3,11 +3,9 @@ const mongoose = require('mongoose');
 const LearningMaterialSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: true
     },
     author: {
         type: String,
-        required: true
     },
     copyright: {
         type: String
@@ -15,7 +13,6 @@ const LearningMaterialSchema = new mongoose.Schema({
     license: {
         type: {
             type: String,
-            required: true,
         },
         version: {
             type: String,
@@ -27,11 +24,10 @@ const LearningMaterialSchema = new mongoose.Schema({
     link: {
         type: String
     },
-    fileUrl: {
+    file: {
         type: String,
-        required: true
-    },
-})
+    }
+});
 
 const CourseSchema = new mongoose.Schema({
     title: {

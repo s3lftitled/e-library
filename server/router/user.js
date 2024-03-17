@@ -13,6 +13,7 @@ const Log = require('../models/log')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const { verifyToken, generateTokens } = require('../middleware/verifyToken')
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
+const limiter = require('../middleware/rateLimiter')
 
 
 // User registration endpoint
@@ -258,7 +259,7 @@ router.post('/verify-email', async (req, res) => {
 })
 
 // User Log In endpoint
-router.post('/login', async (req, res) => {
+router.post('/login', limiter, async (req, res) => {
   try {
     const { email, password } = req.body 
 

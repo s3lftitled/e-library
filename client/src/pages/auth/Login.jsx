@@ -41,7 +41,10 @@ export const Login = () => {
       if (err.response?.data?.msg === 'Please verify your email first') {
         alert(err.response.data.msg)
         navigate(`/verify/${email}`)
-      } else {
+      } else if (err.response?.status === 429) {
+        alert(err.response.data.error)
+      }
+       else {
         alert(err.response?.data?.msg || 'An error occurred')
       }
     }

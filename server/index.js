@@ -2,10 +2,12 @@ const express = require('express')
 const cors = require('cors')
 const dotenv = require('dotenv')
 const path = require('path')
+const cookieParser = require('cookie-parser')
 dotenv.config()
 
 // Import the connectDB function to establish a connection with MongoDB
 const connectDB = require('./db/connect')
+
 
 // Import user and e-library routes
 const users = require('./router/user')
@@ -15,8 +17,6 @@ const courses = require('./router/courses')
 const learningMaterials = require('./router/learningMaterials')
 const token = require('./router/token')
 const adminDashboard = require('./router/admin')
-
-const cookieParser = require('cookie-parser')
 
 // Create an Express application
 const app = express()
@@ -29,8 +29,8 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
-
 app.use(cookieParser())
+
 
 // Configure Express to parse JSON requests with a maximum size limit of 50mb
 app.use(express.json({ limit: '100mb' }))

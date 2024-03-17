@@ -14,11 +14,18 @@ const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const { verifyToken, generateTokens } = require('../middleware/verifyToken')
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
 const limiter = require('../middleware/rateLimiter')
+const mongoSanitize = require('express-mongo-sanitize')
 
 
 // User registration endpoint
-router.post('/student-registration', async (req, res) => {
+router.post('/student-registration', limiter, async (req, res) => {
   try {
+    req.body = mongoSanitize.sanitize(req.body)
+
+    if (req.body.email && typeof req.body.email === 'object') {
+      return res.status(400).json({ msg: 'Invalid email format' });
+    }
+
     // Extract email and password from the request body
     const { email, password, chosenDepartment, chosenRole, chosenProgram } = req.body
 

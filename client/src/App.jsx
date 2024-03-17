@@ -11,6 +11,7 @@ import { Courses } from './pages/courses/Courses'
 import FileUploadComponent from './pages/learningMaterials/UploadLearningMaterial'
 import { LearningMaterials } from './pages/learningMaterials/LearningMaterials'
 import SelectedPdfPage from './pages/learningMaterials/PDFShower'
+import { AdminDashboard } from './pages/dashboard/AdminDashboard'
 
 function App() {
   return (
@@ -27,8 +28,7 @@ function App() {
             <Route path='/learning-materials/:courseID' element={<LearningMaterials />} />
             <Route path='/upload-learning-material' element={<FileUploadComponent />} />
             <Route path='/view-material/:materialID' element={<SelectedPdfPage />} />
-            <Route />
-            <Route />
+            <Route path='/admin-dashboard' element={<AdminDashboard />}/>
           </Route>
         </Routes>
       </Router>

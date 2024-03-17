@@ -14,6 +14,8 @@ const programs = require('./router/programs')
 const courses = require('./router/courses')
 const learningMaterials = require('./router/learningMaterials')
 const token = require('./router/token')
+const adminDashboard = require('./router/admin')
+
 const cookieParser = require('cookie-parser')
 
 // Create an Express application
@@ -45,6 +47,7 @@ app.use('/programs', programs)
 app.use('/courses', courses)
 app.use('/learning-materials', learningMaterials)
 app.use('/token', token)
+app.use('/admin-dashboard', adminDashboard)
 
 // Function to start the server
 const start = async () => {

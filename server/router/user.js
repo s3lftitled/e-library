@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken') // Importing jsonwebtoken for user authentic
 const sharp = require('sharp')
 require('dotenv').config() // Loading environment variables
 const { Department, Program } = require('../models/e-book')
+const Log = require('../models/log')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const { verifyToken, generateTokens } = require('../middleware/verifyToken')
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
@@ -280,6 +281,16 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ msg: 'Please verify your email first'})
     }
 
+    const log = new Log({
+      userId: user._id,
+      userProgramId: user.programID, 
+      userDepartmentId: user.departmentID, 
+      timestamp: new Date(),
+      action: 'login',
+    })
+
+    await log.save()
+
     const tokens = generateTokens(user)
 
     const accessToken = tokens.accessToken
@@ -488,86 +499,6 @@ router.get('/:userID/programs', verifyToken, checkRole([ROLES.STUDENT]), async (
   }
 })
 
-// Get user statistics (accessible only by librarian)
-router.get('/admin-dashboard', async (req, res) => {
-  try {
-    const departmentStats = await User.aggregate([
-      {
-        $group: {
-          _id: '$departmentID',
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          totalUsers: { $sum: '$count' },
-          departments: {
-            $push: {
-              departmentID: '$_id',
-              count: '$count',
-            },
-          },
-        },
-      },
-      {
-        $unwind: { path: '$departments', preserveNullAndEmptyArrays: true },
-      },
-      {
-        $lookup: {
-          from: 'departments',
-          localField: 'departments.departmentID',
-          foreignField: '_id',
-          as: 'department',
-        },
-      },
-      {
-        $unwind: { path: '$department', preserveNullAndEmptyArrays: true },
-      },
-      {
-        $project: {
-          department: {
-            $ifNull: ['$department.title', 'Others'],
-          },
-          percentage: {
-            $multiply: [
-              { $cond: [{ $eq: ['$totalUsers', 0] }, 0, { $divide: ['$departments.count', '$totalUsers'] }] },
-              100,
-            ],
-          },
-        },
-      },
-      {
-        $group: {
-          _id: '$department',
-          percentage: { $max: '$percentage' },
-        },
-      },
-      {
-        $project: {
-          department: '$_id',
-          percentage: 1,
-          _id: 0,
-        },
-      },
-    ]);
 
-    const allDepartments = await Department.find({})
-
-    const result = allDepartments.map(department => {
-      const matchingStat = departmentStats.find(stat => stat.department === department.title)
-      return {
-        department: department.title,
-        percentage: matchingStat ? matchingStat.percentage : 0,
-      }
-    })
-
-    res.status(200).json({
-      departmentStats: result,
-    })
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
 
 module.exports = router

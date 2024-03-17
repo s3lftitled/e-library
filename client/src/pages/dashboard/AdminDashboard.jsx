@@ -4,25 +4,25 @@ import { Pie } from 'react-chartjs-2'
 import './AdminDashboard.css'
 
 export const AdminDashboard = () => {
-  const [elibraryStats, setElibraryStats] = useState([]);
+  const [elibraryStats, setElibraryStats] = useState([])
+  const [ totalUserCount, setTotalUserCount ] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/admin-dashboard/get-statistics');
-        setElibraryStats(response.data.elibraryStats);
+        const response = await api.get('/admin-dashboard/get-statistics')
+        setElibraryStats(response.data.elibraryStats)
+        setTotalUserCount(response.data.totalCount)
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error)
       }
-    };
-
-    fetchData();
-  }, []);
+    }
+    fetchData()
+  }, [])
 
   // Extract labels, percentages, and counts from elibraryStats
   const labels = elibraryStats.map(stat => stat.program);
   const percentages = elibraryStats.map(stat => stat.percentage);
-  const counts = elibraryStats.map(stat => stat.count);
 
   const pieChartData = {
     labels: labels,
@@ -99,10 +99,10 @@ export const AdminDashboard = () => {
       tooltip: {
         callbacks: {
           label: (context) => {
-            const label = context.label || '';
-            const value = context.formattedValue || '';
-            const count = elibraryStats[context.dataIndex]?.count || '';
-            return `${label}: ${value}%, Count: ${count}`;
+            const label = context.label || ''
+            const value = context.formattedValue || ''
+            const count = elibraryStats[context.dataIndex]?.count || ''
+            return `${label}: ${value}%, Count: ${count}`
           },
         },
       },
@@ -116,6 +116,7 @@ export const AdminDashboard = () => {
       <div className="chart-container">
         <h2>Total User Statistics</h2>
         <Pie data={pieChartData} options={chartOptions} />
+        <h3>Total User Count: {totalUserCount}</h3>
       </div>
     </div>
   )

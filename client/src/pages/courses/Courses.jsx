@@ -50,6 +50,7 @@ export const Courses = () => {
           <ion-icon name="arrow-back" onClick={() => navigateToHome()}></ion-icon>
           <h1>Courses</h1>
         </div> 
+        <dotlottie-player src="https://lottie.host/c7b8849d-1b44-4cb0-a68f-6874fbafe0f3/AJYxlq4Zs0.json" background="transparent" speed="1" style={{ width: "120px", height: "200px", margin: "20px" }} loop autoplay></dotlottie-player>
       </header>
       <main>
         { programCourses.length === 0 ? (

@@ -20,6 +20,7 @@ const mongoSanitize = require('express-mongo-sanitize')
 // User registration endpoint
 router.post('/student-registration', limiter, async (req, res) => {
   try {
+
     req.body = mongoSanitize.sanitize(req.body)
 
     if (req.body.email && typeof req.body.email === 'object') {
@@ -33,10 +34,43 @@ router.post('/student-registration', limiter, async (req, res) => {
       return res.status(404).json({ msg: 'Please fill in all the required fields' })
     }
 
+    if (!email || typeof email !== 'string' ||
+      !password || typeof password !== 'string' ||
+      !chosenDepartment || !mongoose.Types.ObjectId.isValid(chosenDepartment) ||
+      !chosenRole || typeof chosenRole !== 'string' ||
+      !chosenProgram || !mongoose.Types.ObjectId.isValid(chosenProgram)) {
+    return res.status(400).json({ msg: 'Invalid input data' })
+    }
+
     if (chosenRole !== ROLES.STUDENT) {
       return res.status(400).json({ msg: 'Your role should be a student' });
     }
 
+    // Regular expression to match panpacific email format
+    const emailRegex = /^[a-zA-Z0-9._-]+@panpacificu\.edu\.ph$/
+
+    // Validate email format
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ msg: 'Invalid email format. Please use your panpacific email' })
+    }
+
+    // Extract username from email
+    const usernameMatch = email.match(/^([a-zA-Z0-9._-]+)@panpacificu\.edu\.ph$/)
+    const username = usernameMatch ? usernameMatch[1].split('.')[0] : ''
+
+    // Regular expression to enforce password requirements
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/
+
+    // Validate password format
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        msg: 'Password should have capital letters, numbers and symbols',
+      })
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10)
+    
     // Find the email and assign it to existingUser variable
     const existingUser = await User.findOne({ email })
 
@@ -58,24 +92,6 @@ router.post('/student-registration', limiter, async (req, res) => {
     // Validate if department exists
     if(!program) {
       return res.status(404).json({ msg: 'Program doesnt exists' })
-    }
-
-    // Regular expression to match panpacific email format
-    const emailRegex = /^[a-zA-Z0-9._-]+@panpacificu\.edu\.ph$/
-
-    // Validate email format
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ msg: 'Invalid email format. Please use your panpacific email' })
-    }
-
-    // Regular expression to enforce password requirements
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/
-
-    // Validate password format
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        msg: 'Password should have capital letters, numbers and symbols',
-      })
     }
 
     // Generate verification code
@@ -100,13 +116,6 @@ router.post('/student-registration', limiter, async (req, res) => {
 
     // Send verification code via email
     await transporter.sendMail(mailOptions)
-
-    // Extract username from email
-    const usernameMatch = email.match(/^([a-zA-Z0-9._-]+)@panpacificu\.edu\.ph$/)
-    const username = usernameMatch ? usernameMatch[1].split('.')[0] : ''
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10)
 
     // Create a new user instance
     const newUser = User({
@@ -142,6 +151,11 @@ router.post('/student-registration', limiter, async (req, res) => {
 // Common registration logic for users without departments
 router.post('/staff-registration', async (req, res) => {
   try {
+    req.body = mongoSanitize.sanitize(req.body)
+
+    if (req.body.email && typeof req.body.email === 'object') {
+      return res.status(400).json({ msg: 'Invalid email format' });
+    }
     // Extract email and password from the request body
     const { email, password, chosenRole } = req.body
 
@@ -268,6 +282,12 @@ router.post('/verify-email', async (req, res) => {
 // User Log In endpoint
 router.post('/login', limiter, async (req, res) => {
   try {
+    req.body = mongoSanitize.sanitize(req.body)
+
+    if (req.body.email && typeof req.body.email === 'object') {
+      return res.status(400).json({ msg: 'Invalid email format' });
+    }
+
     const { email, password } = req.body 
 
     // Find user by email

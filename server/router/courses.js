@@ -3,7 +3,6 @@ const router = express.Router()
 const { LearningMaterial, Course, Program } = require('../models/e-book')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const User = require('../models/user')
-const { verifyToken } = require('../middleware/verifyToken')
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
 
 // Create a course within a program

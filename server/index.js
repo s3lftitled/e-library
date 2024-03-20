@@ -3,6 +3,8 @@ const cors = require('cors')
 const dotenv = require('dotenv')
 const path = require('path')
 const cookieParser = require('cookie-parser')
+const helmet = require('helmet')
+const xss = require('xss-clean')
 dotenv.config()
 
 // Import the connectDB function to establish a connection with MongoDB
@@ -22,7 +24,7 @@ const adminDashboard = require('./router/admin')
 const app = express()
 
 const corsOptions = {
-  origin: 'http://localhost:5174', // replace with your frontend URL
+  origin: 'http://localhost:5173', // replace with your frontend URL
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
@@ -35,6 +37,7 @@ app.use(cookieParser())
 // Configure Express to parse JSON requests with a maximum size limit of 50mb
 app.use(express.json({ limit: '100mb' }))
 app.use(express.urlencoded({ extended: true, limit: '100mb', parameterLimit: 1000000 }))
+app.use(helmet())
 app.use(express.static(path.join(__dirname, 'files')))
 
 // Set the port for the server to run on, using the specified PORT or default to 5000

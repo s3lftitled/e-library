@@ -2,6 +2,8 @@ const User = require('../models/user')
 const { Department, Program } = require('../models/e-book')
 const express = require('express') 
 const router = express.Router()
+const { checkRole, ROLES } = require('../middleware/auth-middleWare')
+const { verifyToken } = require('../middleware/verifyToken')
 
 // Get user statistics (accessible only by librarian)
 router.get('/get-statistics', async (req, res) => {
@@ -91,6 +93,32 @@ router.get('/get-statistics', async (req, res) => {
     })
   } catch (error) {
     res.status(500).json({ error: error.message })
+  }
+})
+
+// Delete user endpoint (accessible only by staff)
+router.delete('/delete-user/:userId', verifyToken, checkRole([ROLES.STAFF]), async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Ensure that the userId is provided
+    if (!userId) {
+      return res.status(400).json({ msg: 'User ID is required for deletion.' });
+    }
+
+    // Check if the user to be deleted exists
+    const userToDelete = await User.findById(userId);
+    if (!userToDelete) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Perform the deletion
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({ msg: 'User deleted successfully.' });
+  } catch (error) {
+    // Handle errors
+    res.status(500).json({ msg: error.message });
   }
 })
 

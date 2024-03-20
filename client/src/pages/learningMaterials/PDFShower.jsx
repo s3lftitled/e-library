@@ -10,8 +10,9 @@ export const SelectedPdfPage = () => {
   useEffect(() => {
     const fetchSelectedPdf = async () => {
       try {
-        const response = await api.get(`/learning-materials/get-material/${materialID}`);
+        const response = await api.get(`/learning-materials/get-material/${materialID}`)
         setSelectedPdf(response.data.material)
+        console.log(response.data.material.downloadUrl)
       } catch (err) {
         console.log(err)
       }
@@ -22,9 +23,9 @@ export const SelectedPdfPage = () => {
 
   return (
     <div>
-      {selectedPdf && <PdfViewer pdfUrl={`http://localhost:5000/${selectedPdf.file}`} />}
+      {selectedPdf && <PdfViewer pdfUrl={`${selectedPdf.downloadUrl}`} />}
     </div>
   )
 }
 
-export default SelectedPdfPage
+export default SelectedPdfPage 

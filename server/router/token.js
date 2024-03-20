@@ -1,34 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const jwt = require('jsonwebtoken')
-require('dotenv').config()
+const refreshAccessToken = require('../controller/tokenController')
+
 
 // POST /refresh
-router.post('/refresh', async (req, res) => {
-  try {
-
-    const { refreshToken } = req.cookies
-
-    if (!refreshToken) {
-      console.error("Missing refresh token")
-      throw new Error("Missing refresh token")
-    }
-
-    const decoded = jwt.verify(refreshToken, process.env.SECRET_KEY)
-
-    const newAccessToken = jwt.sign(
-      { id: decoded.id, role: decoded.role },
-      process.env.SECRET_KEY,
-      { expiresIn: '30m' }
-    )
-
-    res.cookie('accessToken', newAccessToken, { httpOnly: true, secure: true, sameSite: 'none' })
-    res.setHeader('Authorization', `Bearer ${newAccessToken}`)
-    res.status(200).json({ msg: 'token refreshed'})
-  } catch (error) {
-    console.error('Error refreshing token:', error)
-    res.status(500).json({ msg: 'Internal Server Error' })
-  }
-})
+router.post('/refresh', refreshAccessToken )
 
 module.exports = router

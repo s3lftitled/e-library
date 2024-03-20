@@ -1,27 +1,20 @@
 const express = require('express')
 const router = express.Router()
 const { LearningMaterial, Course } = require('../models/e-book')
-const multer = require('multer')
-const fs = require('fs').promises
+const { app } = require('../config/firebase.config')
+const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require('firebase/storage')
+const { upload } = require('../middleware/multer')
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./files")
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now();
-    cb(null, uniqueSuffix + file.originalname)
-  },
-})
+const storage = getStorage(app)
 
-const upload = multer({ storage: storage })
-
-router.post('/courses/:courseId', upload.single('file'), async (req, res) => {
+router.post('/courses/:courseId', upload , async (req, res) => {
   const { courseId } = req.params
   const title = req.body.title
-  const fileName = req.file.filename
+  const file = req.file
 
   try {
+
+    console.log(file)
     // Find the course within the specified program
     const course = await Course.findOne({ _id: courseId })
 
@@ -30,10 +23,21 @@ router.post('/courses/:courseId', upload.single('file'), async (req, res) => {
       return res.status(404).json({ error: 'Course not found in the specified program' })
     }
 
-    // Create a new learning material using the binary file data
+    const storageRef = ref(storage, `learning-materials/${file.originalname}`)
+
+    console.log(storageRef)
+    
+    // Upload file bytes to Firebase Storage
+    const snapshot = await uploadBytesResumable(storageRef, file.buffer)
+
+    console.log('file uploaded')
+
+    console.log(snapshot.metadata.fullPath)
+
+    // Create a new learning material using the uploaded file's metadata
     const learningMaterial = await LearningMaterial.create({
-      file: fileName,
-      title: title
+      title: title,
+      file: snapshot.metadata.fullPath
     })
 
     // Add the learning material to the course's list of materials
@@ -82,20 +86,27 @@ router.get('/get-material/:materialID', async (req, res) => {
   try {
     const { materialID } = req.params
 
-    if(!materialID) {
-      return res.status(400).json({ msg: 'Material ID is not found'})
+    if (!materialID) {
+      return res.status(400).json({ msg: 'Material ID is not found' })
     }
 
+    // Find the learning material in MongoDB
     const material = await LearningMaterial.findById(materialID)
 
-    if(!material) {
-      return res.status(400).json({ msg: 'Material is not found'})
+    if (!material) {
+      return res.status(404).json({ msg: 'Material not found' })
     }
 
-    res.status(200).json({ material })
-  
+    // Get the download URL of the file from Firebase Storage
+    const downloadUrl = await getDownloadURL(ref(storage, material.file))
+
+    // Attach the download URL to the material object
+    const materialWithUrl = { ...material.toObject(), downloadUrl }
+
+    res.status(200).json({ material: materialWithUrl })
   } catch (err) {
-    res.status(500).json({ msg: 'Internal Server Error'})
+    console.error('Error:', err)
+    res.status(500).json({ msg: 'Internal Server Error' })
   }
 })
 

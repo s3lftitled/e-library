@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import api from "../../../utils/api"
 
-
 export const LearningMaterials = () => {
   const [learningMaterials, setLearningMaterials] = useState([])
   const [selectedPdf, setSelectedPdf] = useState(null);

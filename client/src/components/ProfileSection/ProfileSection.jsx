@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
-import useUserData from "../../hooks/useUserData"
-import api from "../../utils/api"
+import useUserData from "../../../hooks/useUserData"
+import api from "../../../utils/api"
+import './ProfileSection.css'
 
 export const ProfileSection = ({ showProfileSection, setShowProfileSection }) => {
   const [isUploading, setIsUploading] = useState(false)

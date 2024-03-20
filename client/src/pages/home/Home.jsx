@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Programs } from './Programs'
 import './home.css'
-import { ProfileSection } from '../../components/ProfileSection'
+import { ProfileSection } from '../../components/ProfileSection/ProfileSection'
 
 export const Home = () => {
   const [ showProfileSection, setShowProfileSection ] = useState(false)

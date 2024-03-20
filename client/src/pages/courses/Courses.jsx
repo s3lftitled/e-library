@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { privateAxios } from "../../../utils/api"
-import { ProfileSection } from "../../components/ProfileSection"
+import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import './courses.css'
 
 export const Courses = () => {

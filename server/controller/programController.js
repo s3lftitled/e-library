@@ -16,7 +16,7 @@ const clearAllProgramsCache = async () => {
   }
 }
 
-const createProgram =  async (req, res) => {
+const createProgram =  async (req, res, programRepository) => {
   const { title, description } = req.body
   try {
     // Check if required fields are filled
@@ -25,7 +25,7 @@ const createProgram =  async (req, res) => {
     }
 
     // Check if a program with the same title already exists
-    const existingProgram = await Program.findOne({ title: { $regex: new RegExp(`^${title}$`, 'i') } })
+    const existingProgram = await programRepository.findExistingProgramByTitle(title)
 
     // If program with the same title exists, return an error
     if (existingProgram) {
@@ -33,20 +33,19 @@ const createProgram =  async (req, res) => {
     }
 
     // Create a new program with the provided title and description
-    const program = new Program({ title, description, courses: [] })
-    await program.save()
+    const program = await programRepository.createProgram(title, description)
 
     await clearAllProgramsCache()
 
     // Respond with the created program
-    res.status(201).json(program)
+    res.status(201).json({ program, msg: 'Program has been created succesfully' })
   } catch (error) {
       // Handle errors and respond with an error message
       res.status(500).json({ error: error.message })
   }
 }
 
-const getAllPrograms = async (req, res) => {
+const getAllPrograms = async (req, res, programRepository) => {
   try {
     const cachedPrograms = await redisClient.get(`programs`)
 
@@ -61,7 +60,7 @@ const getAllPrograms = async (req, res) => {
       }
     }
     // Retrieve all programs from the database
-    const programs = await Program.find({})
+    const programs = await programRepository.getAllPrograms()
 
     await redisClient.SET("programs", JSON.stringify(programs), {EX: DEFAULT_EXP})
     // Respond with the list of programs
@@ -72,20 +71,20 @@ const getAllPrograms = async (req, res) => {
   }
 }
 
-const getDepartmentPrograms = async (req, res) => {
+const getDepartmentPrograms = async (req, res, programRepository, departmentRepository) => {
   const { departmentID } = req.params
 
   try {
     // Find the department by ID
-    const department = await Department.findById(departmentID)
+    const department = await departmentRepository.findDepartmentByID(departmentID)
 
     if (!department) {
       return res.status(404).json({ msg: 'Department not found' })
     }
 
     // Retrieve the details of the programs within the department
-    const programIds = department.programs;
-    const programs = await Program.find({ _id: { $in: programIds } })
+    const programIds = department.programs
+    const programs = await programRepository.getProgramByIds(programIds)
 
     // Respond with the list of programs
     res.status(200).json({ programs })

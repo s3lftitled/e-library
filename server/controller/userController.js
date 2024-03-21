@@ -96,7 +96,6 @@ const studentRegistration = async (req, res, userRepository) => {
   }
 }
 
-
 const staffRegistration = async (req, res, userRepository) => {
   try {
     req.body = mongoSanitize.sanitize(req.body)

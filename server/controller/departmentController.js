@@ -1,6 +1,5 @@
-const { Program, Department } = require('../models/e-book')
 
-const createDepartment = async (req, res) => {
+const createDepartment = async (req, res, departmentRepository) => {
   const { title } = req.body
 
   try {
@@ -8,22 +7,21 @@ const createDepartment = async (req, res) => {
       return res.status(400).json({ msg: 'Please fill in the required fields' })
     }
 
-    const existingDepartment = await Department.findOne({ title: { $regex: new RegExp(`^${title}$`, 'i') } })
+    const existingDepartment = await departmentRepository.findExistingDepartment(title)
 
     if (existingDepartment) {
       return res.status(400).json({ msg: 'Department already exists '})
     }
 
-    const department = new Department({ title })
-    await department.save()
+    const department = departmentRepository.createDepartment(title)
 
-    res.status(201).json({ msg: 'Department has been created succesfully' })
+    res.status(201).json({ department, msg: 'Department has been created succesfully' })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
 }
 
-const addProgramToDept = async (req, res) => {
+const addProgramToDept = async (req, res, departmentRepository, programRepository) => {
   const { departmentID, programID } = req.params
 
   try {
@@ -31,21 +29,21 @@ const addProgramToDept = async (req, res) => {
       return res.status(404).json({ msg: 'Please fill in the required fields' })
     }
 
-    const program = await Program.findById(programID)
-    const department = await Department.findById(departmentID)
+    const program = await programRepository.findProgramById(programID)
+    const department = await departmentRepository.findDepartmentById(departmentID)
 
     if (!program || !department) {
       return res.status(404).json({ msg: 'Program is not found' })
     }
 
-    const existingProgram = await Department.findOne({ programs: program._id })
+    const existingProgram = await departmentRepository.findExistingProgramInADept(program._id)
 
     if (existingProgram) {
       return res.status(400).json({ msg: 'Program already in the department'})
     }
 
     department.programs.push(program)
-    await department.save()
+    await departmentRepository.updateDepartmentPrograms(departmentID, department.programs)
 
     res.status(201).json({ msg: `${program.title} has been succesfully added to ${department.title}`})
   } catch (err) {
@@ -53,10 +51,10 @@ const addProgramToDept = async (req, res) => {
   }
 }
 
-const getAllDepartments = async (req, res) => {
+const getAllDepartments = async (req, res, departmentRepository) => {
   try {
     // Retrieve all programs from the database
-    const department = await Department.find({})
+    const department = await departmentRepository.getAllDepartments()
 
     // Respond with the list of programs
     res.status(200).json({ department })

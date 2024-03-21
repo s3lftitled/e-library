@@ -1,3 +1,5 @@
+const CourseRepository = require('../repositories/courseRepository')
+const LearningMaterialRepository = require('../repositories/learningMaterialsRepository')
 const express = require('express')
 const router = express.Router()
 const { upload } = require('../middleware/multer')
@@ -8,10 +10,19 @@ const {
   getMaterial
 } = require('../controller/learningMaterialsController')
 
-router.post('/courses/:courseId', upload, checkRole([ROLES.LIBRARIAN]), uploadMaterial)
+const courseRepository = new CourseRepository()
+const learningMaterialRepository = new LearningMaterialRepository()
 
-router.get('/courses/:courseID', getCourseLearningMaterial)
+router.post('/courses/:courseId', upload, checkRole([ROLES.LIBRARIAN]), 
+  (req, res) => uploadMaterial(req, res, courseRepository, learningMaterialRepository)
+)
 
-router.get('/get-material/:materialID', getMaterial)
+router.get('/courses/:courseID', 
+  (req, res) => getCourseLearningMaterial(req, res, courseRepository, learningMaterialRepository)
+)
+
+router.get('/get-material/:materialID', 
+  (req,res) => getMaterial(req, res, learningMaterialRepository)
+)
 
 module.exports = router

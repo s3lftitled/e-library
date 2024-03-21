@@ -4,7 +4,7 @@ const Log = require('../models/log')
 const mongoSanitize = require('express-mongo-sanitize')
 const { generateTokens } = require('../middleware/verifyToken')
 
-const logIn = async (req, res) => {
+const logIn = async (req, res, userRepository, logRepository) => {
   try {
     req.body = mongoSanitize.sanitize(req.body)
 
@@ -15,7 +15,7 @@ const logIn = async (req, res) => {
     const { email, password } = req.body 
 
     // Find user by email
-    const user = await User.findOne({ email })
+    const user = await userRepository.findUserByEmail(email)
 
     // If user not found
     if (!user) {
@@ -33,15 +33,31 @@ const logIn = async (req, res) => {
       return res.status(400).json({ msg: 'Please verify your email first'})
     }
 
-    const log = new Log({
+    const logData = {
       userId: user._id,
       userProgramId: user.programID, 
       userDepartmentId: user.departmentID, 
       timestamp: new Date(),
       action: 'login',
-    })
+    }
+    
+    const options = {
+      timeZone: 'Asia/Manila',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour12: true,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }
 
-    await log.save()
+    const formattedDateTime = logData.timestamp.toLocaleString('en-PH', options)
+
+    logData.timestamp = formattedDateTime;
+
+    // Save login activity to the database
+    await logRepository.createLog(logData)
 
     const tokens = generateTokens(user)
 
@@ -67,12 +83,12 @@ const logIn = async (req, res) => {
   }
 }
 
-const verifyEmail = async (req, res) => {
+const verifyEmail = async (req, res, userRepository) => {
   try {
     const { email, verificationCode } = req.body
 
     // Find user by email
-    const user = await User.findOne({ email })
+    const user = await userRepository.findUserByEmail(email)
 
     // If user not found
     if (!user) {

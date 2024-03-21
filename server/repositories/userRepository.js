@@ -3,9 +3,9 @@ const User = require('../models/user')
 class UserRepository {
   constructor() {
     if (!UserRepository.instance) {
-      UserRepository.instance = this;
+      this.instance = this
     }
-    return UserRepository.instance;
+    return this.instance
   }
 
   async createUser(userData) {
@@ -46,6 +46,14 @@ class UserRepository {
       return await User.findOneAndDelete(filter)
     } catch (error) {
       throw new Error(`Error deleting user: ${error.message}`)
+    }
+  }
+
+  async findUserByEmail(email) {
+    try {
+      return await User.findOne({ email: email })
+    } catch (error) {
+      throw new Error(`Error finding user by email: ${error.message}`);
     }
   }
 

@@ -1,3 +1,5 @@
+const DepartmentRepository = require('../repositories/departmentRepository')
+const ProgramRepository = require('../repositories/programRepository')
 const express = require('express')
 const router = express.Router()
 const { verifyToken } = require('../middleware/verifyToken')
@@ -8,12 +10,25 @@ const {
   getAllDepartments
 } = require('../controller/departmentController')
 
-// Create a department
-router.post('/create-department', verifyToken, checkRole([ROLES.LIBRARIAN]), createDepartment )
+const departmentRepository = new DepartmentRepository()
+const programRepository = new ProgramRepository()
 
-router.post('/:departmentID/programs/:programID', verifyToken, checkRole([ROLES.LIBRARIAN]), addProgramToDept )
+// Create a department
+router.post('/create-department', 
+  verifyToken,
+  checkRole([ROLES.LIBRARIAN]), 
+  (req, res) => 
+    createDepartment(req,res, departmentRepository) 
+)
+
+router.post('/:departmentID/programs/:programID', 
+  verifyToken, 
+  checkRole([ROLES.LIBRARIAN]), 
+  (req, res) => {
+    addProgramToDept(req, res, departmentRepository, programRepository)
+  } )
 
 // GET all the department
-router.get('/get-departments', getAllDepartments)
+router.get('/get-departments', (req, res) => getAllDepartments(req, res, departmentRepository))
 
 module.exports = router

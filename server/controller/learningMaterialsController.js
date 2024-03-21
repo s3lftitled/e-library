@@ -6,41 +6,15 @@ const { Types } = require('mongoose'); // Import Types for ObjectId validation
 
 const storage = getStorage(app)
 
-const isValidObjectId = (id) => {
-  return Types.ObjectId.isValid(id)
-}
 
-const findAndValidateCourse = async (courseID) => {
-  console.log(courseID)
-  if (!isValidObjectId(courseID)) {
-    throw new Error('Invalid course ID')
-  }
-  const course = await Course.findOne({ _id: courseID })
-  if (!course) {
-    throw new Error('Course not found')
-  }
-  return course
-}
-
-const findAndValidateMaterial = async (materialID) => {
-  if (!isValidObjectId(materialID)) {
-    throw new Error('Invalid material ID')
-  }
-  const material = await LearningMaterial.findById(materialID)
-  if (!material) {
-    throw new Error('Material not found')
-  }
-  return material
-}
-
-const uploadMaterial = async (req, res) => {
+const uploadMaterial = async (req, res, learningMaterialRepository, courseRepository) => {
   const { courseId } = req.params
   const title = req.body.title
   const file = req.file
 
   try {
     // Find the course within the specified program
-    const course = await findAndValidateCourse(courseId)
+    const course = await courseRepository.findAndValidateCourse(courseId)
 
     // If course not found, return an error
     if (!course) {
@@ -59,14 +33,13 @@ const uploadMaterial = async (req, res) => {
     console.log(snapshot.metadata.fullPath)
 
     // Create a new learning material using the uploaded file's metadata
-    const learningMaterial = await LearningMaterial.create({
+    const learningMaterial = await learningMaterialRepository.createLearningMaterial({
       title: title,
       file: snapshot.metadata.fullPath
     })
 
     // Add the learning material to the course's list of materials
-    course.learningMaterials.push(learningMaterial._id)
-    await course.save();
+    await courseRepository.addLearningMaterialToCourse(courseId, learningMaterial._id)
 
     // Respond with the created learning material
     res.status(201).json(learningMaterial)
@@ -76,7 +49,7 @@ const uploadMaterial = async (req, res) => {
   }
 }
 
-const getCourseLearningMaterial = async (req, res) => {
+const getCourseLearningMaterial = async (req, res, courseRepository, learningMaterialRepository) => {
   const { courseID } = req.params
 
   try {
@@ -94,7 +67,7 @@ const getCourseLearningMaterial = async (req, res) => {
       }
     }
 
-    const course = await findAndValidateCourse(courseID)
+    const course = await courseRepository.findAndValidateCourse(courseID)
 
     if(!course) {
       return res.status(404).json({ msg: 'Course subject is not found' })
@@ -106,7 +79,7 @@ const getCourseLearningMaterial = async (req, res) => {
       return res.status(404).json({ msg: 'Course subject learning materials ID are not found'})
     }
 
-    const learningMaterials = await LearningMaterial.find({ _id: { $in: learningMaterialsID } })
+    const learningMaterials = await learningMaterialRepository.findLearningMaterial(learningMaterialsID)
 
     if (!learningMaterials) {
       return res.status(404).json({ msg: 'Course subject learning materials are not found' })
@@ -122,7 +95,7 @@ const getCourseLearningMaterial = async (req, res) => {
   }
 } 
 
-const getMaterial = async (req, res) => {
+const getMaterial = async (req, res, learningMaterialRepository) => {
   try {
     const { materialID } = req.params
 
@@ -131,7 +104,7 @@ const getMaterial = async (req, res) => {
     }
 
     // Find the learning material in MongoDB
-    const material = await findAndValidateMaterial(materialID)
+    const material = await learningMaterialRepository.findAndValidateMaterial(materialID)
 
     if (!material) {
       return res.status(404).json({ msg: 'Material not found' })

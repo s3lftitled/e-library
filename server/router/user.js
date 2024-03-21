@@ -12,12 +12,14 @@ const {
   uploadUserProfilePic,
   getPrograms
 } = require('../controller/userController')
+const UserRepository = require('../repositories/userRepository')
 
-// User registration endpoint
-router.post('/student-registration', limiter, studentRegistration)
+// Define UserRepository Instance
+const userRepository = new UserRepository()
 
-// Common registration logic for users without departments
-router.post('/staff-registration', staffRegistration)
+router.post('/student-registration', limiter,  (req, res) => studentRegistration(req, res, userRepository))
+
+router.post('/staff-registration', (req, res) => staffRegistration(req, res, userRepository))
 
 // Email Verification endpoint
 router.post('/verify-email', verifyEmail)
@@ -26,19 +28,19 @@ router.post('/verify-email', verifyEmail)
 router.post('/login', limiter, logIn)
 
 // Get User Data 
-router.get('/get-user/:userID', verifyToken, getUserData )
+router.get('/get-user/:userID', verifyToken, (req, res) => getUserData(req, res, userRepository) )
 
 // Upload User Profile Pic
 router.post('/profile/upload-image/:userId', 
   verifyToken, 
-  uploadUserProfilePic
+  (req,res,) => uploadUserProfilePic(req,res, userRepository)
 )
 
 // Get programs + recommended programs
 router.get('/:userID/programs', 
   verifyToken, 
   checkRole([ROLES.STUDENT]), 
-  getPrograms
+  (req, res) => getPrograms(req, res, userRepository)
 )
 
 

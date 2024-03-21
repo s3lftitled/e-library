@@ -44,9 +44,7 @@ router.post('/programs/:programId/courses', async (req, res) => {
 // GET courses within a program
 router.get('/:programId/courses', async (req, res) => {
   const { programId } = req.params;
-
   try {
-
       const cachedCourses = await redisClient.get(`courses:${programId}`)
       // Find the program by ID and populate the courses field
       if (cachedCourses) {

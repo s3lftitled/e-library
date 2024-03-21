@@ -1,4 +1,3 @@
-const User = require('../models/user') // Importing User model
 const { Department, Program } = require('../models/e-book')
 const bcrypt = require('bcrypt') // Importing bcrypt for password hashing
 const nodemailer = require('nodemailer') // Importing nodemailer for sending emails
@@ -13,12 +12,7 @@ const {
   validateEmail,
   validatePassword
 } = require('../validators/inputValidation')
-
-
-const findExistingUser = async (email) => {
-  const existingUser = await User.findOne({ email })
-  return existingUser
-}
+const { errorResponse } = require('../utils/responseUtils')
 
 const sendVerificationEmail = async (email, verificationCode) => {
   const transporter = nodemailer.createTransport({
@@ -47,33 +41,16 @@ const hashPassword = async (password) => {
   return await bcrypt.hash(password, 10)
 }
 
-const createUser = async (userData, username, hashedPassword, department, program) => {
-  const newUser = new User({
-    email: userData.email,
-    username,
-    password: hashedPassword,
-    verificationCode: userData.verificationCode,
-    departmentID: department,
-    departmentName: null,
-    programID: program,
-    programeName: null,
-    role: userData.chosenRole,
-  })
-
-  await newUser.save()
-}
-
-const studentRegistration = async (req, res) => {
+const studentRegistration = async (req, res, userRepository) => {
   try {
-    req.body = mongoSanitize(req.body)
 
-    console.log(req.body)
-
+    mongoSanitize(req.body)
     validateUserData(req.body)
 
     const { email, password, chosenDepartment, chosenRole, chosenProgram } = req.body
 
-    const existingUser = await findExistingUser(email)
+    const existingUser = await userRepository.findExistingUser(email)
+
     if (existingUser) {
       return res.status(400).json({ msg: 'User already exists' })
     }
@@ -84,12 +61,12 @@ const studentRegistration = async (req, res) => {
 
     const department = await Department.findById(chosenDepartment);
     if (!department) {
-      return res.status(404).json({ msg: 'Department doesn\'t exist' })
+      return res.status(404).json({ msg: 'Department doesn\t exist' })
     }
 
     const program = await Program.findById(chosenProgram);
     if (!program) {
-      return res.status(404).json({ msg: 'Program doesn\'t exist' })
+      return res.status(404).json({ msg: 'Program doesn\t exist' })
     }
 
     const verificationCode = generateVerificationCode()
@@ -100,31 +77,31 @@ const studentRegistration = async (req, res) => {
     const username = usernameMatch ? usernameMatch[1].split('.')[0] : ''
 
     // Hash the password
-    const hashedPassword = hashPassword(password)
+    const hashedPassword = await hashPassword(password)
 
-    await createUser(req.body, username, hashedPassword, department, program)
+    console.log(hashedPassword)
+
+    await userRepository.createUser({ email, username, password: hashedPassword, departmentID: department, verificationCode, programID: program, role: chosenRole })
 
     setTimeout(async () => {
-      const expiredUser = await User.findOneAndDelete({ email, verified: false });
+      const expiredUser = await userRepository.findOneAndDelete({ email, verified: false });
       if (expiredUser) {
-        console.log(`Account for ${email} deleted due to expiration`)
+        console.log(`Account for ${email} deleted due to expiration`);
       }
-    }, 30 * 60 * 1000)
-
-    res.status(200).json({ msg: 'Verification code sent. Check your email to complete registration' });
+    }, 30 * 60 * 1000);
+    
+    res.status(200).json({ msg: 'Verification code sent. Please check your email'})
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    errorResponse(res, 500, error.message)
   }
 }
 
 
-const staffRegistration = async (req, res) => {
+const staffRegistration = async (req, res, userRepository) => {
   try {
     req.body = mongoSanitize.sanitize(req.body)
 
-    if (req.body.email && typeof req.body.email === 'object') {
-      return res.status(400).json({ msg: 'Invalid email format' });
-    }
+    validateEmail(req.body.email)
     // Extract email and password from the request body
     const { email, password, chosenRole } = req.body
 
@@ -140,7 +117,7 @@ const staffRegistration = async (req, res) => {
       return res.status(403).json({ msg: `You are not authorized to register as a ${chosenRole}` });
     }
 
-    const existingUser = await findExistingUser(email)
+    const existingUser = await userRepository.findExistingUser(email)
     if (existingUser) {
       return res.status(400).json({ msg: 'User already exists' })
     }
@@ -161,10 +138,10 @@ const staffRegistration = async (req, res) => {
     const username = usernameMatch ? usernameMatch[1].split('.')[0] : ''
 
     // Hash the password
-    const hashedPassword = hashPassword(password)
+    const hashedPassword = await hashPassword(password)
 
     // Create a new user instance
-    const newUser = new User({
+    await userRepository.createUser({
       email,
       username,
       password: hashedPassword,
@@ -179,14 +156,14 @@ const staffRegistration = async (req, res) => {
     res.status(200).json({ msg: 'Verification code sent. Check your email to complete registration' })
   } catch (error) {
     // Handle errors
-    res.status(500).json({ msg: error.message })
+    errorResponse(res, 500, error.message)
   }
 }
 
-const getUserData = async (req, res) => {
-  const { userID } = req.params
-
+const getUserData = async (req, res, userRepository) => {
   try {
+    const { userID } = req.params
+
     if (!userID) {
       return res.status(404).json({ msg: 'userID is not found' })
     }
@@ -205,31 +182,23 @@ const getUserData = async (req, res) => {
       }
     }
 
-    const user = await User.findById(userID)
+    const user = await userRepository.getUserById(userID)
 
     if (!user) {
       return res.status(404).json({ msg: 'User with that ID is not found' })
     }
 
-    let userDepartment
+    let userDepartment, userProgram;
 
     if (user.role !== ROLES.STAFF && user.role !== ROLES.LIBRARIAN) {
-      // Find the department for non-staff and non-librarian users
-      userDepartment = await Department.findOne({ _id: { $in: user.departmentID } })
+      // Find the department and program for non-staff and non-librarian users
+      [userDepartment, userProgram] = await Promise.all([
+        Department.findOne({ _id: { $in: user.departmentID } }),
+        Program.findOne({ _id: { $in: user.programID } })
+      ])
 
-      if (!userDepartment) {
-        return res.status(404).json({ msg: 'User department is not found' })
-      }
-    }
-
-    let userProgram
-
-    if (user.role !== ROLES.STAFF && user.role !== ROLES.LIBRARIAN) {
-      // Find the department for non-staff and non-librarian users
-      userProgram = await Program.findOne({ _id: { $in: user.programID } })
-
-      if (!userProgram) {
-        return res.status(404).json({ msg: 'User program is not found' })
+      if (!userDepartment || !userProgram) {
+        return res.status(404).json({ msg: 'User department or program is not found' })
       }
     }
 
@@ -246,12 +215,12 @@ const getUserData = async (req, res) => {
 
     await redisClient.SET(`user-details:${userID}`, JSON.stringify(currentUser), {EX: DEFAULT_EXP})
     res.status(200).json({ currentUser })
-  } catch (err) {
-    res.status(500).json({ msg: err.message })
+  } catch (error) {
+    errorResponse(res, 500, error.message)
   }
 }
 
-const uploadUserProfilePic =  async (req, res) => {
+const uploadUserProfilePic =  async (req, res, userRepository) => {
   try {
     const { base64Image } = req.body
     const userId = req.params.userId
@@ -278,18 +247,17 @@ const uploadUserProfilePic =  async (req, res) => {
 
     const resizedImageBase64 = `data:image/${imageFormat};base64,${resizedImage.toString('base64')}`
 
-    await User.findByIdAndUpdate(userId, { profilePic: resizedImageBase64 })
+    await userRepository.updateUser(userId, { profilePic: resizedImageBase64 })
 
     await redisClient.del(`user-details:${userId}`)
 
     res.status(200).json({ msg: 'Profile picture uploaded successfully', resizedImage: resizedImageBase64 })
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ msg: 'Internal Server Error' })
+    errorResponse(res, 500, error.message)
   }
 }
 
-const getPrograms = async (req, res) => {
+const getPrograms = async (req, res, userRepository) => {
   const { userID } = req.params
 
   try {
@@ -311,7 +279,7 @@ const getPrograms = async (req, res) => {
       }
     }
 
-    const user = await User.findById(userID)
+    const user = await userRepository.getUserById(userID)
 
     if (!user) {
       return res.status(404).json({ msg: 'User not found' })
@@ -335,8 +303,8 @@ const getPrograms = async (req, res) => {
 
     await redisClient.SET(`programs:${userID}`, JSON.stringify(response), {EX: DEFAULT_EXP})
     res.status(200).json({ response })
-  } catch (err) {
-    res.status(500).json({ error: err.message })
+  } catch (error) {
+    errorResponse(res, 500, error.message)
   }
 }
 

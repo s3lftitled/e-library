@@ -53,7 +53,7 @@ const getAllPrograms = async (req, res) => {
     if (cachedPrograms) {
       try {
         const programs = JSON.parse(cachedPrograms)
-        res.status(200).json({ programs })
+        return res.status(200).json({ programs })
       } catch (err) {
         console.error('Error parsing cached programs:', err)
         res.status(500).json({ msg: 'Error retrieving programs from Redis' })

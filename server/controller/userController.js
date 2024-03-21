@@ -8,136 +8,115 @@ const mongoSanitize = require('express-mongo-sanitize')
 require('dotenv').config() // Loading environment variables
 const {  ROLES } = require('../middleware/auth-middleWare')
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
+const { 
+  validateUserData,
+  validateEmail,
+  validatePassword
+} = require('../validators/inputValidation')
 
-const studentRegistration =  async (req, res) => {
+
+const findExistingUser = async (email) => {
+  const existingUser = await User.findOne({ email })
+  return existingUser
+}
+
+const sendVerificationEmail = async (email, verificationCode) => {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.USER,
+      pass: process.env.PASSWORD
+    },
+  })
+
+  const mailOptions = {
+    from: process.env.USER,
+    to: email,
+    subject: 'Email Verification',
+    text: `Your verification code is: ${verificationCode}`,
+  }
+
+  await transporter.sendMail(mailOptions)
+}
+
+const generateVerificationCode = () => {
+  return crypto.randomBytes(3).toString('hex')
+}
+
+const hashPassword = async (password) => {
+  return await bcrypt.hash(password, 10)
+}
+
+const createUser = async (userData, username, hashedPassword, department, program) => {
+  const newUser = new User({
+    email: userData.email,
+    username,
+    password: hashedPassword,
+    verificationCode: userData.verificationCode,
+    departmentID: department,
+    departmentName: null,
+    programID: program,
+    programeName: null,
+    role: userData.chosenRole,
+  })
+
+  await newUser.save()
+}
+
+const studentRegistration = async (req, res) => {
   try {
+    req.body = mongoSanitize(req.body)
 
-    req.body = mongoSanitize.sanitize(req.body)
+    console.log(req.body)
 
-    if (req.body.email && typeof req.body.email === 'object') {
-      return res.status(400).json({ msg: 'Invalid email format' });
-    }
+    validateUserData(req.body)
 
-    // Extract email and password from the request body
     const { email, password, chosenDepartment, chosenRole, chosenProgram } = req.body
 
-    if (!email || !password || !chosenRole || !chosenDepartment ) {
-      return res.status(404).json({ msg: 'Please fill in all the required fields' })
-    }
-
-    if (!email || typeof email !== 'string' ||
-      !password || typeof password !== 'string' ||
-      !chosenDepartment || !mongoose.Types.ObjectId.isValid(chosenDepartment) ||
-      !chosenRole || typeof chosenRole !== 'string' ||
-      !chosenProgram || !mongoose.Types.ObjectId.isValid(chosenProgram)) {
-    return res.status(400).json({ msg: 'Invalid input data' })
-    }
-
-    if (chosenRole !== ROLES.STUDENT) {
-      return res.status(400).json({ msg: 'Your role should be a student' });
-    }
-
-    // Regular expression to match panpacific email format
-    const emailRegex = /^[a-zA-Z0-9._-]+@panpacificu\.edu\.ph$/
-
-    // Validate email format
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ msg: 'Invalid email format. Please use your panpacific email' })
-    }
-
-    // Extract username from email
-    const usernameMatch = email.match(/^([a-zA-Z0-9._-]+)@panpacificu\.edu\.ph$/)
-    const username = usernameMatch ? usernameMatch[1].split('.')[0] : ''
-
-    // Regular expression to enforce password requirements
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/
-
-    // Validate password format
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        msg: 'Password should have capital letters, numbers and symbols',
-      })
-    }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10)
-    
-    // Find the email and assign it to existingUser variable
-    const existingUser = await User.findOne({ email })
-
-      // Check if user already exists
+    const existingUser = await findExistingUser(email)
     if (existingUser) {
       return res.status(400).json({ msg: 'User already exists' })
     }
 
-    // Find the department and assign it to department variable
-    const department = await Department.findById(chosenDepartment)
-
-    // Validate if department exists
-    if(!department) {
-      return res.status(404).json({ msg: 'Department doesnt exists' })
+    if (chosenRole !== ROLES.STUDENT) {
+      return res.status(400).json({ msg: 'Your role should be a student' })
     }
 
-    const program = await Program.findById(chosenProgram)
-
-    // Validate if department exists
-    if(!program) {
-      return res.status(404).json({ msg: 'Program doesnt exists' })
+    const department = await Department.findById(chosenDepartment);
+    if (!department) {
+      return res.status(404).json({ msg: 'Department doesn\'t exist' })
     }
 
-    // Generate verification code
-    const verificationCode = crypto.randomBytes(3).toString('hex')
-
-    // Create nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.USER, // Email sender's username
-        pass: process.env.PASSWORD // Email sender's password
-      },
-    })
-
-    // Mail options for sending verification code
-    const mailOptions = {
-      from: process.env.USER, // Sender's email
-      to: email, // Recipient's email
-      subject: 'Email Verification',
-      text: `Your verification code is: ${verificationCode}`,
+    const program = await Program.findById(chosenProgram);
+    if (!program) {
+      return res.status(404).json({ msg: 'Program doesn\'t exist' })
     }
 
-    // Send verification code via email
-    await transporter.sendMail(mailOptions)
+    const verificationCode = generateVerificationCode()
 
-    // Create a new user instance
-    const newUser = User({
-      email,
-      username,
-      password: hashedPassword,
-      verificationCode,
-      departmentID: department,
-      departmentName: null,
-      programID: program, 
-      programeName: null,
-      role: chosenRole,
-    })
+    await sendVerificationEmail(email, verificationCode)
+
+    const usernameMatch = email.match(/^([a-zA-Z0-9._-]+)@panpacificu\.edu\.ph$/)
+    const username = usernameMatch ? usernameMatch[1].split('.')[0] : ''
+
+    // Hash the password
+    const hashedPassword = hashPassword(password)
+
+    await createUser(req.body, username, hashedPassword, department, program)
 
     setTimeout(async () => {
       const expiredUser = await User.findOneAndDelete({ email, verified: false });
       if (expiredUser) {
-        console.log(`Account for ${email} deleted due to expiration`);
+        console.log(`Account for ${email} deleted due to expiration`)
       }
     }, 30 * 60 * 1000)
 
-    // Save the new user to the database
-    await newUser.save()
-
-    // Respond with success message
-    res.status(200).json({ msg: 'Verification code sent. Check your email to complete registration' })
+    res.status(200).json({ msg: 'Verification code sent. Check your email to complete registration' });
   } catch (error) {
-    // Handle errors
-    res.status(500).json({ msg: error.message })
+    res.status(500).json({ msg: error.message });
   }
 }
+
 
 const staffRegistration = async (req, res) => {
   try {
@@ -161,61 +140,28 @@ const staffRegistration = async (req, res) => {
       return res.status(403).json({ msg: `You are not authorized to register as a ${chosenRole}` });
     }
 
-    // Find the email and assign it to the existingUser variable
-    const existingUser = await User.findOne({ email })
-
-    // Check if user already exists
+    const existingUser = await findExistingUser(email)
     if (existingUser) {
       return res.status(400).json({ msg: 'User already exists' })
     }
 
-    // Regular expression to match panpacific email format
-    const emailRegex = /^[a-zA-Z0-9._-]+@panpacificu\.edu\.ph$/
-
     // Validate email format
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ msg: 'Invalid email format. Please use your panpacific email' })
-    }
-
-    // Regular expression to enforce password requirements
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+    validateEmail(email)
 
     // Validate password format
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        msg: 'Password should have capital letters, numbers, and symbols',
-      })
-    }
+    validatePassword(password)
 
     // Generate verification code
-    const verificationCode = crypto.randomBytes(3).toString('hex')
+    const verificationCode = generateVerificationCode()
 
-    // Create nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.USER, // Email sender's username
-        pass: process.env.PASSWORD, // Email sender's password
-      },
-    })
-
-    // Mail options for sending verification code
-    const mailOptions = {
-      from: process.env.USER, // Sender's email
-      to: email, // Recipient's email
-      subject: 'Email Verification',
-      text: `Your verification code is: ${verificationCode}`,
-    }
-
-    // Send verification code via email
-    await transporter.sendMail(mailOptions)
+    await sendVerificationEmail(email, verificationCode)
 
     // Extract username from email
     const usernameMatch = email.match(/^([a-zA-Z0-9._-]+)@panpacificu\.edu\.ph$/)
     const username = usernameMatch ? usernameMatch[1].split('.')[0] : ''
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = hashPassword(password)
 
     // Create a new user instance
     const newUser = new User({

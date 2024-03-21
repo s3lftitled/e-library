@@ -1,6 +1,8 @@
 const User = require('../models/user') // Importing User model
 const bcrypt = require('bcrypt') // Importing bcrypt for password hashing
 const Log = require('../models/log')
+const mongoSanitize = require('express-mongo-sanitize')
+const { generateTokens } = require('../middleware/verifyToken')
 
 const logIn = async (req, res) => {
   try {

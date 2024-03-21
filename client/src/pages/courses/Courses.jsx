@@ -4,13 +4,14 @@ import { privateAxios } from "../../../utils/api"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import './courses.css'
 
-export const Courses = () => {
+const Courses = () => {
   const [programCourses, setProgramCourses] = useState([])
   const [ showProfileSection, setShowProfileSection ] = useState(false)
   const { programID } = useParams()
   const navigate = useNavigate()
 
   useEffect(() => {
+    console.log('courses loaded')
     let isMounted = true;
 
     const fetchProgramCourses = async () => {
@@ -69,3 +70,5 @@ export const Courses = () => {
     </div>
   )
 }
+
+export default Courses

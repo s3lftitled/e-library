@@ -3,7 +3,7 @@ import api from '../../../utils/api'
 import { Pie } from 'react-chartjs-2'
 import './AdminDashboard.css'
 
-export const AdminDashboard = () => {
+const AdminDashboard = () => {
   const [elibraryStats, setElibraryStats] = useState([])
   const [ totalUserCount, setTotalUserCount ] = useState(null)
 
@@ -121,3 +121,5 @@ export const AdminDashboard = () => {
     </div>
   )
 }
+
+export default AdminDashboard

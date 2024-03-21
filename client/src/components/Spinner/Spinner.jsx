@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import './Spinner.css'
 
-export const Spinner= ({ text }) => {
+const Spinner= ({ text }) => {
   const [typedText, setTypedText] = useState('')
   const navigate = useNavigate()
 
@@ -42,3 +43,5 @@ export const Spinner= ({ text }) => {
     </div>
   )
 }
+
+export default Spinner

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import api from "../../../utils/api"
 
-export const LearningMaterials = () => {
+const LearningMaterials = () => {
   const [learningMaterials, setLearningMaterials] = useState([])
   const [selectedPdf, setSelectedPdf] = useState(null);
   const { courseID } = useParams()
@@ -42,3 +42,5 @@ export const LearningMaterials = () => {
     </>
   )
 }
+
+export default LearningMaterials

@@ -13,6 +13,7 @@ export const SelectedPdfPage = () => {
         const response = await api.get(`/learning-materials/get-material/${materialID}`)
         setSelectedPdf(response.data.material)
         console.log(response.data.material.downloadUrl)
+        console.log('FETCHED')
       } catch (err) {
         console.log(err)
       }
@@ -23,7 +24,7 @@ export const SelectedPdfPage = () => {
 
   return (
     <div>
-      {selectedPdf && <PdfViewer pdfUrl={`${selectedPdf.downloadUrl}`} />}
+      { selectedPdf && <PdfViewer pdfUrl={selectedPdf.downloadUrl} />}
     </div>
   )
 }

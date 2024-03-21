@@ -3,7 +3,7 @@ import { Programs } from './Programs'
 import './home.css'
 import { ProfileSection } from '../../components/ProfileSection/ProfileSection'
 
-export const Home = () => {
+const Home = () => {
   const [ showProfileSection, setShowProfileSection ] = useState(false)
 
   return (
@@ -31,3 +31,5 @@ export const Home = () => {
     </>
   )
 }
+
+export default Home

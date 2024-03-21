@@ -3,7 +3,7 @@ import './styles.css'
 import { Login } from './Login'
 import { Register } from './Register'
 
-export const Authentication = () => {
+const Authentication = () => {
   const [form, setForm] = useState(false)
   
   return (
@@ -43,3 +43,5 @@ export const Authentication = () => {
     </div>
   )
 }
+
+export default Authentication

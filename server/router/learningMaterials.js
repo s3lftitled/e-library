@@ -17,11 +17,11 @@ router.post('/courses/:courseId', upload, checkRole([ROLES.LIBRARIAN]),
   (req, res) => uploadMaterial(req, res, courseRepository, learningMaterialRepository)
 )
 
-router.get('/courses/:courseID', 
+router.get('/courses/:courseID/:userID', 
   (req, res) => getCourseLearningMaterial(req, res, courseRepository, learningMaterialRepository)
 )
 
-router.get('/get-material/:materialID', 
+router.get('/get-material/:materialID/:userID', 
   (req,res) => getMaterial(req, res, learningMaterialRepository)
 )
 

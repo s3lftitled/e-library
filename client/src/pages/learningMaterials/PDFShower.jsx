@@ -6,11 +6,12 @@ import api from "../../../utils/api"
 export const SelectedPdfPage = () => {
   const [selectedPdf, setSelectedPdf] = useState([])
   const { materialID } = useParams()
+  const userID = localStorage.getItem("userID")
 
   useEffect(() => {
     const fetchSelectedPdf = async () => {
       try {
-        const response = await api.get(`/learning-materials/get-material/${materialID}`)
+        const response = await api.get(`/learning-materials/get-material/${materialID}/${userID}`)
         setSelectedPdf(response.data.material)
         console.log(response.data.material.downloadUrl)
         console.log('FETCHED')

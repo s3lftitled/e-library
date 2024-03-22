@@ -15,6 +15,6 @@ const programRepository = new ProgramRepository()
 router.post('/programs/:programId/courses', (req, res) => createCourse(req, res, courseRepository, programRepository ))
 
 // GET courses within a program
-router.get('/:programId/courses', (req, res) => getCoursesWithInPrograms(req, res, programRepository))
+router.get('/:programId/courses/:userID', (req, res) => getCoursesWithInPrograms(req, res, programRepository))
 
 module.exports = router

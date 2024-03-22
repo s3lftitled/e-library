@@ -5,6 +5,7 @@ import api from "../../../utils/api"
 export const Register = () => {
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
+  const [ passwordConfirmation, setPasswordConfirmation ] = useState('')
   const [ departments, setDepartments ] = useState([])
   const [ chosenDepartment, setChosenDepartment] = useState('')
   const [ chosenRole, setChosenRole ] = useState('')
@@ -75,9 +76,9 @@ export const Register = () => {
       let response
 
       if (chosenRole === 'Student') {
-        response = await api.post('users/student-registration', { email, password, chosenDepartment, chosenRole, chosenProgram })
+        response = await api.post('users/student-registration', { email, password, passwordConfirmation, chosenDepartment, chosenRole, chosenProgram })
       } else {
-       response = await api.post('users/staff-registration', { email, password, chosenRole })
+       response = await api.post('users/staff-registration', { email, password, passwordConfirmation, chosenRole })
       }
      
       if(response.status === 200) {
@@ -110,6 +111,12 @@ export const Register = () => {
             placeholder='Password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+           <input 
+            type='password'
+            placeholder='Confirm Password'
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
           />
           <select 
             value={chosenRole}

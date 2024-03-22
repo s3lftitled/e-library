@@ -9,19 +9,20 @@ const clearAllProgramsCache = async () => {
     for (const userIdObj of allUserIds) {
       const userId = userIdObj._id.toString();
       await redisClient.del(`programs:${userId}`)
-      await redisClient.del("programs")
     }
+    await redisClient.del("programs")
   } catch (error) {
-    console.error('Error clearing programs cache for all users:', error);
+    console.error('Error clearing programs cache for all users:', error)
   }
 }
 
 const createProgram =  async (req, res, programRepository) => {
   const { title, description } = req.body
+  
   try {
     // Check if required fields are filled
     if (!title || !description) {
-      return res.status(500).json({ msg: 'Please fill in the required fields'})
+      return res.status(500).json({ error: 'Please provide both title and description'})
     }
 
     // Check if a program with the same title already exists
@@ -29,7 +30,7 @@ const createProgram =  async (req, res, programRepository) => {
 
     // If program with the same title exists, return an error
     if (existingProgram) {
-      return res.status(400).json({ msg: 'Program already exists '})
+      return res.status(400).json({ error: 'Program already exists '})
     }
 
     // Create a new program with the provided title and description
@@ -41,7 +42,8 @@ const createProgram =  async (req, res, programRepository) => {
     res.status(201).json({ program, msg: 'Program has been created succesfully' })
   } catch (error) {
       // Handle errors and respond with an error message
-      res.status(500).json({ error: error.message })
+    console.error('Error creating program:', error)
+    res.status(500).json({ error: 'Failed to create program. Please try again later.' })
   }
 }
 
@@ -53,9 +55,9 @@ const getAllPrograms = async (req, res, programRepository) => {
       try {
         const programs = JSON.parse(cachedPrograms)
         return res.status(200).json({ programs })
-      } catch (err) {
-        console.error('Error parsing cached programs:', err)
-        res.status(500).json({ msg: 'Error retrieving programs from Redis' })
+      } catch (error) {
+        console.error('Error parsing cached programs:', error)
+        res.status(500).json({ error: 'Error retrieving programs from Redis' })
         return
       }
     }
@@ -67,7 +69,8 @@ const getAllPrograms = async (req, res, programRepository) => {
     res.status(200).json({ programs })
   } catch (error) {
     // Handle errors and respond with an error message
-    res.status(500).json({ error: error.message })
+    console.error('Error fetching programs:', error)
+    res.status(500).json({ error: 'Failed to fetch programs. Please try again later.' })
   }
 }
 
@@ -79,7 +82,7 @@ const getDepartmentPrograms = async (req, res, programRepository, departmentRepo
     const department = await departmentRepository.findDepartmentByID(departmentID)
 
     if (!department) {
-      return res.status(404).json({ msg: 'Department not found' })
+      return res.status(404).json({ error: 'Department not found' })
     }
 
     // Retrieve the details of the programs within the department
@@ -90,7 +93,8 @@ const getDepartmentPrograms = async (req, res, programRepository, departmentRepo
     res.status(200).json({ programs })
   } catch (error) {
     // Handle errors and respond with an error message
-    res.status(500).json({ error: error.message })
+    console.error('Error fetching department programs:', error)
+    res.status(500).json({ error: 'Failed to fetch department programs. Please try again later.' })
   }
 }
  

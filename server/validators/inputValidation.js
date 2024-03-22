@@ -16,9 +16,9 @@ const validatePassword = (password) => {
 
 // Function to validate user data
 const validateUserData = (userData) => {
-  const { email, password, chosenRole, chosenDepartment, chosenProgram } = userData
+  const { email, password, passwordConfirmation, chosenRole, chosenDepartment, chosenProgram } = userData
 
-  if (!email || !password || !chosenRole || !chosenDepartment || !chosenProgram) {
+  if (!email || !password || ! passwordConfirmation || !chosenRole || !chosenDepartment || !chosenProgram) {
     throw new Error('Please fill in all the required fields')
   }
 

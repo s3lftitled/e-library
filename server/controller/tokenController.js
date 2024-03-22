@@ -24,7 +24,7 @@ const refreshAccessToken = async (req, res) => {
     res.status(200).json({ msg: 'token refreshed'})
   } catch (error) {
     console.error('Error refreshing token:', error)
-    res.status(500).json({ msg: 'Internal Server Error' })
+    res.status(500).json({ error: 'Internal Server Error' })
   }
 }
 

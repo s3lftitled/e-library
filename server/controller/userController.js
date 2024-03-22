@@ -12,25 +12,29 @@ const {
   validateEmail,
   validatePassword
 } = require('../validators/inputValidation')
-const { errorResponse } = require('../utils/responseUtils')
 
 const sendVerificationEmail = async (email, verificationCode) => {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.USER,
-      pass: process.env.PASSWORD
-    },
-  })
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASSWORD
+      },
+    })
 
-  const mailOptions = {
-    from: process.env.USER,
-    to: email,
-    subject: 'Email Verification',
-    text: `Your verification code is: ${verificationCode}`,
+    const mailOptions = {
+      from: process.env.USER,
+      to: email,
+      subject: 'Email Verification',
+      text: `Your verification code is: ${verificationCode}`,
+    }
+
+    await transporter.sendMail(mailOptions)
+  } catch (error) {
+    console.error('Error sending verification email:', error.message)
+    throw new Error('Failed to send verification email.')
   }
-
-  await transporter.sendMail(mailOptions)
 }
 
 const generateVerificationCode = () => {
@@ -38,44 +42,48 @@ const generateVerificationCode = () => {
 }
 
 const hashPassword = async (password) => {
-  return await bcrypt.hash(password, 10)
+  try {
+    return await bcrypt.hash(password, 10)
+  } catch (error) {
+    console.error('Error hashing password:', error.message)
+    throw new Error('Failed to hash password.')
+  }
 }
 
 const studentRegistration = async (req, res, userRepository) => {
+  const { email, password, passwordConfirmation, chosenDepartment, chosenRole, chosenProgram } = req.body
+
   try {
 
     mongoSanitize(req.body)
     validateUserData(req.body)
 
-    const { email, password, chosenDepartment, chosenRole, chosenProgram } = req.body
-
     const existingUser = await userRepository.findExistingUser(email)
 
     if (existingUser) {
-      return res.status(400).json({ msg: 'User already exists' })
+      return res.status(400).json({ error: 'User already exists' })
     }
 
     if (chosenRole !== ROLES.STUDENT) {
-      return res.status(400).json({ msg: 'Your role should be a student' })
+      return res.status(400).json({ error: 'Your role should be a student' })
     }
 
     const department = await Department.findById(chosenDepartment);
     if (!department) {
-      return res.status(404).json({ msg: 'Department doesn\t exist' })
+      return res.status(404).json({ error: 'Department doesn\t exist' })
     }
 
     const program = await Program.findById(chosenProgram);
     if (!program) {
-      return res.status(404).json({ msg: 'Program doesn\t exist' })
+      return res.status(404).json({ error: 'Program doesn\t exist' })
     }
-
-    const verificationCode = generateVerificationCode()
-
-    await sendVerificationEmail(email, verificationCode)
 
     const usernameMatch = email.match(/^([a-zA-Z0-9._-]+)@panpacificu\.edu\.ph$/)
     const username = usernameMatch ? usernameMatch[1].split('.')[0] : ''
 
+    if (password !== passwordConfirmation) {
+      return res.status(400).json({ error: 'Password do not match'})
+    }
     // Hash the password
     const hashedPassword = await hashPassword(password)
 
@@ -88,24 +96,30 @@ const studentRegistration = async (req, res, userRepository) => {
       if (expiredUser) {
         console.log(`Account for ${email} deleted due to expiration`);
       }
-    }, 30 * 60 * 1000);
+    }, 30 * 60 * 1000)
+
+    
+    const verificationCode = generateVerificationCode()
+
+    await sendVerificationEmail(email, verificationCode)
     
     res.status(200).json({ msg: 'Verification code sent. Please check your email'})
   } catch (error) {
-    errorResponse(res, 500, error.message)
+    console.error('Student registration error:', error.message)
+    res.status(500).json({ error: 'Failed to register student. Please try again later.' })
   }
 }
 
 const staffRegistration = async (req, res, userRepository) => {
+  const { email, password, passwordConfirmation, chosenRole } = req.body
+
   try {
     req.body = mongoSanitize.sanitize(req.body)
 
     validateEmail(req.body.email)
-    // Extract email and password from the request body
-    const { email, password, chosenRole } = req.body
 
-    if (!email || !password || !chosenRole) {
-      return res.status(400).json({ msg: 'Please fill in all the required fields' })
+    if (!email || !password || !passwordConfirmation || !chosenRole) {
+      return res.status(400).json({ error: 'Please fill in all the required fields' })
     }
 
     // Check if the email is in the array of staff or librarian emails
@@ -113,12 +127,12 @@ const staffRegistration = async (req, res, userRepository) => {
     const librarianEmails = [''] // Add librarian emails to this array
 
     if ((chosenRole === ROLES.STAFF && !staffEmails.includes(email)) || (chosenRole === ROLES.LIBRARIAN && !librarianEmails.includes(email))) {
-      return res.status(403).json({ msg: `You are not authorized to register as a ${chosenRole}` });
+      return res.status(403).json({ error: `You are not authorized to register as a ${chosenRole}` });
     }
 
     const existingUser = await userRepository.findExistingUser(email)
     if (existingUser) {
-      return res.status(400).json({ msg: 'User already exists' })
+      return res.status(400).json({ error: 'User already exists' })
     }
 
     // Validate email format
@@ -126,15 +140,15 @@ const staffRegistration = async (req, res, userRepository) => {
 
     // Validate password format
     validatePassword(password)
-
-    // Generate verification code
-    const verificationCode = generateVerificationCode()
-
-    await sendVerificationEmail(email, verificationCode)
-
+    
     // Extract username from email
     const usernameMatch = email.match(/^([a-zA-Z0-9._-]+)@panpacificu\.edu\.ph$/)
     const username = usernameMatch ? usernameMatch[1].split('.')[0] : ''
+
+    // Check if password and passwordConfirmation matches
+    if (password !== passwordConfirmation) {
+      return res.status(400).json({ error: 'Password do not match'})
+    }
 
     // Hash the password
     const hashedPassword = await hashPassword(password)
@@ -150,21 +164,28 @@ const staffRegistration = async (req, res, userRepository) => {
 
     // Save the new user to the database
     await newUser.save()
+    
+    const verificationCode = generateVerificationCode()
+
+    await sendVerificationEmail(email, verificationCode)
+
 
     // Respond with success message
     res.status(200).json({ msg: 'Verification code sent. Check your email to complete registration' })
   } catch (error) {
     // Handle errors
-    errorResponse(res, 500, error.message)
+    console.error('Staff registration error:', error.message)
+    res.status(500).json({ error: 'Failed to register staff. Please try again later.' })
   }
 }
 
 const getUserData = async (req, res, userRepository) => {
+  const { userID } = req.params
+  
   try {
-    const { userID } = req.params
 
     if (!userID) {
-      return res.status(404).json({ msg: 'userID is not found' })
+      return res.status(404).json({ error: 'userID is not found' })
     }
 
     const cachedUser = await redisClient.get(`user-details:${userID}`)
@@ -174,9 +195,9 @@ const getUserData = async (req, res, userRepository) => {
         const currentUser = JSON.parse(cachedUser)
         res.status(200).json({ currentUser })
         return
-      } catch (err) {
-        console.error('Error parsing cached programs:', err)
-        res.status(500).json({ msg: 'Error retrieving programs from Redis' })
+      } catch (error) {
+        console.error('Error parsing cached programs:', error)
+        res.status(500).json({ error: 'Error retrieving programs from Redis' })
         return
       }
     }
@@ -184,10 +205,10 @@ const getUserData = async (req, res, userRepository) => {
     const user = await userRepository.getUserById(userID)
 
     if (!user) {
-      return res.status(404).json({ msg: 'User with that ID is not found' })
+      return res.status(404).json({ error: 'User with that ID is not found' })
     }
 
-    let userDepartment, userProgram;
+    let userDepartment, userProgram
 
     if (user.role !== ROLES.STAFF && user.role !== ROLES.LIBRARIAN) {
       // Find the department and program for non-staff and non-librarian users
@@ -197,7 +218,7 @@ const getUserData = async (req, res, userRepository) => {
       ])
 
       if (!userDepartment || !userProgram) {
-        return res.status(404).json({ msg: 'User department or program is not found' })
+        return res.status(404).json({ error: 'User department or program is not found' })
       }
     }
 
@@ -215,21 +236,22 @@ const getUserData = async (req, res, userRepository) => {
     await redisClient.SET(`user-details:${userID}`, JSON.stringify(currentUser), {EX: DEFAULT_EXP})
     res.status(200).json({ currentUser })
   } catch (error) {
-    errorResponse(res, 500, error.message)
+    console.error('Get user data error:', error.message)
+    res.status(500).json({ error: 'Failed to retrieve user data. Please try again later.' })
   }
 }
 
 const uploadUserProfilePic =  async (req, res, userRepository) => {
-  try {
-    const { base64Image } = req.body
-    const userId = req.params.userId
+  const { base64Image } = req.body
+  const userId = req.params.userId
 
+  try {
     const allowedFormats = ['jpeg', 'jpg', 'png']
     const detectedFormat = base64Image.match(/^data:image\/(\w+);base64,/)
     const imageFormat = detectedFormat ? detectedFormat[1] : null
 
     if (!imageFormat || !allowedFormats.includes(imageFormat.toLowerCase())) {
-      return res.status(400).json({ msg: 'Unsupported image format. Please upload a JPEG, JPG, or PNG image.' })
+      return res.status(400).json({ error: 'Unsupported image format. Please upload a JPEG, JPG, or PNG image.' })
     }
 
     const imageBuffer = Buffer.from(base64Image.split(',')[1], 'base64')
@@ -252,7 +274,8 @@ const uploadUserProfilePic =  async (req, res, userRepository) => {
 
     res.status(200).json({ msg: 'Profile picture uploaded successfully', resizedImage: resizedImageBase64 })
   } catch (error) {
-    errorResponse(res, 500, error.message)
+    console.error('Upload profile picture error:', error.message)
+    res.status(500).json({ error: 'Failed to upload profile picture. Please try again later.' })
   }
 }
 
@@ -261,7 +284,7 @@ const getPrograms = async (req, res, userRepository) => {
 
   try {
     if (!userID) {
-      return res.status(404).json({ msg: 'User ID is not found' })
+      return res.status(404).json({ error: 'User ID is not found' })
     }
 
     const cachedPrograms = await redisClient.get(`programs:${userID}`)
@@ -281,13 +304,13 @@ const getPrograms = async (req, res, userRepository) => {
     const user = await userRepository.getUserById(userID)
 
     if (!user) {
-      return res.status(404).json({ msg: 'User not found' })
+      return res.status(404).json({ error: 'User not found' })
     }
 
     const userProgram = await Program.findById(user.programID)
 
     if (!userProgram) {
-      return res.status(404).json({ msg: 'User program is not found' })
+      return res.status(404).json({ error: 'User program is not found' })
     }
 
     const restOfPrograms = await Program.find({ _id: { $ne: userProgram._id } })
@@ -303,7 +326,8 @@ const getPrograms = async (req, res, userRepository) => {
     await redisClient.SET(`programs:${userID}`, JSON.stringify(response), {EX: DEFAULT_EXP})
     res.status(200).json({ response })
   } catch (error) {
-    errorResponse(res, 500, error.message)
+    console.error('Get programs error:', error.message)
+    res.status(500).json({ error: 'Failed to retrieve programs. Please try again later.' })
   }
 }
 

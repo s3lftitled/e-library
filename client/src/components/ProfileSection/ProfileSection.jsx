@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import useUserData from "../../../hooks/useUserData"
+import { useNavigate } from "react-router-dom"
 import api from "../../../utils/api"
 import './ProfileSection.css'
 
@@ -8,6 +9,7 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
   const [base64Image, setBase64Image] = useState('')
   const { user } = useUserData()
   const userID = localStorage.getItem("userID")
+  const navigate = useNavigate()
 
   const handleSubmission = async (e) => {
     e.preventDefault()
@@ -41,6 +43,19 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
       reader.onerror = (error) => {
         console.error("Error reading file:", error)
       }
+    }
+  }
+
+  const handleLogOut = async () => {
+    try {
+      const response = await api.delete(`users/logout/${userID}`)
+
+      if (response.status === 200) {
+        localStorage.clear()
+        navigate('/auth')
+      }
+    } catch (err) {
+      console.error("Error logging out:", err)
     }
   }
 
@@ -100,7 +115,7 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
               
               <div className="log-out-section">
                 <a>Change password?</a>
-                <button>LOG OUT</button>
+                <button onClick={() => handleLogOut()}>LOG OUT</button>
               </div>
             </div>
     

@@ -8,6 +8,7 @@ const Courses = () => {
   const [programCourses, setProgramCourses] = useState([])
   const [ showProfileSection, setShowProfileSection ] = useState(false)
   const { programID } = useParams()
+  const userID = localStorage.getItem("userID")
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -16,7 +17,7 @@ const Courses = () => {
 
     const fetchProgramCourses = async () => {
       try {
-        const response = await privateAxios.get(`/courses/${programID}/courses`)
+        const response = await privateAxios.get(`/courses/${programID}/courses/${userID}`)
         setProgramCourses(response.data.courses)
       } catch (err) {
         if (err.response) {

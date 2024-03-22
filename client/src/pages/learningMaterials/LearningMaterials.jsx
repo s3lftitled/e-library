@@ -4,14 +4,15 @@ import api from "../../../utils/api"
 
 const LearningMaterials = () => {
   const [learningMaterials, setLearningMaterials] = useState([])
-  const [selectedPdf, setSelectedPdf] = useState(null);
+  const [selectedPdf, setSelectedPdf] = useState(null)
+  const userID = localStorage.getItem("userID")
   const { courseID } = useParams()
   const navigate = useNavigate()
 
   useEffect(() => {
     const fetchLearningMaterials = async () => {
       try {
-        const response = await api.get(`/learning-materials/courses/${courseID}`)
+        const response = await api.get(`/learning-materials/courses/${courseID}/${userID}`)
         setLearningMaterials(response.data.learningMaterials)
         console.log(learningMaterials)
       } catch (err) {

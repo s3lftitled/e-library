@@ -30,12 +30,11 @@ class LearningMaterialRepository {
 
   async findLearningMaterial(learningMaterialsID) {
     try {
-      await LearningMaterial.find({ _id: { $in: learningMaterialsID } })
-    } catch (err0r) {
+      return await LearningMaterial.find({ _id: { $in: learningMaterialsID } })
+    } catch (error) {
       throw new Error(`Error finding learning material: ${error.message}`)
     }
   }
-
 }
 
 module.exports = LearningMaterialRepository

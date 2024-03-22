@@ -10,7 +10,6 @@ dotenv.config()
 // Import the connectDB function to establish a connection with MongoDB
 const connectDB = require('./db/connect')
 
-
 // Import user and e-library routes
 const users = require('./router/user')
 const departments = require('./router/departments')
@@ -32,7 +31,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 app.use(cookieParser())
-
 
 // Configure Express to parse JSON requests with a maximum size limit of 50mb
 app.use(express.json({ limit: '100mb' }))

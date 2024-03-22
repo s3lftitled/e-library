@@ -20,7 +20,7 @@ const useUserData = () => {
         console.log({ user })
       } catch (error) {
         console.log(error)
-        if (error.response && error.response.status === 401) {
+        if (error.response && error.response.status === 401 || 400 || 500) {
           console.log("Token expired. Navigating to /auth")
           navigate('/auth')
         }

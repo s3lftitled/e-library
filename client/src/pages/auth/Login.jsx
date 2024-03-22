@@ -37,17 +37,13 @@ export const Login = () => {
         alert('Logged in successfully')
         navigate('/welcome')
     } catch (err) {
-      console.error(err);
-      if (err.response?.data?.msg === 'Please verify your email first') {
-        alert(err.response.data.msg)
-        navigate(`/verify/${email}`)
-      } else if (err.response?.status === 429) {
+      if (err.response && err.response.data.error === 'Please verify your email first') {
         alert(err.response.data.error)
-      }
-       else {
-        alert(err.response?.data?.msg || 'An error occurred')
-      }
-    }
+        navigate(`/verify/${email}`)
+      } else {
+        alert('An error occurred. Please try again.');
+      } 
+     } 
   }
 
   return (

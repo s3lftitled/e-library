@@ -2,16 +2,18 @@
 const validateEmail = (email) => {
   const emailRegex = /^[a-zA-Z0-9._-]+@panpacificu\.edu\.ph$/;
   if (!emailRegex.test(email)) {
-    throw new Error('Invalid email format. Please use your panpacific email');
+    return { isValid: false, errorMessage: 'Invalid email format. Please use your panpacific email' };
   }
+  return { isValid: true }
 }
 
 // Function to validate password format
 const validatePassword = (password) => {
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
   if (!passwordRegex.test(password)) {
-    throw new Error('Password should have capital letters, numbers, and symbols');
+    return { isValid: false, errorMessage: 'Password should have capital letters, numbers, and symbols' };
   }
+  return { isValid: true }
 }
 
 // Function to validate user data

@@ -94,8 +94,8 @@
 
 .user-content-section {
   width: 100%;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 15px;
+  margin-bottom: 10px;
   justify-self: flex-start;
 }
 
@@ -114,7 +114,7 @@
 .log-out-section {
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .log-out-section a {

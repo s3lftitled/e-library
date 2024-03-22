@@ -22,9 +22,9 @@ export const Programs = () => {
         console.log({ login})
         setPrograms(response.data.response.restOfPrograms)
         setRecommendedProgram(response.data.response.recommendedPrograms)
-      } else if (user.role === "Staff") {
-        const response = await privateAxios.get(`/programs/get-programs` )
-        setPrograms(response.data.response.programs)
+      } else if (user.role === "Staff" || "Librarian") {
+        const response = await privateAxios.get(`/programs/get-programs`, user.role )
+        setPrograms(response.data.programs)
       }
     } catch (err) {
       console.log(err)

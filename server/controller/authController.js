@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt') // Importing bcrypt for password hashing
 const { redisClient } = require('../utils/redisClient')
 const mongoSanitize = require('express-mongo-sanitize')
 const { generateTokens } = require('../middleware/verifyToken')
-const {  validateEmail, validatePassword } = require('../validators/inputValidation')
+const {  validateEmail } = require('../validators/inputValidation')
 
 const logIn = async (req, res, userRepository, logRepository) => {
   try {
@@ -12,15 +12,14 @@ const logIn = async (req, res, userRepository, logRepository) => {
     // Destructure request body
     const { email, password } = req.body 
 
-    // Validate email format
-    validateEmail(email)
-
-    // Validate password format
-    validatePassword(password)
+    const emailValidationResult = validateEmail(email)
+    if (!emailValidationResult.isValid) {
+      return res.status(400).json({ error: emailValidationResult.errorMessage })
+    }
 
     // Validate email format
     if (req.body.email && typeof req.body.email === 'object') {
-      return res.status(400).json({ error: 'Invalid email format' });
+      return res.status(400).json({ error: 'Invalid email format' })
     }
 
     // Find user by email
@@ -44,12 +43,18 @@ const logIn = async (req, res, userRepository, logRepository) => {
 
     const logData = {
       userId: user._id,
-      userProgramId: user.programID, 
-      userDepartmentId: user.departmentID, 
       timestamp: new Date(),
       action: 'login',
     }
-    
+
+     // Add user's program ID and department ID to logData if they exist
+     if (user.programID) {
+      logData.userProgramId = user.programID;
+    }
+    if (user.departmentID) {
+      logData.userDepartmentId = user.departmentID;
+    }
+
     const options = {
       timeZone: 'Asia/Manila',
       year: 'numeric',
@@ -65,16 +70,17 @@ const logIn = async (req, res, userRepository, logRepository) => {
 
     logData.timestamp = formattedDateTime
 
-
-    // Save login activity to the database
-    await logRepository.createLog(logData)
+    // Save login activity to the database only if program ID and department ID exist
+    if (logData.userProgramId && logData.userDepartmentId) {
+      await logRepository.createLog(logData)
+    }
 
     const tokens = generateTokens(user)
 
     const accessToken = tokens.accessToken
     const refreshToken = tokens.refreshToken
 
-    res.cookie('refreshToken', refreshToken, { httpOnly: true });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true })
     res.cookie('accessToken', accessToken, { httpOnly: true })
 
     console.log('access:', accessToken)
@@ -90,7 +96,7 @@ const logIn = async (req, res, userRepository, logRepository) => {
   } catch (error) {
     // Handle errors
     console.error('Error logging in:', error);
-    res.status(500).json({ error : 'Error logging in. Please try again later.' })
+    res.status(500).json({ error : `Error logging in. ${error.message} ` })
   }
 }
 

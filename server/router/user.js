@@ -34,7 +34,7 @@ router.post('/staff-registration', (req, res) => staffRegistration(req, res, use
 router.post('/verify-email',(req, res) => verifyEmail(req, res, userRepository) )
 
 // User Log In endpoint
-router.post('/login', limiter, (req, res) => logIn(req, res, userRepository, logRepository))
+router.post('/login',  (req, res) => logIn(req, res, userRepository, logRepository))
 
 // User Log Out endpoint
 router.delete('/logout/:userID', logOut)

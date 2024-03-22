@@ -59,6 +59,10 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
     }
   }
 
+  const navigateToDashboard = () => {
+    navigate('/admin-dashboard')
+  }
+
   return (
     <>
       {!showProfileSection ? (
@@ -109,6 +113,7 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
               <div className="user-content-section">
                 <h2>NOTES</h2>
                 <h2>BOOKSHELF</h2>
+                { user.role === 'Librarian' && <h2 onClick={() => navigateToDashboard()}>DASHBOARD</h2>}
               </div>
 
               <div className="separator-underline"></div>

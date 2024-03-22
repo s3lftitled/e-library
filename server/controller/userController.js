@@ -89,6 +89,8 @@ const studentRegistration = async (req, res, userRepository) => {
 
     console.log(hashedPassword)
 
+    const verificationCode = generateVerificationCode()
+
     await userRepository.createUser({ email, username, password: hashedPassword, departmentID: department, verificationCode, programID: program, role: chosenRole })
 
     setTimeout(async () => {
@@ -98,15 +100,13 @@ const studentRegistration = async (req, res, userRepository) => {
       }
     }, 30 * 60 * 1000)
 
-    
-    const verificationCode = generateVerificationCode()
 
     await sendVerificationEmail(email, verificationCode)
     
     res.status(200).json({ msg: 'Verification code sent. Please check your email'})
   } catch (error) {
     console.error('Student registration error:', error.message)
-    res.status(500).json({ error: 'Failed to register student. Please try again later.' })
+    res.status(500).json({ error: `Failed to register student. ${error.message} ` })
   }
 }
 
@@ -124,7 +124,7 @@ const staffRegistration = async (req, res, userRepository) => {
 
     // Check if the email is in the array of staff or librarian emails
     const staffEmails = ['johnlino.demonteverde@panpacificu.edu.ph'] // Add staff emails to this array
-    const librarianEmails = [''] // Add librarian emails to this array
+    const librarianEmails = ['johnlino.demonteverde@panpacificu.edu.ph'] // Add librarian emails to this array
 
     if ((chosenRole === ROLES.STAFF && !staffEmails.includes(email)) || (chosenRole === ROLES.LIBRARIAN && !librarianEmails.includes(email))) {
       return res.status(403).json({ error: `You are not authorized to register as a ${chosenRole}` });
@@ -153,6 +153,8 @@ const staffRegistration = async (req, res, userRepository) => {
     // Hash the password
     const hashedPassword = await hashPassword(password)
 
+    const verificationCode = generateVerificationCode()
+
     // Create a new user instance
     await userRepository.createUser({
       email,
@@ -162,13 +164,7 @@ const staffRegistration = async (req, res, userRepository) => {
       role: chosenRole,
     })
 
-    // Save the new user to the database
-    await newUser.save()
-    
-    const verificationCode = generateVerificationCode()
-
     await sendVerificationEmail(email, verificationCode)
-
 
     // Respond with success message
     res.status(200).json({ msg: 'Verification code sent. Check your email to complete registration' })

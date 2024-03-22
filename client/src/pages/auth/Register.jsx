@@ -87,9 +87,12 @@ export const Register = () => {
       }
     } catch (err) {
       if (err.response && err.response.data) {
-        alert(err.response.data.msg)
-      }
-    } finally {
+        alert(err.response.data.error || 'An error occurred. Please try again.');
+      } else {
+        alert('An error occurred. Please try again.');
+      } 
+      } 
+      finally {
       setTimeout(() => {
         setIsButtonDisabled(false)
       }, 3000)

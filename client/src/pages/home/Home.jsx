@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Programs } from './Programs'
+import { Programs } from './Programs/Programs'
 import './home.css'
 import { ProfileSection } from '../../components/ProfileSection/ProfileSection'
 

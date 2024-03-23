@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react"
 import useUserData from "../../../hooks/useUserData"
+import { memo } from "react"
 import { useNavigate } from "react-router-dom"
 import api from "../../../utils/api"
 import './ProfileSection.css'
 
-export const ProfileSection = ({ showProfileSection, setShowProfileSection }) => {
+export const ProfileSection = memo(({ showProfileSection, setShowProfileSection }) => {
   const [isUploading, setIsUploading] = useState(false)
   const [base64Image, setBase64Image] = useState('')
   const { user } = useUserData()
   const userID = localStorage.getItem("userID")
-  const navigate = useNavigate()
+  const navigate = useNavigate() 
 
   const handleSubmission = async (e) => {
     e.preventDefault()
@@ -134,5 +135,5 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
       )}
     </>
   )
-}
+})
 

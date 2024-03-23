@@ -1,3 +1,54 @@
+.learning-materials-container {
+  height: 100%;
+  min-width: 100%;
+  font-family: 'Lexend';
+}
+
+.learning-materials-container header {
+  display: flex;
+  flex-direction: row;
+  height: 130px;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  background-color: #4E7133;
+  min-width: 100%;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.learning-materials-container header:hover{
+  background-color: #0C359E;
+}
+
+header .header-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-left: 80px;
+}
+
+.header-content h1 {
+  font-size: 1.7rem;
+  margin-left: 2vh;
+}
+
+.materials-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-left: 25px;
+}
+
+.material {
+  height: 300px;
+  width: 180px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+  margin: 25px;
+}
+
 .pdf-container {
   width: 100%;
   max-width: 800px;

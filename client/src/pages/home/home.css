@@ -47,7 +47,7 @@
 /* Library Section CSS */
 
 .library-section {
-  max-height: 750px;
+  max-height: 100vh;
   position: relative; 
   overflow-y: auto;
   z-index: 0; 

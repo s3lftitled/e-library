@@ -26,12 +26,12 @@ class CourseRepository {
     }
   }
 
-  async findAndValidateCourse(courseID) {
+  async findAndValidateCourse(courseId) {
     try {
-      if (!isValidObjectId(courseID)) {
+      if (!isValidObjectId(courseId)) {
         throw new Error('Invalid course ID')
       }
-      const course = await Course.findOne({ _id: courseID })
+      const course = await Course.findOne({ _id: courseId })
       if (!course) {
         throw new Error('Course not found')
       }

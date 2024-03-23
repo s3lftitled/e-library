@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Programs } from './Programs/Programs'
-import './home.css'
+import './Home.css'
 import { ProfileSection } from '../../components/ProfileSection/ProfileSection'
 
 const Home = () => {

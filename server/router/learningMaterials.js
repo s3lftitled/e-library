@@ -13,7 +13,7 @@ const {
 const courseRepository = new CourseRepository()
 const learningMaterialRepository = new LearningMaterialRepository()
 
-router.post('/courses/:courseId', upload, checkRole([ROLES.LIBRARIAN]), 
+router.post('/courses/:courseId', upload, 
   (req, res) => uploadMaterial(req, res, courseRepository, learningMaterialRepository)
 )
 

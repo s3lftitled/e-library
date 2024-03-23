@@ -29,7 +29,7 @@ function App() {
        <Route path="/courses/:programID" element={<Courses />} />
        <Route path="/verify/:email" element={<VerificationCodeInput />} />
        <Route path="/form" element={<Form />} />
-       <Route path="/learning-materials/:courseID" element={<LearningMaterials />} />
+       <Route path="/learning-materials/:courseID/:programID" element={<LearningMaterials />} />
        <Route path="/upload-learning-material" element={<FileUploadComponent />} />
        <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />
        <Route path="/admin-dashboard" element={<AdminDashboard />} />

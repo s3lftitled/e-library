@@ -6,24 +6,29 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pd
 
 const PdfViewer = ({ pdfUrl }) => {
   const [pageNumber, setPageNumber] = useState(1)
+  const [numPages, setNumPages] = useState(null)
 
   const onNextPage = () => {
-    setPageNumber(prevPageNumber => prevPageNumber + 1)
+    setPageNumber(prevPageNumber => Math.min(prevPageNumber + 1, numPages)) 
   }
 
   const onPrevPage = () => {
     setPageNumber(prevPageNumber => Math.max(1, prevPageNumber - 1))
   }
 
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages)
+  }
+
   return (
     <div>
-      <Document file={pdfUrl}>
+      <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
         <Page pageNumber={pageNumber} />
       </Document>
       <div>
         <button onClick={onPrevPage} disabled={pageNumber <= 1}>Previous Page</button>
-        <span>Page {pageNumber}</span>
-        <button onClick={onNextPage}>Next Page</button>
+        <span>Page {pageNumber} / {numPages}</span>
+        <button onClick={onNextPage} disabled={pageNumber >= numPages}>Next Page</button>
       </div>
     </div>
   )

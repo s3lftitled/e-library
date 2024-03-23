@@ -4,7 +4,7 @@ const { app } = require('../config/firebase.config')
 
 const storage = getStorage(app)
 
-const uploadMaterial = async (req, res, learningMaterialRepository, courseRepository) => {
+const uploadMaterial = async (req, res, courseRepository, learningMaterialRepository) => {
   const { courseId } = req.params
   const title = req.body.title
   const file = req.file
@@ -109,7 +109,7 @@ const getMaterial = async (req, res, learningMaterialRepository) => {
   try {
     const { materialID, userID } = req.params
 
-    const cachedMaterials = await redisClient.get(`material:${userID}`)
+    const cachedMaterials = await redisClient.get(`material:${materialID}${userID}`)
 
     if (cachedMaterials) {
       try {
@@ -138,7 +138,7 @@ const getMaterial = async (req, res, learningMaterialRepository) => {
 
     // Attach the download URL to the material object
     const materialWithUrl = { ...material.toObject(), downloadUrl }
-    await redisClient.SET(`material:${userID}`, JSON.stringify(materialWithUrl), {EX: DEFAULT_EXP})
+    await redisClient.SET(`material:${materialID}${userID}`, JSON.stringify(materialWithUrl), {EX: DEFAULT_EXP})
     res.status(200).json({ material: materialWithUrl })
   } catch (error) {
     console.error('Error retrieving material:', error)

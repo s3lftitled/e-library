@@ -17,12 +17,12 @@ class CourseRepository {
     }
   }
 
-  async createCourse() {
+  async createCourse(title) {
     try {
       const course = new Course({ title })
       return await course.save() 
     } catch (error) {
-      throw new Error(`Error creating department ${error.message}`)
+      throw new Error(`Error creating course ${error.message}`)
     }
   }
 

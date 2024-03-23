@@ -12,7 +12,7 @@ const courseRepository = new CourseRepository()
 const programRepository = new ProgramRepository()
 
 // Create a course within a program
-router.post('/programs/:programId/courses', (req, res) => createCourse(req, res, courseRepository, programRepository ))
+router.post('/programs/:programID/create-course', (req, res) => createCourse(req, res, courseRepository, programRepository ))
 
 // GET courses within a program
 router.get('/:programId/courses/:userID', (req, res) => getCoursesWithInPrograms(req, res, programRepository))

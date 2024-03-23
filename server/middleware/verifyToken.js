@@ -25,8 +25,7 @@ const verifyToken = (req, res, next) => {
   if (!token) {
     return res.status(401).send("Unauthorized: Missing token")
   }
-
-  console.log('Received token:', token)
+  
   const secretKey = process.env.SECRET_KEY
 
   if (!secretKey) {

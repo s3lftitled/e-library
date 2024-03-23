@@ -1,17 +1,19 @@
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
 
 const createCourse = async (req, res, courseRepository, programRepository) => {
-  const { programId } = req.params
-  const { title } = req.body
+  const { programID }  = req.params
+  const { title }  = req.body
 
   try {
+    console.log(programID)
+    console.log(title)
     // Validate input data
     if (!title || typeof title !== 'string') {
       return res.status(400).json({ error: 'Title is required and must be a string' });
     }
 
     // Find the program by ID
-    const program = await programRepository.findProgramByID(programId)
+    const program = await programRepository.findProgramByID(programID)
 
     // If program not found, return an error
     if (!program) {
@@ -31,7 +33,7 @@ const createCourse = async (req, res, courseRepository, programRepository) => {
 
     // Add the new course to the program's list of courses
     program.courses.push(course._id)
-    await programRepository.updateProgramCourses(programId, program.courses)
+    await programRepository.updateProgramCourses(programID, program.courses)
     
     // Respond with the created course
     res.status(201).json(course)

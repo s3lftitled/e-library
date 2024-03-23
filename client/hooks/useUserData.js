@@ -15,9 +15,6 @@ const useUserData = () => {
           { withCredentials: true }
         )
         setUser(response.data.currentUser)
-        console.log(user.departmentName)
-        console.log(user.programName)
-        console.log({ user })
       } catch (error) {
         console.log(error)
         if (error.response && error.response.status === 401 || 400 || 500) {

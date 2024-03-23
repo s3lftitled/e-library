@@ -5,6 +5,7 @@ import ProgramSearch from './ProgramSearch'
 import { useNavigate } from 'react-router-dom'
 import RecommendedProgram from './RecommendedProgram'
 import ProgramCard from './ProgramCard'
+import FloatingButton from '../../../components/FloatingButton/FloatingButton'
 
 export const Programs = () => {
   const { user } = useUserData()
@@ -14,6 +15,7 @@ export const Programs = () => {
   const [searchResults, setSearchResults] = useState([])
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState({ recommendedProgram: null, programs: [] })
+  const [programID, setProgramID] = useState(null)
 
   useEffect(() => {
     const fetchPrograms = async () => {
@@ -42,6 +44,10 @@ export const Programs = () => {
 
   const navigateToCourses = (programID) => {
     navigate(`/courses/${programID}`)
+  }
+
+  const navigateToForm = () => {
+    navigate(`/form/program/null`)
   }
 
   useEffect(() => {
@@ -82,6 +88,7 @@ export const Programs = () => {
           />
         ))}
       </div>
+      <FloatingButton onClick={() => navigateToForm()}/>
     </div>
   )
 }

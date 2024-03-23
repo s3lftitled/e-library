@@ -20,6 +20,7 @@ const createProgram =  async (req, res, programRepository) => {
   const { title, description } = req.body
   
   try {
+    console.log('creating program...')
     // Check if required fields are filled
     if (!title || !description) {
       return res.status(500).json({ error: 'Please provide both title and description'})

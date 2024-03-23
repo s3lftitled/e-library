@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { privateAxios } from "../../../utils/api"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
+import FloatingButton from "../../components/FloatingButton/FloatingButton"
 import './courses.css'
 
 const Courses = () => {
@@ -41,6 +42,10 @@ const Courses = () => {
     navigate(`/learning-materials/${courseID}/${programID}`)
   }
 
+  const navigateToForm = () => {
+    navigate(`/form/course/${programID}`)
+  }
+
   return (
     <div className="courses-div">
       <header>
@@ -68,6 +73,7 @@ const Courses = () => {
         )
         }
       </main>
+      <FloatingButton onClick={() => navigateToForm()}/>
     </div>
   )
 }

@@ -279,6 +279,7 @@ const getPrograms = async (req, res, userRepository) => {
   const { userID } = req.params
 
   try {
+    console.log(userID)
     if (!userID) {
       return res.status(404).json({ error: 'User ID is not found' })
     }
@@ -309,7 +310,11 @@ const getPrograms = async (req, res, userRepository) => {
       return res.status(404).json({ error: 'User program is not found' })
     }
 
+    console.log(userProgram)
+
     const restOfPrograms = await Program.find({ _id: { $ne: userProgram._id } })
+
+    console.log('Rest:', restOfPrograms)
 
     const recommendedPrograms = userProgram
 

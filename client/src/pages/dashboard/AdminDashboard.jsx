@@ -20,7 +20,7 @@ const AdminDashboard = () => {
 
   const fetchPieChartData = async () => {
     try {
-      const response = await api.get('/admin-dashboard/get-statistics');
+      const response = await api.get('/admin-dashboard/get-statistics')
       setElibraryStats(response.data.elibraryStats)
       setTotalUserCount(response.data.totalCount)
     } catch (error) {

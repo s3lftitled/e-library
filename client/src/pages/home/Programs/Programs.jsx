@@ -15,19 +15,22 @@ export const Programs = () => {
   const [searchResults, setSearchResults] = useState([])
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState({ recommendedProgram: null, programs: [] })
-  const [programID, setProgramID] = useState(null)
+  const userID = localStorage.getItem("userID")
 
   useEffect(() => {
+    console.log(userID)
+    console.log(user.role)
     const fetchPrograms = async () => {
       setLoading(true)
       try {
         let response
         if (user.role === 'Student') {
-          response = await privateAxios.get(`/users/${user.id}/programs`, user.role, { withCredentials: true })
+          response = await privateAxios.get(`/users/${userID}/programs`, user.role, { withCredentials: true })
         } else if (user.role === 'Staff' || user.role === 'Librarian') {
           response = await privateAxios.get(`/programs/get-programs`, { params: { role: user.role } })
         }
-        setData({ recommendedProgram: response?.data?.response?.recommendedPrograms || null, programs: response?.data?.programs || [] })
+        setData({ recommendedProgram: response?.data?.response?.recommendedPrograms || null, programs: response?.data?.response?.restOfPrograms || [] })
+        console.log(data)
       } catch (err) {
         console.log(err)
         if (err.response && err.response.status === 401) {
@@ -40,7 +43,7 @@ export const Programs = () => {
     }
 
     fetchPrograms()
-  }, [user, privateAxios, navigate])
+  }, [user, user._id, privateAxios, navigate])
 
   const navigateToCourses = (programID) => {
     navigate(`/courses/${programID}`)

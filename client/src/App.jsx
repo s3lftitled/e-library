@@ -28,15 +28,14 @@ function App() {
             <Route element={<PersistLogin />}>
               <Route path="/" element={<Home />} />
               <Route path="/courses/:programID" element={<Courses />} />
-              <Route path="/verify/:email" element={<VerificationCodeInput />} />
-             
+              <Route path="/verify/:email" element={<VerificationCodeInput />} />         
               <Route path="/learning-materials/:courseID/:programID" element={<LearningMaterials />} />
               <Route path="/upload-learning-material" element={<FileUploadComponent />} />
               <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />
-              <Route element={<ProtectedRoute allowedRoles={['Librarian']} />}>
+              <Route element={<ProtectedRoute allowedRoles={['Student']} />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
               </Route>
-              <Route element={<ProtectedRoute allowedRoles={['Librarian']} />}>
+              <Route element={<ProtectedRoute allowedRoles={['Student']} />}>
                 <Route path="/form/:type/:programID" element={<Form />} />
               </Route>
             </Route>

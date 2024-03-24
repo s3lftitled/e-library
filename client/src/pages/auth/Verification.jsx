@@ -21,7 +21,9 @@ const VerificationCodeInput = () => {
       navigate('/auth')
     } catch (error) {
       if (error.response && error.response.data) {
-        alert(error.response.data.msg)
+        alert(error.response.data.error || 'An error occurred. Please try again.')
+      } else {
+        alert('An error occurred. Please try again.')
       }
     }
   }

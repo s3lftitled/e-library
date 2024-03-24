@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 
 const ChartComponent = ({ data }) => {
@@ -6,9 +6,18 @@ const ChartComponent = ({ data }) => {
 
   const { daily, weekly, monthly } = data
 
+  useEffect(() => {
+    console.log(data)
+    console.log(selectedProgram)
+  }, [data, selectedProgram])
+
   const dailyVisitorData = { label: 'Daily', total: daily.totalUniqueVisitors }
   const weeklyVisitorData = { label: 'Weekly', total: weekly.totalUniqueVisitors }
   const monthlyVisitorData = { label: 'Monthly', total: monthly.totalUniqueVisitors }
+
+  useEffect(() => {
+    console.log(weeklyVisitorData)
+  }, [weeklyVisitorData])
 
   const visitorLabels = ['Daily', 'Weekly', 'Monthly']
   const visitorDatasets = [
@@ -21,7 +30,7 @@ const ChartComponent = ({ data }) => {
     },
   ]
 
-    const selectedProgramData = {
+  const selectedProgramData = {
     daily: daily.programCounts[selectedProgram] || 0,
     weekly: weekly.programCounts[selectedProgram] || 0,
     monthly: monthly.programCounts[selectedProgram] || 0,
@@ -32,7 +41,7 @@ const ChartComponent = ({ data }) => {
     {
       label: selectedProgram,
       data: [selectedProgramData.daily, selectedProgramData.weekly, selectedProgramData.monthly],
-      backgroundColor: 'rgba(255, 99, 132, 0.2)', // Adjust colors as needed
+      backgroundColor: 'rgba(255, 99, 132, 0.2)', 
       borderColor: 'rgba(255, 99, 132, 1)',
       borderWidth: 1,
     },
@@ -58,7 +67,7 @@ const ChartComponent = ({ data }) => {
 
       <h2>Total Visitor By Program</h2>
       <select value={selectedProgram} onChange={handleProgramChange}>
-        {Object.keys(daily.programCounts).map((program) => (
+        {Object.keys(monthly.programCounts).map((program) => (
           <option key={program} value={program}>
             {program}
           </option>
@@ -69,4 +78,6 @@ const ChartComponent = ({ data }) => {
   )
 }
 
-export default ChartComponent;
+export default ChartComponent
+
+

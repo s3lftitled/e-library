@@ -1,7 +1,10 @@
-const ProgramRepository = require('../repositories/programRepository')
-const DepartmentRepository = require('../repositories/departmentRepository')
+// Import necessary modules and packages
 const express = require('express')
 const router = express.Router()
+
+// Import repositories, middleware, and controllers
+const ProgramRepository = require('../repositories/programRepository')
+const DepartmentRepository = require('../repositories/departmentRepository')
 const { verifyToken } = require('../middleware/verifyToken')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const { 
@@ -10,25 +13,27 @@ const {
   getDepartmentPrograms
 } = require('../controller/programController')
 
+// Create instances of repositories
 const programRepository = new ProgramRepository()
 const departmentRepository = new DepartmentRepository()
 
-// Create a program
+// Route for creating a program
 router.post('/create-programs', (req, res) => createProgram(req, res, programRepository))
 
-// GET all the programs
+// Route for getting all programs
 router.get('/get-programs', 
-  verifyToken, 
-  checkRole([ROLES.STAFF, ROLES.LIBRARIAN]),
+  verifyToken, // Middleware to verify token
+  checkRole([ROLES.STAFF, ROLES.LIBRARIAN]), // Middleware to check role
   (req, res) => {
     getAllPrograms(req, res, programRepository)
   }
 )
 
-// Get programs of a department
+// Route for getting programs of a department
 router.get('/get-department-programs/:departmentID', 
   (req, res) => 
     getDepartmentPrograms(req, res, programRepository, departmentRepository)
 )
 
+// Export the router for use in other files
 module.exports = router

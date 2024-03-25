@@ -2,12 +2,14 @@ const { Department } = require('../models/e-book')
 
 class DepartmentRepository {
   constructor() {
+    // Singleton pattern implementation
     if (!DepartmentRepository.instance) {
-      this.instance = this;
+      DepartmentRepository.instance = this
     }
-    return this.instance;
+    return this.instance
   }
 
+  // Method to create a new department
   async createDepartment() {
     try {
       const department = new Department({ title })
@@ -17,6 +19,7 @@ class DepartmentRepository {
     }
   }
 
+    // Method to find an existing department by title
   async findExistingDepartment(title) {
     try {
       return await Department.findOne({ title: { $regex: new RegExp(`^${title}$`, 'i') } })
@@ -25,6 +28,7 @@ class DepartmentRepository {
     }
   }
 
+   // Method to find a department by ID
   async findDepartmentByID(departmentID) {
     try { 
       return await Department.findById(departmentID)
@@ -33,6 +37,7 @@ class DepartmentRepository {
     }
   }
 
+   // Method to check if a program exists in a department
   async findExistingProgramInADept(programID) {
     try { 
       return await Department.findOne({ programs: programID })
@@ -41,6 +46,7 @@ class DepartmentRepository {
     }
   }
 
+   // Method to fetch all departments
   async getAllDepartments() {
     try {
       return await Department.find({})
@@ -49,11 +55,12 @@ class DepartmentRepository {
     }
   }
 
+  // Method to update a department's programs
   async updateDepartmentPrograms(departmentID, programs) {
     try {
-      return await Department.findByIdAndUpdate(departmentID, { programs }, { new: true });
+      return await Department.findByIdAndUpdate(departmentID, { programs }, { new: true })
     } catch (error) {
-      throw new Error(`Error updating department programs: ${error.message}`);
+      throw new Error(`Error updating department programs: ${error.message}`)
     }
   }
   

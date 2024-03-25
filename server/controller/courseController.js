@@ -1,12 +1,19 @@
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
 
+/**
+ * Creates a new course within a program.
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {CourseRepository} courseRepository - The course repository instance.
+ * @param {ProgramRepository} programRepository - The program repository instance.
+ * @returns {void}
+ */
 const createCourse = async (req, res, courseRepository, programRepository) => {
   const { programID }  = req.params
   const { title }  = req.body
 
   try {
-    console.log(programID)
-    console.log(title)
     // Validate input data
     if (!title || typeof title !== 'string') {
       return res.status(400).json({ error: 'Title is required and must be a string' });
@@ -44,6 +51,14 @@ const createCourse = async (req, res, courseRepository, programRepository) => {
   }
 }
 
+/**
+ * Retrieves all courses within a program.
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {ProgramRepository} programRepository - The program repository instance.
+ * @returns {void}
+ */
 const getCoursesWithInPrograms = async (req, res, programRepository) => {
   const { programId, userID } = req.params
 
@@ -52,16 +67,19 @@ const getCoursesWithInPrograms = async (req, res, programRepository) => {
     // Find the program by ID and populate the courses field
     if (cachedCourses) {
       try {
+         // Respond with cached courses if available
         const courses = JSON.parse(cachedCourses)
         res.status(200).json({ courses })
         return
       } catch (err) {
+         // Handle parsing error
         console.error('Error parsing cached programs:', err)
         res.status(500).json({ error: 'Error retrieving programs from Redis' })
         return
       }
     }
 
+     // Find the program by ID and populate the courses field
     const program = await programRepository.findProgramByIdWithCourses(programId)
 
     // If program not found, return an error
@@ -71,7 +89,9 @@ const getCoursesWithInPrograms = async (req, res, programRepository) => {
 
     // Extract the courses from the program and respond
     const courses = program.courses
+    // Cache the retrieved courses for the given user ID in Redis with expiration time
     await redisClient.SET(`courses:${userID}`, JSON.stringify(courses), {EX: DEFAULT_EXP})
+    // Respond with the retrieved courses
     res.status(200).json({ courses })
   } catch (error) {
     // Handle errors and respond with an error message

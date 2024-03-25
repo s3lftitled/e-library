@@ -3,12 +3,14 @@ const { Program } = require('../models/e-book')
 
 class UserRepository {
   constructor() {
+    // Singleton pattern implementation
     if (!UserRepository.instance) {
-      this.instance = this
+      UserRepository.instance = this
     }
     return this.instance
   }
 
+  // Method to create a new user
   async createUser(userData) {
     try {
       const newUser = new User(userData)
@@ -18,6 +20,7 @@ class UserRepository {
     }
   }
 
+  // Method to get a user by ID
   async getUserById(userId) {
     try {
       return await User.findById(userId)
@@ -26,6 +29,7 @@ class UserRepository {
     }
   }
 
+  // Method to update a user
   async updateUser(userId, updatedData) {
     try {
       return await User.findByIdAndUpdate(userId, updatedData, { new: true })
@@ -34,6 +38,7 @@ class UserRepository {
     }
   }
 
+  // Method to delete a user
   async deleteUser(userId) {
     try {
       return await User.findByIdAndDelete(userId)
@@ -42,6 +47,7 @@ class UserRepository {
     }
   }
 
+  // Method to find and delete a user
   async findOneAndDelete(filter) {
     try {
       return await User.findOneAndDelete(filter)
@@ -50,6 +56,7 @@ class UserRepository {
     }
   }
 
+  // Method to find a user by email
   async findUserByEmail(email) {
     try {
       return await User.findOne({ email: email })
@@ -58,6 +65,7 @@ class UserRepository {
     }
   }
 
+  // Method to find an existing user
   async findExistingUser(email) {
     try {
       return await User.findOne({ email })
@@ -66,15 +74,19 @@ class UserRepository {
     }
   }
 
+  // Method to get total user count and program-wise distribution
   async getTotalUserCount() {
     try {
+      // Aggregate query to get user statistics
       const elibraryStats = await User.aggregate([
+        // Group by programID and count users
         {
           $group: {
             _id: '$programID',
             count: { $sum: 1 },
           },
         },
+        // Group again to calculate total users and program-wise distribution
         {
           $group: {
             _id: null,
@@ -87,9 +99,11 @@ class UserRepository {
             },
           },
         },
+        // Unwind programs array
         {
           $unwind: { path: '$programs', preserveNullAndEmptyArrays: true },
         },
+        // Lookup program information
         {
           $lookup: {
             from: 'programs',
@@ -98,9 +112,11 @@ class UserRepository {
             as: 'program',
           },
         },
+        // Unwind program array
         {
           $unwind: { path: '$program', preserveNullAndEmptyArrays: true },
         },
+        // Project data
         {
           $project: {
             program: {
@@ -115,6 +131,7 @@ class UserRepository {
             count: '$programs.count', // Add count of students for each program
           },
         },
+        // Group by program to get final statistics
         {
           $group: {
             _id: '$program',
@@ -122,6 +139,7 @@ class UserRepository {
             count: { $sum: '$count' }, // Sum up the count of students for each program
           },
         },
+        // Project final output
         {
           $project: {
             program: '$_id',
@@ -132,8 +150,10 @@ class UserRepository {
         },
       ])
 
+      // Get all programs
       const allPrograms = await Program.find({})
 
+      // Map statistics to program data
       const result = allPrograms.map(program => {
         const matchingStat = elibraryStats.find(stat => stat.program === program.title)
         return {
@@ -143,10 +163,13 @@ class UserRepository {
         }
       })
 
-      const resultWithoutMinorSubjects = result.filter(entry => entry.program !== "Minor subjects");
+      // Filter out minor subjects from the result
+      const resultWithoutMinorSubjects = result.filter(entry => entry.program !== "Minor subjects")
 
+      // Calculate total user count
       const totalCount = elibraryStats.reduce((acc, stat) => acc + stat.count, 0)
 
+      // Return final statistics
       return { elibraryStats: resultWithoutMinorSubjects, totalCount }
     } catch (error) {
       throw new Error(error.message)
@@ -154,5 +177,5 @@ class UserRepository {
   }
 }
 
-
 module.exports = UserRepository
+

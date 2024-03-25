@@ -3,12 +3,14 @@ const { isValidObjectId } = require('mongoose')
 
 class CourseRepository {
   constructor() {
+    // Singleton pattern implementation
     if (!CourseRepository.instance) {
-      this.instance = this
+      CourseRepository.instance = this
     }
     return this.instance
   }
 
+  // Method to find an existing course by title
   async findExistingCourseByTitle(title) {
     try { 
       return await Course.findOne({ title: { $regex: new RegExp(`^${title}$`, 'i') } })
@@ -17,6 +19,7 @@ class CourseRepository {
     }
   }
 
+  // Method to create a new course
   async createCourse(title) {
     try {
       const course = new Course({ title })
@@ -26,6 +29,7 @@ class CourseRepository {
     }
   }
 
+  // Method to find and validate a course by ID
   async findAndValidateCourse(courseId) {
     try {
       if (!isValidObjectId(courseId)) {
@@ -41,6 +45,7 @@ class CourseRepository {
     }
   }
 
+  // Method to add a learning material to a course
   async addLearningMaterialToCourse(courseID, learningMaterialID) {
     try {
       const course = await Course.findById(courseID)
@@ -48,10 +53,8 @@ class CourseRepository {
         throw new Error('Course not found')
       }
 
-      // Push the learning material ID to the course's learningMaterials array
       course.learningMaterials.push(learningMaterialID)
 
-      // Save the updated course
       await course.save()
 
       return course

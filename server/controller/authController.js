@@ -2,8 +2,17 @@ const bcrypt = require('bcrypt') // Importing bcrypt for password hashing
 const { redisClient } = require('../utils/redisClient')
 const mongoSanitize = require('express-mongo-sanitize')
 const { generateTokens } = require('../middleware/verifyToken')
-const {  validateEmail } = require('../validators/inputValidation')
+const { validateEmail } = require('../validators/inputValidation')
 
+/**
+ * Logs in a user by verifying email and password, generating tokens, and setting cookies.
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {UserRepository} userRepository - The user repository instance.
+ * @param {LogRepository} logRepository - The log repository instance.
+ * @returns {void}
+ */
 const logIn = async (req, res, userRepository, logRepository) => {
   try {
     // Sanitize user input
@@ -12,14 +21,10 @@ const logIn = async (req, res, userRepository, logRepository) => {
     // Destructure request body
     const { email, password } = req.body 
 
+    // Validate email format
     const emailValidationResult = validateEmail(email)
     if (!emailValidationResult.isValid) {
       return res.status(400).json({ error: emailValidationResult.errorMessage })
-    }
-
-    // Validate email format
-    if (req.body.email && typeof req.body.email === 'object') {
-      return res.status(400).json({ error: 'Invalid email format' })
     }
 
     // Find user by email
@@ -41,20 +46,22 @@ const logIn = async (req, res, userRepository, logRepository) => {
       return res.status(400).json({ error: 'Please verify your email first'})
     }
 
+    // Prepare log data
     const logData = {
       userId: user._id,
       timestamp: new Date(),
       action: 'login',
     }
 
-     // Add user's program ID and department ID to logData if they exist
-     if (user.programID) {
+    // Add user's program ID and department ID to logData if they exist
+    if (user.programID) {
       logData.userProgramId = user.programID;
     }
     if (user.departmentID) {
       logData.userDepartmentId = user.departmentID;
     }
 
+    // Format timestamp
     const options = {
       timeZone: 'Asia/Manila',
       year: 'numeric',
@@ -65,27 +72,23 @@ const logIn = async (req, res, userRepository, logRepository) => {
       minute: '2-digit',
       second: '2-digit',
     }
-
-    const formattedDateTime = logData.timestamp.toLocaleString('en-PH', options)
-
-    logData.timestamp = formattedDateTime
+    logData.timestamp = logData.timestamp.toLocaleString('en-PH', options)
 
     // Save login activity to the database only if program ID and department ID exist
     if (logData.userProgramId && logData.userDepartmentId) {
       await logRepository.createLog(logData)
     }
 
+    // Generate tokens
     const tokens = generateTokens(user)
 
+    // Set cookies with access and refresh tokens
     const accessToken = tokens.accessToken
     const refreshToken = tokens.refreshToken
-
     res.cookie('refreshToken', refreshToken, { httpOnly: true })
     res.cookie('accessToken', accessToken, { httpOnly: true })
 
-    console.log('access:', accessToken)
-    console.log("refresh:", refreshToken)
-
+    // Send response with tokens and user information
     res.status(200).json({
       accessToken,
       refreshToken,
@@ -100,20 +103,28 @@ const logIn = async (req, res, userRepository, logRepository) => {
   }
 }
 
-const logOut =  async (req, res) => {
+/**
+ * Logs out a user by clearing cookies and deleting user-related data from Redis.
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {void}
+ */
+const logOut = async (req, res) => {
   const { userID } = req.params
   try {
-    // Clear cookies (assuming you're using cookies for authentication)
+    // Clear cookies
     res.clearCookie('accessToken')
     res.clearCookie('refreshToken')
 
-    console.log(`user-details:${userID}`)
+    // Delete user-related data from Redis
     await redisClient.del(`user-details:${userID}`)
     await redisClient.del(`programs:${userID}`)
     await redisClient.del(`courses:${userID}`)
     await redisClient.del(`materials:${userID}`)
     await redisClient.del(`material:${userID}`)
 
+    // Send success message
     res.status(200).json({ msg: 'Logged out successfully' })
   } catch (error) {
     // Handle errors
@@ -122,10 +133,19 @@ const logOut =  async (req, res) => {
   }
 }
 
+/**
+ * Verifies user email by comparing verification code and updates user verification status.
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {UserRepository} userRepository - The user repository instance.
+ * @returns {void}
+ */
 const verifyEmail = async (req, res, userRepository) => {
   try {
     const { email, verificationCode } = req.body
 
+    // Sanitize user input
     req.body = mongoSanitize(req.body)
 
     // Find user by email

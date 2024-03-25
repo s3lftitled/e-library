@@ -1,5 +1,5 @@
-const { logIn } = require('./authController.js')
-const { ROLES } = require('../middleware/auth-middleWare')
+const { logIn } = require('../controller/authController.js')
+const { ROLES } = require('../middleware/auth-middleWare.js')
 const bcrypt = require('bcrypt')
 const UserRepository = require('../repositories/userRepository.js')
 

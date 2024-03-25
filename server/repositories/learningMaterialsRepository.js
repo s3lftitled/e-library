@@ -2,12 +2,14 @@ const { LearningMaterial } = require('../models/e-book');
 
 class LearningMaterialRepository {
   constructor() {
+    // Singleton pattern implementation
     if (!LearningMaterialRepository.instance) {
       LearningMaterialRepository.instance = this
     }
     return LearningMaterialRepository.instance
   }
 
+  // Method to create new learning material
   async createLearningMaterial(data) {
     try {
       return await LearningMaterial.create(data)
@@ -16,6 +18,7 @@ class LearningMaterialRepository {
     }
   }
 
+  // Method to find and validate material
   async findAndValidateMaterial(materialID) {
     try {
       const material = await LearningMaterial.findById(materialID)
@@ -28,6 +31,7 @@ class LearningMaterialRepository {
     }
   }
 
+  // Method to find learning material
   async findLearningMaterial(learningMaterialsID) {
     try {
       return await LearningMaterial.find({ _id: { $in: learningMaterialsID } })

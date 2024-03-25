@@ -35,9 +35,6 @@ function App() {
               <Route element={<ProtectedRoute allowedRoles={['Student']} />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
               </Route>
-              <Route element={<ProtectedRoute allowedRoles={['Student']} />}>
-                <Route path="/form/:type/:programID" element={<Form />} />
-              </Route>
             </Route>
           </Routes>
         </Suspense>

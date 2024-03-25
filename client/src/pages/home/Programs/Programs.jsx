@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import RecommendedProgram from './RecommendedProgram'
 import ProgramCard from './ProgramCard'
 import FloatingButton from '../../../components/FloatingButton/FloatingButton'
+import Form from '../../../components/UploadForm/Form'
 
 export const Programs = () => {
   const { user } = useUserData()
@@ -13,9 +14,11 @@ export const Programs = () => {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
+  const [showForm, setShowForm] = useState(false)
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState({ recommendedProgram: null, programs: [] })
   const userID = localStorage.getItem("userID")
+  const userRole = localStorage.getItem('userRole')
 
   useEffect(() => {
     console.log(userID)
@@ -64,6 +67,14 @@ export const Programs = () => {
     navigateToCourses(result._id)
   }
 
+  const openForm = () => {
+    setShowForm(true)
+  }
+
+  const closeForm = () => {
+    setShowForm(false)
+  }
+
   return (
     <div className={`programs`}>
       <ProgramSearch
@@ -91,7 +102,8 @@ export const Programs = () => {
           />
         ))}
       </div>
-      <FloatingButton onClick={() => navigateToForm()}/>
+      { userRole=== 'Student' && <FloatingButton onClick={openForm} /> }
+      {showForm && <Form onClose={closeForm} type="program" programID={null} />}
     </div>
   )
 }

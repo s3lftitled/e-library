@@ -3,8 +3,7 @@ import { useParams } from 'react-router-dom'
 import api from '../../../utils/api'
 import './Form.css'
 
-const Form = () => {
-  const { type, programID } = useParams()
+const Form = ({ onClose, type, programID }) => {
   const [formData, setFormData] = useState({})
   const [file, setFile] = useState(null)
 
@@ -45,6 +44,7 @@ const Form = () => {
 
       if (response.status === 201) {
         alert('Data has been submitted successfully')
+        onClose(); // Invoke onClose function here if submission is successful
       }
     } catch (err) {
       if (err.response && err.response.data) {
@@ -80,13 +80,16 @@ const Form = () => {
   }
 
   return (
-    <div className="form-container">
-      <h2>Add {type}</h2>
-      <form onSubmit={handleSubmission}>
-        {fields}
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <>
+      <div className="overlay" onClick={onClose} /> {/* Overlay to dim the background */}
+      <div className="form-container">
+        <h2>Add {type}</h2>
+        <form onSubmit={handleSubmission}>
+          {fields}
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </>
   )
 }
 

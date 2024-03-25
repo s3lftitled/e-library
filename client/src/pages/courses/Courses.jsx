@@ -3,13 +3,16 @@ import { useParams, useNavigate } from "react-router-dom"
 import { privateAxios } from "../../../utils/api"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import FloatingButton from "../../components/FloatingButton/FloatingButton"
+import Form from "../../components/UploadForm/Form"
 import './courses.css'
 
 const Courses = () => {
   const [programCourses, setProgramCourses] = useState([])
   const [ showProfileSection, setShowProfileSection ] = useState(false)
+  const [showForm, setShowForm] = useState(false)
   const { programID } = useParams()
   const userID = localStorage.getItem("userID")
+  const userRole = localStorage.getItem("userRole")
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -42,8 +45,12 @@ const Courses = () => {
     navigate(`/learning-materials/${courseID}/${programID}`)
   }
 
-  const navigateToForm = () => {
-    navigate(`/form/course/${programID}`)
+  const openForm = () => {
+    setShowForm(true)
+  }
+
+  const closeForm = () => {
+    setShowForm(false)
   }
 
   return (
@@ -73,7 +80,8 @@ const Courses = () => {
         )
         }
       </main>
-      <FloatingButton onClick={() => navigateToForm()}/>
+      { userRole=== 'Librarian' && <FloatingButton onClick={openForm} /> }
+      {showForm && <Form onClose={closeForm} type="course" programID={programID} />}
     </div>
   )
 }

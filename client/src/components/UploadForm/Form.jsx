@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import api from '../../../utils/api'
 import './Form.css'
 
@@ -44,7 +43,7 @@ const Form = ({ onClose, type, programID }) => {
 
       if (response.status === 201) {
         alert('Data has been submitted successfully')
-        onClose(); // Invoke onClose function here if submission is successful
+        onClose()
       }
     } catch (err) {
       if (err.response && err.response.data) {
@@ -81,7 +80,7 @@ const Form = ({ onClose, type, programID }) => {
 
   return (
     <>
-      <div className="overlay" onClick={onClose} /> {/* Overlay to dim the background */}
+      <div className="overlay" onClick={onClose} /> 
       <div className="form-container">
         <h2>Add {type}</h2>
         <form onSubmit={handleSubmission}>

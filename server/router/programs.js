@@ -7,11 +7,18 @@ const ProgramRepository = require('../repositories/programRepository')
 const DepartmentRepository = require('../repositories/departmentRepository')
 const { verifyToken } = require('../middleware/verifyToken')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
+const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require('firebase/storage')
+const { app } = require('../config/firebase.config');
+const { Program } = require('../models/e-book')
+const { upload } = require('../middleware/multer')
 const { 
   createProgram,
   getAllPrograms,
-  getDepartmentPrograms
+  getDepartmentPrograms,
+  getProgramImageURL
 } = require('../controller/programController')
+
+const storage = getStorage(app)
 
 // Create instances of repositories
 const programRepository = new ProgramRepository()
@@ -34,6 +41,8 @@ router.get('/get-department-programs/:departmentID',
   (req, res) => 
     getDepartmentPrograms(req, res, programRepository, departmentRepository)
 )
+
+router.get('/get-image/:programID/:userID', (req, res) => getProgramImageURL(req, res, programRepository))
 
 // Export the router for use in other files
 module.exports = router

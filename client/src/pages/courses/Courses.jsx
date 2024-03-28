@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { privateAxios } from "../../../utils/api"
+import api from "../../../utils/api"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import FloatingButton from "../../components/FloatingButton/FloatingButton"
 import Form from "../../components/UploadForm/Form"
+import Logo from "../../../public/pu-logo-2.png"
 import './courses.css'
 
 const Courses = () => {
   const [programCourses, setProgramCourses] = useState([])
+  const [ programImage, setProgramImage ] = useState(null)
   const [ showProfileSection, setShowProfileSection ] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const { programID } = useParams()
@@ -31,11 +34,22 @@ const Courses = () => {
     }
 
     fetchProgramCourses()
+    fetchProgramImage()
 
     return () => {
       isMounted = false
     }
   }, [programID])
+
+  const fetchProgramImage = async () => {
+    try {
+      const response = await api.get(`/programs/get-image/${programID}/${userID}`)
+      console.log(response)
+      setProgramImage(response.data.downloadUrl)
+    } catch (err) {
+      console.log(console.error())
+    }
+  }
 
   const navigateToHome = () => {
     navigate('/')
@@ -73,6 +87,17 @@ const Courses = () => {
           <div className="courses">
             {programCourses.map((course) => (
               <div className="course-card" key={course._id} onClick={() => navigateToLearningMaterials(course._id)} >
+                { programImage !== null ? (
+                 <div className="image-container">
+                  <img className="course-img" src={programImage} alt="program image" />
+                    <p className="attribution-text">
+                      Free resources from <a href="https://free3dicon.com/" target="_blank" rel="noopener noreferrer">free3dicon.com</a>
+                    </p>
+                  </div>
+                  ) : (
+                    <img className="course-img" src={Logo} alt="pu-logo"/>
+                  ) 
+                }                   
                 <p className="course-title">{course.title}</p>
               </div>
             ))}
@@ -80,7 +105,7 @@ const Courses = () => {
         )
         }
       </main>
-      { userRole=== 'Librarian' && <FloatingButton onClick={openForm} /> }
+      { userRole=== 'Student' && <FloatingButton onClick={openForm} /> }
       {showForm && <Form onClose={closeForm} type="course" programID={programID} />}
     </div>
   )

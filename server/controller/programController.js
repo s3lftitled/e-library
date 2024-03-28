@@ -1,6 +1,10 @@
-const { Program, Department } = require('../models/e-book')
+
 const User = require('../models/user')
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
+const { getDownloadURL, getStorage, ref } = require('firebase/storage')
+const { app } = require('../config/firebase.config')
+
+const storage = getStorage(app)
 
 /**
  * Clears cached programs for all users from Redis.
@@ -140,9 +144,59 @@ const getDepartmentPrograms = async (req, res, programRepository, departmentRepo
     res.status(500).json({ error: 'Failed to fetch department programs. Please try again later.' })
   }
 }
+
+const getProgramImageURL = async (req, res, programRepository) => {
+  // Extract material ID and user ID from request parameters
+  const { programID, userID } = req.params
+
+  try {
+    // Check if the material details are cached in Redis
+    const cachedProgramImage = await redisClient.get(`image:${programID}${userID}`)
+
+    // If cached materials exist, parse and return them
+    if (cachedProgramImage) {
+      try {
+        const downloadUrl = JSON.parse(cachedProgramImage)
+        return res.status(200).json({ downloadUrl })
+      } catch (err) {
+        // Handle parsing error if unable to parse cached materials
+        console.error('Error parsing cached materials:', err)
+        res.status(500).json({ error: 'Error retrieving materials from Redis' })
+        return
+      }
+    }
+
+    // Check if material ID is provided
+    if (!programID) {
+      return res.status(400).json({ error: 'program ID is not found' })
+    }
+
+    // Find the learning material in MongoDB
+    const program = await programRepository.findProgramByID(programID)
+
+    // If material not found, return error
+    if (!program) {
+      return res.status(404).json({ error: 'Program not found' })
+    }
+
+    // Get the download URL of the file from Firebase Storage
+    const downloadUrl = await getDownloadURL(ref(storage, program.imageURL))
+    
+    // Cache the material details in Redis
+    await redisClient.SET(`image:${programID}${userID}`, JSON.stringify(downloadUrl), {EX: DEFAULT_EXP})
+    
+    // Respond with the downloadUrl
+    res.status(200).json({ downloadUrl })
+  } catch (error) {
+    // Handle any errors and respond with an error message
+    console.error('Error retrieving material:', error)
+    res.status(500).json({ error: 'Failed to retrieve material. Please try again later.' })
+  }
+}
  
 module.exports = { 
   createProgram,
   getAllPrograms,
-  getDepartmentPrograms
+  getDepartmentPrograms,
+  getProgramImageURL
 }

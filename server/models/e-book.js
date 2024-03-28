@@ -49,6 +49,9 @@ const ProgramSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    imageURL: {
+        type: String
+    },
     courses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course',

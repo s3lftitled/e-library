@@ -5,7 +5,6 @@ import api from "../../../utils/api"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import FloatingButton from "../../components/FloatingButton/FloatingButton"
 import Form from "../../components/UploadForm/Form"
-import Logo from "../../../public/pu-logo-2.png"
 import './courses.css'
 
 const Courses = () => {
@@ -13,7 +12,7 @@ const Courses = () => {
   const [ programImage, setProgramImage ] = useState(null)
   const [ showProfileSection, setShowProfileSection ] = useState(false)
   const [showForm, setShowForm] = useState(false)
-  const { programID } = useParams()
+  const { programID, programTitle } = useParams()
   const userID = localStorage.getItem("userID")
   const userRole = localStorage.getItem("userRole")
   const navigate = useNavigate()
@@ -55,8 +54,8 @@ const Courses = () => {
     navigate('/')
   }
 
-  const navigateToLearningMaterials = (courseID) => {
-    navigate(`/learning-materials/${courseID}/${programID}`)
+  const navigateToLearningMaterials = (courseID, courseTitle) => {
+    navigate(`/learning-materials/${programID}/${programTitle}/${courseID}/${courseTitle}`)
   }
 
   const openForm = () => {
@@ -76,7 +75,7 @@ const Courses = () => {
         />
         <div className="header-content">
           <ion-icon name="arrow-back" onClick={() => navigateToHome()}></ion-icon>
-          <h1>Courses</h1>
+          <h1>{programTitle ? programTitle : 'Courses'}</h1>
         </div> 
         <dotlottie-player src="https://lottie.host/c7b8849d-1b44-4cb0-a68f-6874fbafe0f3/AJYxlq4Zs0.json" background="transparent" speed="1" style={{ width: "110px", height: "auto", margin: "10px" }} loop autoplay></dotlottie-player>
       </header>
@@ -86,7 +85,7 @@ const Courses = () => {
         ) : (
           <div className="courses">
             {programCourses.map((course) => (
-              <div className="course-card" key={course._id} onClick={() => navigateToLearningMaterials(course._id)} >
+              <div className="course-card" key={course._id} onClick={() => navigateToLearningMaterials(course._id, course.title)} >
                 { programImage !== null ? (
                  <div className="image-container">
                   <img className="course-img" src={programImage} alt="program image" />
@@ -95,7 +94,7 @@ const Courses = () => {
                     </p>
                   </div>
                   ) : (
-                    <img className="course-img" src={Logo} alt="pu-logo"/>
+                    <img className="course-img" src='/pu-logo-2.png' alt="pu-logo"/>
                   ) 
                 }                   
                 <p className="course-title">{course.title}</p>

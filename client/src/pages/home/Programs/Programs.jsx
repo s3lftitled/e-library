@@ -48,12 +48,8 @@ export const Programs = () => {
     fetchPrograms()
   }, [user, user._id, privateAxios, navigate])
 
-  const navigateToCourses = (programID) => {
-    navigate(`/courses/${programID}`)
-  }
-
-  const navigateToForm = () => {
-    navigate(`/form/program/null`)
+  const navigateToCourses = (programID, programTitle) => {
+    navigate(`/courses/${programID}/${programTitle}`)
   }
 
   useEffect(() => {
@@ -88,7 +84,7 @@ export const Programs = () => {
           <h2>Recommended</h2>
           <RecommendedProgram
             program={data.recommendedProgram}
-            onClick={() => navigateToCourses(data.recommendedProgram._id)}
+            onClick={() => navigateToCourses(data.recommendedProgram._id, data.recommendedProgram.title)}
           />
         </>
       )}
@@ -98,7 +94,7 @@ export const Programs = () => {
           <ProgramCard
             key={program._id}
             program={program}
-            onClick={() => navigateToCourses(program._id)}
+            onClick={() => navigateToCourses(program._id, program.title)}
           />
         ))}
       </div>

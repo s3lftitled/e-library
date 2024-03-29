@@ -8,7 +8,7 @@ const LearningMaterials = () => {
   const [learningMaterials, setLearningMaterials] = useState([])
   const [ showProfileSection, setShowProfileSection ] = useState(false)
   const userID = localStorage.getItem("userID")
-  const { courseID, programID } = useParams()
+  const { programID, programTitle, courseID, courseTitle,  } = useParams()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const LearningMaterials = () => {
   }, [courseID])
 
   const navigateBackToCourses = () => {
-    navigate(`/courses/${programID}`)
+    navigate(`/courses/${programID}/${programTitle}`)
   }
 
   const handlePdfClick = (materialID) => {
@@ -42,7 +42,7 @@ const LearningMaterials = () => {
           />
         <div className="header-content">
           <ion-icon name="arrow-back" onClick={() => navigateBackToCourses()}></ion-icon>
-          <h1>Learning Materials</h1>
+          <h1>{ courseTitle ? courseTitle : 'Learning Materials' }</h1>
         </div> 
         <dotlottie-player src="https://lottie.host/c7b8849d-1b44-4cb0-a68f-6874fbafe0f3/AJYxlq4Zs0.json" background="transparent" speed="1" style={{ width: "110px", height: "auto", margin: "10px" }} loop autoplay></dotlottie-player>
       </header>

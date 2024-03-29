@@ -185,25 +185,238 @@
   background-color: #f0f0f0;
 }
 
+@media screen and (max-widht: 915px) {
+  .introduction-section {
+    height: 215px;
+    margin: 0;
+  }
+
+  .introduction-section h1 {
+    font-size: 1.3rem;
+  }
+
+  .introduction-section h4 {
+    font-size: 1.1rem;
+  }
+}
+
 
 @media screen and (max-width: 838px) {
+  .introduction-section {
+    height: 200px;
+  }
+
+  .welcome-greetings {
+    margin-left: 60px;
+  }
+
+  .introduction-section h1 {
+    font-size: 1.3rem;
+  }
+
+  .introduction-section h4 {
+    font-size: 0.8rem;
+  }
+
   .program-card {
-    height: 150px;
-    width: 300px;
+    height: 140px;
+    width: 280px;
+  }
+
+  .program-title {
+    font-size: 0.9rem;
+  }
+  
+  .program-description {
+    font-size: 0.6rem;
+  }
+  
+  .programs h2 {
+    font-size: 1rem;
   }
 }
 
 @media screen and (max-width: 640px) {
+  .welcome-greetings {
+    margin-left: 50px;
+  }
+
   .program-card {
     height: 130px;
     width: 250px;
   }
 
   .program-title {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   
   .program-description {
     font-size: 0.7rem;
+  }
+
+  .programs h2 {
+    font-size: 1.1rem;
+  }
+}
+
+@media screen and (max-width: 542px) {
+  .introduction-section {
+    height: 180px;
+  }
+
+  .welcome-greetings {
+    margin-left: 40px;
+  }
+
+  .introduction-section h1 {
+    font-size: 1.2rem;
+  }
+
+  .introduction-section h4 {
+    font-size: 0.6rem;
+  }
+
+  .program-card {
+    height: 130px;
+    width: 230px;
+  }
+
+  .program-title {
+    font-size: 0.8rem;
+  }
+  
+  .program-description {
+    font-size: 0.6rem;
+  }
+
+  .programs h2 {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .program-card {
+    height: 120px;
+    width: 210px;
+  }
+
+  .program-title {
+    font-size: 0.7rem;
+  }
+  
+  .program-description {
+    font-size: 0.5rem;
+  }
+
+  .programs h2 {
+    font-size: 0.9rem;
+  }
+
+  .book-img {
+    height:60px; 
+    width: 60px;
+  }
+}
+
+@media screen and (max-width: 465px) {
+  .introduction-section {
+    height: 160px;
+  }
+
+  .introduction-section h1 {
+    font-size: 1rem;
+  }
+
+  .introduction-section h4 {
+    font-size: 0.5rem;
+  }
+
+  .program-card {
+    height: 115px;
+    width: 200px;
+  }
+
+  .program-title {
+    font-size: 0.8rem;
+  }
+  
+  .program-description {
+    font-size: 0.6rem;
+  }
+
+  .programs h2 {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 436px) {
+  .introduction-section {
+    height: 150px;
+  }
+
+  .introduction-section h1 {
+    font-size: 1rem;
+  }
+
+  .introduction-section h4 {
+    font-size: 0.5rem;
+  }
+
+  .program-card {
+    height: 115px;
+    width: 180px;
+  }
+
+  .program-title {
+    font-size: 0.7rem;
+  }
+  
+  .program-description {
+    font-size: 0.5rem;
+  }
+  
+  .book-img {
+    height: 60px;
+    width: 60px;
+  }
+}
+
+@media screen and (max-width: 402px) {
+  .program-card {
+    height: 110px;
+    width: 170px;
+  }
+
+  .program-title {
+    font-size: 0.6rem;
+  }
+  
+  .program-description {
+    font-size: 0.4rem;
+  }
+  
+  .book-img {
+    height: 50px;
+    width: 50px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .program-card {
+    height: 100px;
+    width: 160px;
+  }
+
+  .program-title {
+    font-size: 0.6rem;
+  }
+  
+  .program-description {
+    font-size: 0.4rem;
+  }
+  
+  .book-img {
+    height: 50px;
+    width: 50px;
   }
 }

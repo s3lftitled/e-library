@@ -27,9 +27,9 @@ function App() {
             <Route path="/welcome" element={<Spinner text="Welcome to our E-Library..." />} />
             <Route element={<PersistLogin />}>
               <Route path="/" element={<Home />} />
-              <Route path="/courses/:programID" element={<Courses />} />
+              <Route path="/courses/:programID/:programTitle" element={<Courses />} />
               <Route path="/verify/:email" element={<VerificationCodeInput />} />         
-              <Route path="/learning-materials/:courseID/:programID" element={<LearningMaterials />} />
+              <Route path="/learning-materials/:programID/:programTitle/:courseID/:courseTitle" element={<LearningMaterials />} />
               <Route path="/upload-learning-material" element={<FileUploadComponent />} />
               <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />
               <Route element={<ProtectedRoute allowedRoles={['Student']} />}>

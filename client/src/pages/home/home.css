@@ -185,7 +185,7 @@
   background-color: #f0f0f0;
 }
 
-@media screen and (max-widht: 915px) {
+@media screen and (max-width: 915px) {
   .introduction-section {
     height: 215px;
     margin: 0;
@@ -197,6 +197,11 @@
 
   .introduction-section h4 {
     font-size: 1.1rem;
+  }
+
+  .program-card {
+    height: 160px;
+    width: 300px;
   }
 }
 

@@ -3,17 +3,19 @@ import './styles.css'
 import { Login } from './Login'
 import { Register } from './Register'
 
+
 const Authentication = () => {
   const [form, setForm] = useState(false)
   
   return (
     <div className="auth-body">
+      <div className="grains-overlay"></div>
       <div className="auth-container">
-        <div className="right-side">
-          <h2>PanpacificU E-Library</h2>
-          <a href="https://www.freepik.com/">Designed by macrovector / Freepik</a>
-        </div>
         <div className="left-side">
+        <div className="logo-part">
+          <img src="PU_ELIB_LOGO3.webp" alt="PU Library Logo" class="logo-image "></img>
+          </div>
+          <div className="Form-part">
           {form ? (
             <Register/>
           ) : (
@@ -37,7 +39,7 @@ const Authentication = () => {
                 'Create an account'
               }
             </button>
-          </div>
+          </div> </div>
         </div>
       </div>
     </div>

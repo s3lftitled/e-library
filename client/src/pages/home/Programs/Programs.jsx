@@ -60,7 +60,7 @@ export const Programs = () => {
   const handleResultClick = (result) => {
     setSearchQuery(result.title)
     setSearchResults([])
-    navigateToCourses(result._id)
+    navigateToCourses(result._id, result.title)
   }
 
   const openForm = () => {

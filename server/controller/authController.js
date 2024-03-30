@@ -21,6 +21,10 @@ const logIn = async (req, res, userRepository, logRepository) => {
     // Destructure request body
     const { email, password } = req.body 
 
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are BOTH required"})
+    }
+
     // Validate email format
     const emailValidationResult = validateEmail(email)
     if (!emailValidationResult.isValid) {

@@ -51,8 +51,8 @@ const LearningMaterials = () => {
           learningMaterials.map((material) => (
             <div key={material._id} className="material">
               <p className="material-title">{material.title}</p>
+              <p className="material-author">{material.author}</p>
               <u className="underline"></u>
-              <p className="material-author">Author: </p>
               <button className="pdf-button" onClick={() => handlePdfClick(material._id)}>View PDF</button>
             </div>
           ))

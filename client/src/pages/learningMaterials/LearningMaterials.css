@@ -56,10 +56,20 @@ header .header-content {
 }
 
 .material-title {
+  height: 40px;
+  width: 100%;
   font-size: auto;
   font-weight: bolder;
-  align-items: center;
   justify-content: center;
+  text-align: center;
+}
+
+.material-author {
+  height: 30px;
+  width: 100%;
+  font-size: 0.8rem;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
@@ -71,8 +81,8 @@ header .header-content {
 .underline {
   height: 5px;
   min-width: 95%;
-  margin-top: 5px;
   border-top: 2px solid #17171754;
+  margin-bottom: 15px;
 }
 
 .pdf-container {

@@ -16,12 +16,18 @@ const storage = getStorage(app)
 const uploadMaterial = async (req, res, courseRepository, learningMaterialRepository) => {
   const { courseId } = req.params
   const title = req.body.title
+  const author = req.body.author
   const file = req.file
 
   try {
     // Validate title
     if (!title || typeof title !== 'string') {
       return res.status(400).json({ error: 'Title is required and must be a string' });
+    }
+
+     // Validate author
+     if (!author|| typeof author !== 'string') {
+      return res.status(400).json({ error: 'Author is required and must be a string' });
     }
 
     // Find the course within the specified program
@@ -41,6 +47,7 @@ const uploadMaterial = async (req, res, courseRepository, learningMaterialReposi
     // Create a new learning material using the uploaded file's metadata
     const learningMaterial = await learningMaterialRepository.createLearningMaterial({
       title: title,
+      author: author,
       file: snapshot.metadata.fullPath
     })
 

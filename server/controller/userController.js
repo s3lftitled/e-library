@@ -312,7 +312,7 @@ const getUserData = async (req, res, userRepository) => {
     })
 
      // Cache the user data
-    await redisClient.SET(`user-details:${userID}`, JSON.stringify(currentUser), {EX: DEFAULT_EXP})
+    await redisClient.set(`user-details:${userID}`, JSON.stringify(currentUser), "EX", DEFAULT_EXP)
     // Respond with the current user data
     res.status(200).json({ currentUser })
   } catch (error) {
@@ -445,7 +445,7 @@ const getPrograms = async (req, res, userRepository, programRepository) => {
     }
 
      // Cache programs in Redis
-    await redisClient.SET(`programs:${userID}`, JSON.stringify(response), {EX: DEFAULT_EXP})
+    await redisClient.set(`programs:${userID}`, JSON.stringify(response), "EX", DEFAULT_EXP)
     // Respond with the response
     res.status(200).json({ response })
   } catch (error) {

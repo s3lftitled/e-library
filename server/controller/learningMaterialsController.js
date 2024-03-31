@@ -118,7 +118,7 @@ const getCourseLearningMaterial = async (req, res, courseRepository, learningMat
     }
 
     // Cache the retrieved learning materials in Redis
-    await redisClient.SET(`materials:${userID}`, JSON.stringify(learningMaterials), {EX: DEFAULT_EXP})
+    await redisClient.set(`materials:${userID}`, JSON.stringify(learningMaterials), "EX", DEFAULT_EXP)
 
     // Respond with the retrieved learning materials
     res.status(200).json({ learningMaterials })
@@ -178,7 +178,7 @@ const getMaterial = async (req, res, learningMaterialRepository) => {
     const materialWithUrl = { ...material.toObject(), downloadUrl }
     
     // Cache the material details in Redis
-    await redisClient.SET(`material:${materialID}${userID}`, JSON.stringify(materialWithUrl), {EX: DEFAULT_EXP})
+    await redisClient.set(`material:${materialID}${userID}`, JSON.stringify(materialWithUrl), "EX", DEFAULT_EXP)
     
     // Respond with the material details
     res.status(200).json({ material: materialWithUrl })

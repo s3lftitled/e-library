@@ -1,20 +1,21 @@
-const Redis = require('redis')
+const IORedis = require('ioredis')
+const dotenv = require('dotenv')
+dotenv.config()
 
 const DEFAULT_EXP = 3600
-const REDIS_URL = 'redis://red-co4cjksf7o1s738r13rg:6379'
-const redisClient = Redis.createClient(REDIS_URL)
 
-redisClient.on('connect', () => {
-    console.log('Connected to Redis')
-    // Now that the client is connected, you can start using it
-    // Example: redisClient.get('key', (err, reply) => { /* handle response */ });
+/*
+const redisClient = new IORedis({
+  port: process.env.REDIS_PORT,
+  host: process.env.REDIS_HOST,
+  username: process.env.REDIS_USERNAME,
+  password: process.env.REDIS_PASSWORD
 })
+*/
 
-redisClient.connect()
+const redisClient = new IORedis("rediss://red-co4h3pa1hbls73bt555g:hauBLD7vF8I1Z6Hm9tj8liAdXumIuh8C@oregon-redis.render.com:6379")
 
-redisClient.on('error', (err) => {
-    console.error('Redis error:', err)
-})
+redisClient.connect(() => console.log('Redis connected'))
 
 module.exports = {
     redisClient,

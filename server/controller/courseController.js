@@ -90,7 +90,7 @@ const getCoursesWithInPrograms = async (req, res, programRepository) => {
     // Extract the courses from the program and respond
     const courses = program.courses
     // Cache the retrieved courses for the given user ID in Redis with expiration time
-    await redisClient.SET(`courses:${userID}`, JSON.stringify(courses), {EX: DEFAULT_EXP})
+    await redisClient.set(`courses:${userID}`, JSON.stringify(courses), "EX", DEFAULT_EXP)
     // Respond with the retrieved courses
     res.status(200).json({ courses })
   } catch (error) {

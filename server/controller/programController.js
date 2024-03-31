@@ -99,7 +99,7 @@ const getAllPrograms = async (req, res, programRepository) => {
     const programs = await programRepository.getAllPrograms()
  
     // Cache programs in Redis
-    await redisClient.SET("programs", JSON.stringify(programs), {EX: DEFAULT_EXP})
+    await redisClient.set("programs", JSON.stringify(programs), "EX", DEFAULT_EXP)
    
     // Respond with the list of programs
     res.status(200).json({ programs })
@@ -183,7 +183,7 @@ const getProgramImageURL = async (req, res, programRepository) => {
     const downloadUrl = await getDownloadURL(ref(storage, program.imageURL))
     
     // Cache the material details in Redis
-    await redisClient.SET(`image:${programID}${userID}`, JSON.stringify(downloadUrl), {EX: DEFAULT_EXP})
+    await redisClient.set(`image:${programID}${userID}`, JSON.stringify(downloadUrl), "EX", DEFAULT_EXP)
     
     // Respond with the downloadUrl
     res.status(200).json({ downloadUrl })

@@ -1,15 +1,24 @@
 const Redis = require('redis')
 
 const DEFAULT_EXP = 3600
-const redisClient = Redis.createClient()
+const REDIS_URL = 'redis://red-co4cjksf7o1s738r13rg:6379'
+const redisClient = Redis.createClient(REDIS_URL)
 
-const connectRedis = async () => {
-  await redisClient.connect()
-}
+// Handle connection events
+redisClient.on('connect', () => {
+    console.log('Connected to Redis')
+    // Now that the client is connected, you can start using it
+    // Example: redisClient.get('key', (err, reply) => { /* handle response */ });
+})
 
-connectRedis()
+redisClient.on('error', (err) => {
+    console.error('Redis error:', err)
+})
+
+// Explicitly call the connect method
+redisClient.connect()
 
 module.exports = {
-  redisClient,
-  DEFAULT_EXP
+    redisClient,
+    DEFAULT_EXP
 }

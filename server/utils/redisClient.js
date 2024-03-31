@@ -15,9 +15,6 @@ redisClient.on('error', (err) => {
     console.error('Redis error:', err)
 })
 
-// Explicitly call the connect method
-redisClient.connect()
-
 module.exports = {
     redisClient,
     DEFAULT_EXP

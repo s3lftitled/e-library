@@ -107,12 +107,13 @@ header .header-content {
 }
 
 .react-pdf__Page {
-  margin: 20px auto;
   border: 1px solid #ccc;
 }
 
 .react-pdf__Page__canvas {
   display: block;
+  max-height: 60%;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -133,22 +134,107 @@ header .header-content {
 .pdf-viewer-container {
   display: flex;
   justify-content: center;
-  position: relative;
+  align-items: center;
   max-width: 100%;
   height: 100%;
+  background-color: #000;
+  overflow: hidden;
 }
 
 .pdf-viewer {
+  align-self: center;
+  justify-self: center;
   margin-top: 20px;
-  width: 60%;
+  max-width: 60%;
   height: 100%;
 }
 
 .pdf-toolbar {
-  position: absolute;
-  top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  min-width: 500px;
+  z-index: 10;
 }
 
+.pdf-toolbar button, 
+.set-page-toolbar button {
+  padding: 8px 13px;
+  margin: 0 5px;
+  font-size: 13px;
+  background-color: #4E7133;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pdf-toolbar button:hover,
+.set-page-toolbar button:hover {
+  background-color: #0C359E;
+}
+
+.set-page-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 10;
+  max-width: 100%;
+}
+
+.set-page-toolbar input[type="number"] {
+  padding: 5px 10px;
+  margin: 0 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100px;
+  text-align: center;
+}
+
+.set-page-toolbar input[type="number"] {
+  input[type="number"]:focus {
+  outline: none;
+  border-color: #0C359E;
+}
+}
+
+@media only screen and (max-width: 768px) {
+  .pdf-viewer {
+    max-width: 90%;
+  }
+
+  .pdf-toolbar button, 
+  .set-page-toolbar button {
+    padding: 8px 13px;
+    margin: 0 5px;
+    font-size: 10px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .pdf-viewer {
+    max-width: 95%;
+  }
+
+  .pdf-toolbar,
+  .set-page-toolbar {
+    min-width: 90%;
+    margin: 5px;
+  }
+}

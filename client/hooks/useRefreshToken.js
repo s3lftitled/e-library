@@ -12,6 +12,8 @@ const useTokenRefresh = () => {
         { withCredentials: true }
       )
 
+      console.log('new access token', refreshResponse.data.accessToken)
+
       const newAccessToken = (refreshResponse.data.accessToken)
 
       await login({ accessToken: newAccessToken})

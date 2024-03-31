@@ -23,7 +23,7 @@ const adminDashboard = require('./router/admin')
 const app = express()
 
 const corsOptions = {
-  origin: 'https://e-library-2.onrender.com', // replace with your frontend URL
+  origin: 'http://localhost:5173', // replace with your frontend URL
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,

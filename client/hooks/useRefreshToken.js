@@ -8,13 +8,13 @@ const useTokenRefresh = () => {
     try {
       console.log('Refreshing token...');
       const refreshResponse = await api.post(
-        '/token/refresh', {},
+        '/token/refresh', {} ,
         { withCredentials: true }
       )
 
-      console.log('new access token', refreshResponse.data.accessToken)
+      console.log('new access token', refreshResponse.data.newAccessToken)
 
-      const newAccessToken = (refreshResponse.data.accessToken)
+      const newAccessToken = (refreshResponse.data.newAccessToken)
 
       await login({ accessToken: newAccessToken})
       console.log('login', login)

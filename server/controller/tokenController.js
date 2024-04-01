@@ -13,6 +13,8 @@ const refreshAccessToken = async (req, res) => {
      // Extract refresh token from cookies
     const { refreshToken } = req.cookies
 
+    console.log("refresher:", refreshToken)
+
     // Check if refresh token is missing
     if (!refreshToken) {
       console.error("Missing refresh token")
@@ -22,6 +24,8 @@ const refreshAccessToken = async (req, res) => {
     // Verify refresh token
     const decoded = jwt.verify(refreshToken, process.env.SECRET_KEY)
 
+    console.log('decoded:', decoded)
+
      // Generate a new access token
     const newAccessToken = jwt.sign(
       { id: decoded.id, role: decoded.role },
@@ -29,12 +33,14 @@ const refreshAccessToken = async (req, res) => {
       { expiresIn: '30m' }
     )
 
+    console.log('new token:', newAccessToken)
+
     // Set the new access token in cookies
     res.cookie('accessToken', newAccessToken, { httpOnly: true, secure: true, sameSite: 'none' })
     // Set the new access token in the response header
     res.setHeader('Authorization', `Bearer ${newAccessToken}`)
     // Send response indicating successful token refresh
-    res.status(200).json({ msg: 'token refreshed'})
+    res.status(200).json({ newAccessToken, msg: 'token refreshed'})
   } catch (error) {
      // Handle errors and respond with an error message
     console.error('Error refreshing token:', error)

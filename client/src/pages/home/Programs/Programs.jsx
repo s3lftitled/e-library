@@ -22,15 +22,15 @@ export const Programs = () => {
 
   useEffect(() => {
     console.log(userID)
-    console.log(user.role)
+    console.log(userRole)
     const fetchPrograms = async () => {
       setLoading(true)
       try {
         let response
-        if (user.role === 'Student') {
-          response = await privateAxios.get(`/users/${userID}/programs`, user.role, { withCredentials: true })
-        } else if (user.role === 'Staff' || user.role === 'Librarian') {
-          response = await privateAxios.get(`/programs/get-programs`, { params: { role: user.role } })
+        if (userRole === 'Student') {
+          response = await privateAxios.get(`/users/${userID}/programs`, userRole, { withCredentials: true })
+        } else if (userRole === 'Staff' || userRole === 'Librarian') {
+          response = await privateAxios.get(`/programs/get-programs`, { params: { role: userRole } })
         }
         setData({ recommendedProgram: response?.data?.response?.recommendedPrograms || null, programs: response?.data?.response?.restOfPrograms || [] })
         console.log(data)

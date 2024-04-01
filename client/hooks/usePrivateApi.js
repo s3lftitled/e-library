@@ -5,7 +5,7 @@ import { privateAxios } from "../utils/api"
 
 const usePrivateApi = () => {
   const refreshAccessToken = useTokenRefresh()
-  const login= useAuth()
+  const login = useAuth()
 
   useEffect(() => {
     const requestIntercept = privateAxios.interceptors.request.use(
@@ -29,8 +29,9 @@ const usePrivateApi = () => {
           try {
             const newAccessToken = await refreshAccessToken()
             console.log(newAccessToken)
+            login({ accessToken: newAccessToken })
             prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
-            return privateAxios(prevRequest);
+            return privateAxios(prevRequest)
           } catch (refreshError) {
             console.error('Failed to refresh access token:', refreshError)
             return Promise.reject(error)

@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 /**
  * Generates access and refresh tokens for a given user.
  * @param {Object} user - The user object containing _id and role properties.

@@ -398,22 +398,22 @@ const getPrograms = async (req, res, userRepository, programRepository) => {
     }
 
      // Check if programs are cached
-    const cachedPrograms = await redisClient.get(`programs:${userID}`)
+     const cachedPrograms = await redisClient.get(`programs:${userID}`)
 
-    // If cached progams exist, parse and return them
-    if (cachedPrograms) {
-      try {
-        const response = JSON.parse(cachedPrograms)
-        res.status(200).json({ response })
-        return
-      } catch (err) {
-        // Handle parsing error if unable to parse cached materials
-        console.error('Error parsing cached programs:', err)
-        res.status(500).json({ msg: 'Error retrieving programs from Redis' })
-        return
-      }
-    }
-
+     // If cached progams exist, parse and return them
+     if (cachedPrograms) {
+       try {
+         const response = JSON.parse(cachedPrograms)
+         res.status(200).json({ response })
+         return
+       } catch (err) {
+         // Handle parsing error if unable to parse cached materials
+         console.error('Error parsing cached programs:', err)
+         res.status(500).json({ msg: 'Error retrieving programs from Redis' })
+         return
+       }
+     }
+ 
     // Retrieve user data from the database thru the userRepository instance
     const user = await userRepository.getUserById(userID)
 
@@ -470,7 +470,7 @@ const deleteUserAccount = async (req, res, userRepository) => {
   try {
     // Ensure that the userId is provided
     if (!userId) {
-      return res.status(400).json({ msg: 'User ID is required for deletion.' })
+      return res.status(400).json({ error: 'User ID is required for deletion.' })
     }
 
     // Check if the user to be deleted exists
@@ -478,7 +478,7 @@ const deleteUserAccount = async (req, res, userRepository) => {
 
     // Check is the user to delete is found, if not returns an error
     if (!userToDelete) {
-      return res.status(404).json({ msg: 'User not found' })
+      return res.status(404).json({ error: 'User not found' })
     }
 
     // Perform the deletion
@@ -488,7 +488,59 @@ const deleteUserAccount = async (req, res, userRepository) => {
     res.status(200).json({ msg: 'User deleted successfully.' })
   } catch (error) {
     // Handle errors
-    res.status(500).json({ msg: error.message })
+    res.status(500).json({ error: error.message })
+  }
+}
+
+const addToBookMark = async(req, res, userRepository, learningMaterialRepository) => {
+  const { userID, materialID } = req.params
+
+  try {
+    if (!userID || !materialID) {
+      return res.status(400).json({ error: "Invalid or missing parameters" })
+    }
+
+    const user = await userRepository.getUserById(userID)
+
+    if(!user) {
+      res.status(404).json({ error: 'User not found'})
+    }
+
+    const material = learningMaterialRepository.findAndValidateMaterialById(materialID)
+
+    if(!material) {
+      res.status(404).json({ error: 'Material not found'})
+    }
+
+    await userRepository.addMaterialToBookShelf({user, materialID})
+
+    res.status(200).json({ msg: 'Added to bookmark succesfully', bookshelf: user.bookshelf})
+  } catch (error) {
+    console.error('Adding material to bookmark failed:', error.message)
+    res.status(500).json({ error: `Failed to add material to bookmark. ${error.message}` })
+  }
+}
+
+const getUserBookShelf = async (req, res,  userRepository, learningMaterialRepository) => {
+  const { userID } = req.params
+
+  try {
+    if (!userID) {
+      return res.status(400).json({ error: 'Invalid or missing parameters'})
+    }
+
+    const user = await userRepository.getUserById(userID)
+
+    if(!user) {
+      res.status(404).json({ error: 'User not found'})
+    }
+
+    const userBookShelf = await learningMaterialRepository.findLearningMaterial(user.bookshelf)
+
+    res.status(200).json({ bookshelf: userBookShelf })
+  } catch (error) {
+    console.error('Fetching materials from bookshelf failed:', error.message)
+    res.status(500).json({ error: 'Failed to fetch materials from bookshelf. Please try again later.' })
   }
 }
 
@@ -498,5 +550,7 @@ module.exports = {
   getUserData,
   uploadUserProfilePic,
   getPrograms,
-  deleteUserAccount
+  deleteUserAccount,
+  addToBookMark,
+  getUserBookShelf
 }

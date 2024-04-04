@@ -6,6 +6,7 @@ const router = express.Router()
 const CourseRepository = require('../repositories/courseRepository')
 const LearningMaterialRepository = require('../repositories/learningMaterialsRepository')
 const { upload } = require('../middleware/multer')
+const { verifyToken } = require('../middleware/verifyToken')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const {
   uploadMaterial,
@@ -23,7 +24,7 @@ router.post('/courses/:courseId', upload,
 )
 
 // Route for getting learning material for a course
-router.get('/courses/:courseID/:userID', 
+router.get('/courses/:courseID/:userID', verifyToken,
   (req, res) => getCourseLearningMaterial(req, res, courseRepository, learningMaterialRepository)
 )
 

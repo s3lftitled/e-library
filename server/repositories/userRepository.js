@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const { Program } = require('../models/e-book')
+const { isValidObjectId } = require('mongoose')
 
 class UserRepository {
   constructor() {
@@ -23,6 +24,9 @@ class UserRepository {
   // Method to get a user by ID
   async getUserById(userId) {
     try {
+      if (!isValidObjectId(userId)) {
+        throw new Error('Invalid user ID')
+      }
       return await User.findById(userId)
     } catch (error) {
       throw new Error(`Error fetching user: ${error.message}`)
@@ -71,6 +75,29 @@ class UserRepository {
       return await User.findOne({ email })
     } catch (error) {
       throw new Error(`Error finding existing user: ${error.message}`)
+    }
+  }
+
+  async addMaterialToBookShelf({ user, materialID }) {
+    try {
+      if (!user || !materialID) {
+        throw new Error('Invalid user or material ID')
+      }
+
+      if (user.bookshelf.includes(materialID)) {
+        throw new Error('Material is already on your bookshelf')
+      }
+  
+      // Push the materialID to the user's bookshelf array
+      user.bookshelf.push(materialID)
+  
+      // Save the updated user object
+      await user.save()
+  
+      // Return the updated user object
+      return user
+    } catch (error) {
+      throw new Error(error.message)
     }
   }
 

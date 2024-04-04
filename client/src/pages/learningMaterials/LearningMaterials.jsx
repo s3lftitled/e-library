@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
-import api from "../../../utils/api"
+import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
+import privateAxios from "../../../utils/api"
 import "./LearningMaterials.css"
 
 const LearningMaterials = () => {
@@ -9,21 +10,28 @@ const LearningMaterials = () => {
   const [ showProfileSection, setShowProfileSection ] = useState(false)
   const userID = localStorage.getItem("userID")
   const { programID, programTitle, courseID, courseTitle,  } = useParams()
+  const [bookmarks, setBookmarks] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => {
     const fetchLearningMaterials = async () => {
       try {
-        const response = await api.get(`/learning-materials/courses/${courseID}/${userID}`)
-        setLearningMaterials(response.data.learningMaterials)
+        const response = await privateAxios.get(`/learning-materials/courses/${courseID}/${userID}`, {withCredentials: true} )
+        const materials = response.data.learningMaterials.map(material => {
+          const materialID = material._id
+          material.isBookmarked = bookmarks.some(bookmark => bookmark._id === materialID)
+          return material
+        })
+        setLearningMaterials(materials)
         console.log(learningMaterials)
       } catch (err) {
         console.log(err)
       }
     }
-
-    fetchLearningMaterials()
-  }, [courseID])
+    if (bookmarks.length > 0) {
+      fetchLearningMaterials()
+    }
+  }, [courseID, bookmarks])
 
   const navigateBackToCourses = () => {
     navigate(`/courses/${programID}/${programTitle}`)
@@ -31,6 +39,54 @@ const LearningMaterials = () => {
 
   const handlePdfClick = (materialID) => {
     navigate(`/view-material/${materialID}`)
+  }
+
+  const addToBookShelf = async (materialID) => {
+    try {
+      const response = await privateAxios.post(`/users/${userID}/add-to-bookmark/${materialID}`, {}, { withCredentials: true })
+      setBookmarks([...bookmarks, materialID])
+      alert(response.data.msg)
+    } catch (err) {
+      console.error('Error:', err) // Log the error to console
+      if (err.response && err.response.data) {
+        const errorMessage = err.response.data.error || 'An error occurred. Please try again.'
+        if (errorMessage === 'Material is already on your bookshelf') {
+          alert(errorMessage)
+        } else {
+          alert(errorMessage)
+        }
+      } else {
+        alert('An error occurred. Please try again.')
+      }
+    }
+  }  
+
+ useEffect(() => {
+  const userBookmarks = async () => {
+    try {
+      const response = await privateAxios.get(`/users/${userID}/book-shelf`, { withCredentials: true })
+      console.log(response.data.bookshelf)
+      setBookmarks(response.data.bookshelf)
+    } catch (err) {
+      if (err.response && err.response.data) {
+        alert(err.response.data.error || 'An error occurred. Please try again.')
+      } else {
+        alert('An error occurred. Please try again.')
+      }
+    }
+  }
+
+  userBookmarks()
+}, [userID])
+  
+
+  const toggleBookmark = async (materialID) => {
+    if (bookmarks.includes(materialID)) {
+      setBookmarks(bookmarks.filter((id) => id !== materialID))
+    } else {
+      await addToBookShelf(materialID)
+      setBookmarks([...bookmarks, materialID])
+    }
   }
 
   return (
@@ -50,6 +106,11 @@ const LearningMaterials = () => {
         {learningMaterials.length > 0 ? (
           learningMaterials.map((material) => (
             <div key={material._id} className="material">
+               {material.isBookmarked ? (
+                <MdBookmark className="bookmark-icon bookmarked" onClick={() => toggleBookmark(material._id)} />
+              ) : (
+                <MdBookmarkBorder className="bookmark-icon" onClick={() => toggleBookmark(material._id)} />
+              )}
               <p className="material-title">{material.title}</p>
               <p className="material-author">{material.author}</p>
               <u className="underline"></u>

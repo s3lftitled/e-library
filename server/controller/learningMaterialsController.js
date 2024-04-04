@@ -164,7 +164,7 @@ const getMaterial = async (req, res, learningMaterialRepository) => {
     }
 
     // Find the learning material in MongoDB
-    const material = await learningMaterialRepository.findAndValidateMaterial(materialID)
+    const material = await learningMaterialRepository.findAndValidateMaterialById(materialID)
 
     // If material not found, return error
     if (!material) {

@@ -6,6 +6,7 @@ const router = express.Router() // Creating a router object to handle routes
 const UserRepository = require('../repositories/userRepository')
 const LogRepository = require('../repositories/logRepository')
 const ProgramRepository = require('../repositories/programRepository')
+const LearningMaterialRepository = require('../repositories/learningMaterialsRepository')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const { verifyToken } = require('../middleware/verifyToken')
 const limiter = require('../middleware/rateLimiter')
@@ -20,7 +21,9 @@ const {
   getUserData,
   uploadUserProfilePic,
   getPrograms,
-  deleteUserAccount
+  deleteUserAccount,
+  addToBookMark,
+  getUserBookShelf
 } = require('../controller/userController')
 
 // Define UserRepository Instance
@@ -29,6 +32,8 @@ const userRepository = new UserRepository()
 const logRepository = new LogRepository()
 // Define ProgramRepository Instance
 const programRepository = new ProgramRepository()
+// Define LearningMaterialRepository Instance
+const learningMaterialRepository = new LearningMaterialRepository()
 
 // Student Registration endpoint
 router.post('/student-registration', limiter, (req, res) =>
@@ -71,6 +76,14 @@ router.get('/:userID/programs', verifyToken, checkRole([ROLES.STUDENT]), (req, r
 // Delete User Account endpoint
 router.delete('/delete-user/:userId', verifyToken, checkRole([ROLES.STAFF]), (req, res) =>
   deleteUserAccount(req, res, userRepository)
+)
+
+router.post('/:userID/add-to-bookmark/:materialID', verifyToken, (req, res) => 
+  addToBookMark(req, res, userRepository, learningMaterialRepository)
+)
+
+router.get('/:userID/book-shelf', verifyToken, (req, res) => 
+  getUserBookShelf(req, res, userRepository, learningMaterialRepository)
 )
 
 module.exports = router // Exporting the router for use in other files

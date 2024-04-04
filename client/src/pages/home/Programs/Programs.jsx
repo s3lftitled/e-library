@@ -36,7 +36,7 @@ export const Programs = () => {
         console.log(data)
       } catch (err) {
         console.log(err)
-        if (err.response && err.response.status === 401) {
+        if (err.response && err.response.status === 403) {
           console.log('Token expired. Navigating to /auth')
           navigate('/auth')
         }

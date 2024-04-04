@@ -19,7 +19,7 @@ class LearningMaterialRepository {
   }
 
   // Method to find and validate material
-  async findAndValidateMaterial(materialID) {
+  async findAndValidateMaterialById(materialID) {
     try {
       const material = await LearningMaterial.findById(materialID)
       if (!material) {

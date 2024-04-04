@@ -80,12 +80,12 @@ const createProgram =  async (req, res, programRepository) => {
  */
 const getAllPrograms = async (req, res, programRepository) => {
   try {
-      // Check if programs are cached in Redis
+    // Check if programs are cached in Redis
     const cachedPrograms = await redisClient.get(`programs`)
 
     if (cachedPrograms) {
       try {
-         // If cached, parse and return programs
+          // If cached, parse and return programs
         const programs = JSON.parse(cachedPrograms)
         return res.status(200).json({ programs })
       } catch (error) {

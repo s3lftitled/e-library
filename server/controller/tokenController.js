@@ -10,7 +10,7 @@ require('dotenv').config()
  */
 const refreshAccessToken = async (req, res) => {
   try {
-     // Extract refresh token from cookies
+    // Extract refresh token from cookies
     const { refreshToken } = req.cookies
 
     console.log("refresher:", refreshToken)
@@ -26,7 +26,7 @@ const refreshAccessToken = async (req, res) => {
 
     console.log('decoded:', decoded)
 
-     // Generate a new access token
+    // Generate a new access token
     const newAccessToken = jwt.sign(
       { id: decoded.id, role: decoded.role },
       process.env.SECRET_KEY,
@@ -40,10 +40,13 @@ const refreshAccessToken = async (req, res) => {
     // Set the new access token in the response header
     res.setHeader('Authorization', `Bearer ${newAccessToken}`)
     // Send response indicating successful token refresh
-    res.status(200).json({ newAccessToken, msg: 'token refreshed'})
+    res.status(200).json({ newAccessToken, msg: 'token refreshed' })
   } catch (error) {
-     // Handle errors and respond with an error message
+    // Handle errors and respond with an error message
     console.error('Error refreshing token:', error)
+    if (error.name === 'TokenExpiredError') {
+      return res.status(403).json({ error: 'Token expired' })
+    }
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }

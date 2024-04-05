@@ -13,8 +13,6 @@ const refreshAccessToken = async (req, res) => {
     // Extract refresh token from cookies
     const { refreshToken } = req.cookies
 
-    console.log("refresher:", refreshToken)
-
     // Check if refresh token is missing
     if (!refreshToken) {
       console.error("Missing refresh token")
@@ -32,8 +30,6 @@ const refreshAccessToken = async (req, res) => {
       process.env.SECRET_KEY,
       { expiresIn: '30m' }
     )
-
-    console.log('new token:', newAccessToken)
 
     // Set the new access token in cookies
     res.cookie('accessToken', newAccessToken, { httpOnly: true, secure: true, sameSite: 'none' })

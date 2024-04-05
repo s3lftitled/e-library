@@ -63,12 +63,13 @@ const getCoursesWithInPrograms = async (req, res, programRepository) => {
   const { programId, userID } = req.params
 
   try {
-    const cachedCourses = await redisClient.get(`courses:${programId}`)
+    const cachedCourses = await redisClient.get(`courses:${userID}`)
     // Find the program by ID and populate the courses field
     if (cachedCourses) {
       try {
          // Respond with cached courses if available
         const courses = JSON.parse(cachedCourses)
+        console.log('cached retrieved')
         res.status(200).json({ courses })
         return
       } catch (err) {

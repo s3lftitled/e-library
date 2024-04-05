@@ -87,7 +87,7 @@ router.get('/:userID/book-shelf', verifyToken, (req, res) =>
   getUserBookShelf(req, res, userRepository, learningMaterialRepository)
 )
 
-router.delete('/:userID/delete-from-bookshelf/:materialID',  (req, res) => {
+router.delete('/:userID/delete-from-bookshelf/:materialID', verifyToken, (req, res) => {
   deleteFromBookshelf(req, res, userRepository, learningMaterialRepository)
 })
 

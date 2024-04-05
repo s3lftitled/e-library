@@ -83,6 +83,7 @@ ion-icon:hover{
   align-items: center;
   justify-content: center;
   margin-top: 0;
+  margin-bottom: 15px;
 }
 
 .chart-container h2 {

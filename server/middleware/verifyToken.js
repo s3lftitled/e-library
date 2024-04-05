@@ -36,7 +36,6 @@ const verifyToken = (req, res, next) => {
   // Extract token from cookies
   const token = req.cookies.accessToken
 
-  console.log('token:', token)
 
   // Handle missing token
   if (!token) {
@@ -55,7 +54,6 @@ const verifyToken = (req, res, next) => {
   // Verify the token
   jwt.verify(token, secretKey, (err, decoded) => {
     // Log token for debugging
-    console.log(token)
 
     // Handle verification errors
     if (err) {

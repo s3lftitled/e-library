@@ -113,7 +113,7 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
 
               <div className="user-content-section">
                 <h2>NOTES</h2>
-                <h2>BOOKSHELF</h2>
+                <h2 onClick={() => navigate('/bookshelf')}>BOOKSHELF</h2>
                 { user.role === 'Librarian' && <h2 onClick={() => navigateToDashboard()}>DASHBOARD</h2>}
               </div>
 

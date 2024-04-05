@@ -78,7 +78,7 @@ const getCourseLearningMaterial = async (req, res, courseRepository, learningMat
 
   try {
      // Check if the learning materials for the course are cached in Redis
-    const cachedMaterials = await redisClient.get(`materials:${courseID}`)
+    const cachedMaterials = await redisClient.get(`materials:${userID}`)
 
     // If cached materials exist, parse and return them
     if (cachedMaterials) {

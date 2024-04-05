@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import { privateAxios } from "../../../utils/api"
-import toggleBookmark from "../../../utils/toggleBookmark"
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md"
 import './bookshelf.css'
 
@@ -51,9 +50,9 @@ const Bookshelf = () => {
           bookshelf.map((book) => (
             <div key={book._id} className="book">
               {book.isRemoved ? (
-                <MdBookmarkBorder className="bookmark-icon" onClick={() => toggleBookmark(book._id)} />  
+                <MdBookmarkBorder className="bookmark-icon" />  
               ) : (
-                <MdBookmark className="bookmark-icon bookmarked" onClick={() => toggleBookmark(book._id)} />
+                <MdBookmark className="bookmark-icon bookmarked"  />
               )}
               <p className="material-title">{book.title}</p>
               <p className="material-author">{book.author}</p>

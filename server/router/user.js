@@ -23,7 +23,8 @@ const {
   getPrograms,
   deleteUserAccount,
   addToBookMark,
-  getUserBookShelf
+  getUserBookShelf,
+  deleteFromBookshelf
 } = require('../controller/userController')
 
 // Define UserRepository Instance
@@ -85,5 +86,9 @@ router.post('/:userID/add-to-bookmark/:materialID', verifyToken, (req, res) =>
 router.get('/:userID/book-shelf', verifyToken, (req, res) => 
   getUserBookShelf(req, res, userRepository, learningMaterialRepository)
 )
+
+router.delete('/:userID/delete-from-bookshelf/:materialID',  (req, res) => {
+  deleteFromBookshelf(req, res, userRepository, learningMaterialRepository)
+})
 
 module.exports = router // Exporting the router for use in other files

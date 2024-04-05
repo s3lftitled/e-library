@@ -101,6 +101,28 @@ class UserRepository {
     }
   }
 
+  async deleteMaterialFromBookshelf({userID, materialID}) {
+    try {
+      if (!userID || !materialID) {
+        throw new Error('Invalid userID or materialID')
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(
+        userID,
+        { $pull: { bookshelf: materialID } },
+        { new: true }
+      )
+
+      if (!updatedUser) {
+        throw new Error('User not found')
+      }
+  
+      return updatedUser
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+
   // Method to get total user count and program-wise distribution
   async getTotalUserCount() {
     try {

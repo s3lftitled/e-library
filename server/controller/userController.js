@@ -544,6 +544,40 @@ const getUserBookShelf = async (req, res,  userRepository, learningMaterialRepos
   }
 }
 
+const deleteFromBookshelf = async (req, res, userRepository, learningMaterialRepository) => {
+  const { userID, materialID } = req.params
+  try {
+
+    if (!userID || !materialID) {
+      res.status(400).json({ error: 'User ID and Material ID are both required'})
+    }
+
+    const user = await userRepository.getUserById(userID)
+
+    if (!user) {
+      res.status(404).json({ error: "User not found"})
+    }
+
+    const material = learningMaterialRepository.findAndValidateMaterialById(materialID)
+
+    if(!material) {
+      res.status(404).json({ error: 'Material not found'})
+    }
+
+    const updatedUser = await userRepository.deleteMaterialFromBookshelf({userID, materialID})
+
+    if (!updatedUser) {
+      res.status(404).json({ error: 'Error updating usr'})
+    }
+
+    res.status(200).json({ msg: 'Book removed succesfully', updatedBookshelf: updatedUser.bookshelf})
+
+  } catch (error) {
+    console.error('Error deleting book from bookshelf:', error.message)
+    res.status(500).json({ error: 'Failed to delete material from bookshelf. Please try again later.' })
+  }
+}
+
 module.exports = { 
   studentRegistration,
   staffRegistration,
@@ -552,5 +586,6 @@ module.exports = {
   getPrograms,
   deleteUserAccount,
   addToBookMark,
-  getUserBookShelf
+  getUserBookShelf,
+  deleteFromBookshelf
 }

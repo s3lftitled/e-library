@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
+import Spinner from "../../components/Spinner/Spinner"
 import privateAxios from "../../../utils/api"
+import toggleBookmark from "../../../utils/toggleBookmark";
 import "./LearningMaterials.css"
 
 const LearningMaterials = () => {
   const [learningMaterials, setLearningMaterials] = useState([])
   const [ showProfileSection, setShowProfileSection ] = useState(false)
-  const userID = localStorage.getItem("userID")
+  const [loading, setLoading] = useState(true)
   const { programID, programTitle, courseID, courseTitle,  } = useParams()
-  const [bookmarks, setBookmarks] = useState([])
+  const [bookshelf, setBookshelf] = useState([])
+  const userID = localStorage.getItem("userID")
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -19,19 +22,21 @@ const LearningMaterials = () => {
         const response = await privateAxios.get(`/learning-materials/courses/${courseID}/${userID}`, {withCredentials: true} )
         const materials = response.data.learningMaterials.map(material => {
           const materialID = material._id
-          material.isBookmarked = bookmarks.some(bookmark => bookmark._id === materialID)
+          material.isBookmarked = bookshelf.some(bookmark => bookmark._id === materialID)
           return material
         })
         setLearningMaterials(materials)
+        setLoading(false)
         console.log(learningMaterials)
       } catch (err) {
+        setLoading(false)
         console.log(err)
       }
     }
-    if (bookmarks.length > 0) {
+    if (bookshelf.length > 0) {
       fetchLearningMaterials()
     }
-  }, [courseID, bookmarks])
+  }, [courseID, bookshelf])
 
   const navigateBackToCourses = () => {
     navigate(`/courses/${programID}/${programTitle}`)
@@ -44,7 +49,7 @@ const LearningMaterials = () => {
   const addToBookShelf = async (materialID) => {
     try {
       const response = await privateAxios.post(`/users/${userID}/add-to-bookmark/${materialID}`, {}, { withCredentials: true })
-      setBookmarks([...bookmarks, materialID])
+      setBookshelf([...bookshelf, materialID])
       alert(response.data.msg)
     } catch (err) {
       console.error('Error:', err) // Log the error to console
@@ -66,7 +71,7 @@ const LearningMaterials = () => {
     try {
       const response = await privateAxios.get(`/users/${userID}/book-shelf`, { withCredentials: true })
       console.log(response.data.bookshelf)
-      setBookmarks(response.data.bookshelf)
+      setBookshelf(response.data.bookshelf)
     } catch (err) {
       if (err.response && err.response.data) {
         alert(err.response.data.error || 'An error occurred. Please try again.')
@@ -80,13 +85,8 @@ const LearningMaterials = () => {
 }, [userID])
   
 
-  const toggleBookmark = async (materialID) => {
-    if (bookmarks.includes(materialID)) {
-      setBookmarks(bookmarks.filter((id) => id !== materialID))
-    } else {
-      await addToBookShelf(materialID)
-      setBookmarks([...bookmarks, materialID])
-    }
+  if (loading) {
+    return <Spinner text="" />
   }
 
   return (
@@ -107,9 +107,9 @@ const LearningMaterials = () => {
           learningMaterials.map((material) => (
             <div key={material._id} className="material">
                {material.isBookmarked ? (
-                <MdBookmark className="bookmark-icon bookmarked" onClick={() => toggleBookmark(material._id)} />
+                <MdBookmark className="bookmark-icon bookmarked" onClick={() => toggleBookmark(material._id, addToBookShelf, bookshelf, setBookshelf)} />
               ) : (
-                <MdBookmarkBorder className="bookmark-icon" onClick={() => toggleBookmark(material._id)} />
+                <MdBookmarkBorder className="bookmark-icon" onClick={() => toggleBookmark(material._id, addToBookShelf, bookshelf, setBookshelf)} />
               )}
               <p className="material-title">{material.title}</p>
               <p className="material-author">{material.author}</p>

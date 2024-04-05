@@ -4,6 +4,8 @@ import { AuthProvider } from '../context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import './App.css'
 import Spinner from './components/Spinner/Spinner'
+import Notes from './pages/notes/Notes'
+import Bookshelf from './pages/bookshelf/Bookshelf'
 
 // Lazy load components
 const Authentication = lazy(() => import('./pages/auth/Auth'))
@@ -32,6 +34,8 @@ function App() {
               <Route path="/learning-materials/:programID/:programTitle/:courseID/:courseTitle" element={<LearningMaterials />} />
               <Route path="/upload-learning-material" element={<FileUploadComponent />} />
               <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />
+              <Route path="/notes" element={<Notes />}/>
+              <Route path="/bookshelf" element={<Bookshelf />} />
               <Route element={<ProtectedRoute allowedRoles={['Student']} />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
               </Route>

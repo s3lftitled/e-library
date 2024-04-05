@@ -1,22 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import api from '../../../utils/api';
-import { Pie } from 'react-chartjs-2';
-import ChartComponent from './BarChart';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import './AdminDashboard.css';
+import React, { useEffect, useState } from 'react'
+import api from '../../../utils/api'
+import { Pie } from 'react-chartjs-2'
+import ChartComponent from './BarChart'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import { ProfileSection } from '../../components/ProfileSection/ProfileSection'
+import { useNavigate } from 'react-router-dom'
+import './AdminDashboard.css'
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const AdminDashboard = () => {
-  const [elibraryStats, setElibraryStats] = useState([]);
-  const [totalUserCount, setTotalUserCount] = useState(null);
-  const [showPieChart, setShowPieChart] = useState(true);
-  const [visitorData, setVisitorData] = useState(null);
+  const [elibraryStats, setElibraryStats] = useState([])
+  const [totalUserCount, setTotalUserCount] = useState(null)
+  const [showPieChart, setShowPieChart] = useState(true)
+  const [visitorData, setVisitorData] = useState(null)
+  const [ showProfileSection, setShowProfileSection ] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    fetchPieChartData();
-    fetchBarChartData();
-  }, []);
+    fetchPieChartData()
+    fetchBarChartData()
+  }, [])
 
   const fetchPieChartData = async () => {
     try {
@@ -134,12 +138,26 @@ const AdminDashboard = () => {
     responsive: true,
     maintainAspectRatio: true,
     height: 300,
-  };
+  }
+
+  const navigateToHome = () => {
+    navigate('/')
+  }
 
   return (
     <>
      <div className="dashboard-container">
-     <h2 className='stats-h2'>E-Library Stats</h2>
+     <header>
+        <ProfileSection 
+          showProfileSection = {showProfileSection}
+          setShowProfileSection = {setShowProfileSection}
+        />
+        <div className="header-content">
+          <ion-icon name="arrow-back" onClick={() => navigateToHome()}></ion-icon>
+          <h1>Dashboard</h1>
+        </div> 
+        <dotlottie-player src="https://lottie.host/c7b8849d-1b44-4cb0-a68f-6874fbafe0f3/AJYxlq4Zs0.json" background="transparent" speed="1" style={{ width: "110px", height: "auto", margin: "10px" }} loop autoplay></dotlottie-player>
+      </header>
       <div className="stats-option">
         <button onClick={() => setShowPieChart(!showPieChart)}>Toggle Chart</button>
       </div>

@@ -4,6 +4,7 @@ import { privateAxios } from "../../../utils/api"
 import api from "../../../utils/api"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import FloatingButton from "../../components/FloatingButton/FloatingButton"
+import Spinner from "../../components/Spinner/Spinner"
 import Form from "../../components/UploadForm/Form"
 import './courses.css'
 
@@ -12,6 +13,7 @@ const Courses = () => {
   const [ programImage, setProgramImage ] = useState(null)
   const [ showProfileSection, setShowProfileSection ] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [loading, setLoading] = useState(true)
   const { programID, programTitle } = useParams()
   const userID = localStorage.getItem("userID")
   const userRole = localStorage.getItem("userRole")
@@ -25,7 +27,9 @@ const Courses = () => {
       try {
         const response = await privateAxios.get(`/courses/${programID}/courses/${userID}`)
         setProgramCourses(response.data.courses)
+        setLoading(false)
       } catch (err) {
+        setLoading(false)
         if (err.response) {
           alert(err.response)
         }
@@ -64,6 +68,10 @@ const Courses = () => {
 
   const closeForm = () => {
     setShowForm(false)
+  }
+
+  if (loading) {
+    return <Spinner text="" />
   }
 
   return (

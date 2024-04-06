@@ -113,7 +113,7 @@ const Courses = () => {
         }
       </main>
       { userRole=== 'Student' && <FloatingButton onClick={openForm} /> }
-      {showForm && <Form onClose={closeForm} type="course" programID={programID} />}
+      {showForm && <Form onClose={closeForm} type="course" ID={programID} />}
     </div>
   )
 }

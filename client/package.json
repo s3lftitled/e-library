@@ -16,6 +16,7 @@
     "@react-pdf/renderer": "^3.4.2",
     "axios": "^1.6.7",
     "chart.js": "^4.4.2",
+    "html2pdf.js": "^0.10.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-cookie": "^7.0.2",

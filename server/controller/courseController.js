@@ -1,4 +1,23 @@
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
+const User = require('../models/user')
+
+const clearAllCoursesCache = async () => {
+  try {
+    // Retrieve all user IDs
+    const allUserIds = await User.find({}, '_id');
+
+    // Iterate over each user ID and clear cached programs
+    for (const userIdObj of allUserIds) {
+      const userId = userIdObj._id.toString();
+      await redisClient.del(`courses:${userId}`)
+    }
+
+     // Clear global programs cache
+    await redisClient.del("courses")
+  } catch (error) {
+    console.error('Error clearing programs cache for all users:', error)
+  }
+}
 
 /**
  * Creates a new course within a program.
@@ -14,6 +33,8 @@ const createCourse = async (req, res, courseRepository, programRepository) => {
   const { title }  = req.body
 
   try {
+
+    console.log(title)
     // Validate input data
     if (!title || typeof title !== 'string') {
       return res.status(400).json({ error: 'Title is required and must be a string' });
@@ -42,6 +63,7 @@ const createCourse = async (req, res, courseRepository, programRepository) => {
     program.courses.push(course._id)
     await programRepository.updateProgramCourses(programID, program.courses)
     
+    await clearAllCoursesCache()
     // Respond with the created course
     res.status(201).json(course)
   } catch (error) {
@@ -63,7 +85,7 @@ const getCoursesWithInPrograms = async (req, res, programRepository) => {
   const { programId, userID } = req.params
 
   try {
-    const cachedCourses = await redisClient.get(`courses:${userID}`)
+    const cachedCourses = await redisClient.get(`courses:${programId}${userID}`)
     // Find the program by ID and populate the courses field
     if (cachedCourses) {
       try {
@@ -91,7 +113,7 @@ const getCoursesWithInPrograms = async (req, res, programRepository) => {
     // Extract the courses from the program and respond
     const courses = program.courses
     // Cache the retrieved courses for the given user ID in Redis with expiration time
-    await redisClient.set(`courses:${userID}`, JSON.stringify(courses), "EX", DEFAULT_EXP)
+    await redisClient.set(`courses:${programId}${userID}`, JSON.stringify(courses), "EX", DEFAULT_EXP)
     // Respond with the retrieved courses
     res.status(200).json({ courses })
   } catch (error) {

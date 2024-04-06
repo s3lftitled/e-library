@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md"
+import FloatingButton from "../../components/FloatingButton/FloatingButton"
 import Spinner from "../../components/Spinner/Spinner"
+import Form from "../../components/UploadForm/Form"
 import privateAxios from "../../../utils/api"
 import "./LearningMaterials.css"
 
@@ -12,7 +14,9 @@ const LearningMaterials = () => {
   const [showProfileSection, setShowProfileSection] = useState(false)
   const { programID, programTitle, courseID, courseTitle } = useParams()
   const [bookshelf, setBookshelf] = useState([])
+  const [showForm, setShowForm] = useState(false)
   const userID = localStorage.getItem("userID")
+  const userRole = localStorage.getItem("userRole")
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -56,6 +60,14 @@ const LearningMaterials = () => {
 
   const handlePdfClick = (materialID) => {
     navigate(`/view-material/${materialID}`)
+  }
+
+  const openForm = () => {
+    setShowForm(true)
+  }
+
+  const closeForm = () => {
+    setShowForm(false)
   }
 
   const addToBookShelf = async (materialID) => {
@@ -148,6 +160,8 @@ const LearningMaterials = () => {
           <p>No learning materials found</p>
         )}
       </div>
+      { userRole=== 'Student' && <FloatingButton onClick={openForm} /> }
+      {showForm && <Form onClose={closeForm} type="learning-material" ID={courseID} />}
     </div>
   )
 }

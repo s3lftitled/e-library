@@ -19,7 +19,7 @@ const courseRepository = new CourseRepository()
 const learningMaterialRepository = new LearningMaterialRepository()
 
 // Route for uploading material to a course
-router.post('/courses/:courseId', upload, 
+router.post('/courses/:courseId/:userID', upload, 
   (req, res) => uploadMaterial(req, res, courseRepository, learningMaterialRepository)
 )
 

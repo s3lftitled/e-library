@@ -32,6 +32,27 @@ const Bookshelf = () => {
     }
   }
 
+  const handlePdfClick = (materialID) => {
+    navigate(`/view-material/${materialID}`)
+  }
+
+  const deleteFromBookshelf = async (materialID) => {
+    try {
+      const response = await privateAxios.delete(`/users/${userID}/delete-from-bookshelf/${materialID}`, { withCredentials: true })
+
+      if (response.status === 200) {
+        alert(response.data.msg)
+        setBookshelf(prevBookshelf => prevBookshelf.filter(item => item._id !== materialID))
+      }
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response)
+        alert(err.response)
+      }
+    }
+  }
+
+
   return (
     <div className="bookshelf-container">
        <header>
@@ -49,15 +70,11 @@ const Bookshelf = () => {
         {bookshelf.length > 0 ? (
           bookshelf.map((book) => (
             <div key={book._id} className="book">
-              {book.isRemoved ? (
-                <MdBookmarkBorder className="bookmark-icon" />  
-              ) : (
-                <MdBookmark className="bookmark-icon bookmarked"  />
-              )}
+              <MdBookmark className="bookmark-icon bookmarked" onClick={() => deleteFromBookshelf(book._id)}  />
               <p className="material-title">{book.title}</p>
               <p className="material-author">{book.author}</p>
               <u className="underline"></u>
-              <button className="pdf-button">View PDF</button>
+              <button className="pdf-button"  onClick={() => handlePdfClick(book._id)}>View PDF</button>
             </div>
           ))
         ) : (

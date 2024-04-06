@@ -14,12 +14,13 @@ const storage = getStorage(app)
  * @returns {Object} - JSON response indicating the success or failure of the operation.
  */
 const uploadMaterial = async (req, res, courseRepository, learningMaterialRepository) => {
-  const { courseId } = req.params
+  const { courseId, userID } = req.params
   const title = req.body.title
   const author = req.body.author
   const file = req.file
 
   try {
+    console.log(title, author, file)
     // Validate title
     if (!title || typeof title !== 'string') {
       return res.status(400).json({ error: 'Title is required and must be a string' });
@@ -53,6 +54,8 @@ const uploadMaterial = async (req, res, courseRepository, learningMaterialReposi
 
     // Add the learning material to the course's list of materials
     await courseRepository.addLearningMaterialToCourse(courseId, learningMaterial._id)
+
+    await redisClient.del(`materials:${userID}`)
 
     // Respond with the created learning material
     res.status(201).json(learningMaterial)

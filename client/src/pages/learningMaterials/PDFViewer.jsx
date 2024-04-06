@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { Document, Page, pdfjs } from "react-pdf"
+import NoteTaker from "./NoteTaker"
 import './LearningMaterials.css'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
@@ -9,6 +10,7 @@ const PdfViewer = ({ pdfUrl }) => {
   const [inputPageNumber, setInputPageNumber] = useState("")
   const [numPages, setNumPages] = useState(null)
   const [scale, setScale] = useState(1.5)
+  const [showNoteTaker, setShowNoteTaker] = useState(false)
 
   const onNextPage = () => {
     setPageNumber(prevPageNumber => Math.min(prevPageNumber + 1, numPages)); 
@@ -19,19 +21,19 @@ const PdfViewer = ({ pdfUrl }) => {
   }
 
   const onDocumentLoadSuccess = ({ numPages }) => {
-    setNumPages(numPages)
+    setNumPages(numPages);
   }
 
   const zoomIn = () => {
-    setScale(prevScale => Math.min(prevScale + 0.25, 4.0))
+    setScale(prevScale => Math.min(prevScale + 0.25, 4.0));
   }
 
   const zoomOut = () => {
-    setScale(prevScale => Math.max(prevScale - 0.25, 0.25))
+    setScale(prevScale => Math.max(prevScale - 0.25, 0.25));
   }
 
   const goToPage = () => {
-    const pageNumberInt = parseInt(inputPageNumber)
+    const pageNumberInt = parseInt(inputPageNumber);
     if (!isNaN(pageNumberInt) && pageNumberInt >= 1 && pageNumberInt <= numPages) {
       setPageNumber(pageNumberInt)
       setInputPageNumber("")
@@ -44,6 +46,10 @@ const PdfViewer = ({ pdfUrl }) => {
     goToPage()
   }
 
+  const toggleNoteTaker = () => {
+    setShowNoteTaker(prevState => !prevState)
+  }
+
   return (
     <div className="pdf-viewer-container">
       <div className="pdf-toolbar">
@@ -52,6 +58,7 @@ const PdfViewer = ({ pdfUrl }) => {
         <button onClick={onNextPage} disabled={pageNumber >= numPages}>Next Page</button>
         <button onClick={zoomIn}>Zoom In</button>
         <button onClick={zoomOut}>Zoom Out</button>
+        <button onClick={toggleNoteTaker}>Take Note</button>
       </div>
       <div className="pdf-viewer">
         <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
@@ -68,6 +75,7 @@ const PdfViewer = ({ pdfUrl }) => {
         />
         <button onClick={setPageWithButton}>Go</button>
       </div>
+      <NoteTaker showNote={showNoteTaker} onClose={toggleNoteTaker} />
     </div>
   )
 }

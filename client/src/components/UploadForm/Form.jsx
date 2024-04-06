@@ -2,18 +2,19 @@ import { useEffect, useState } from 'react'
 import api from '../../../utils/api'
 import './Form.css'
 
-const Form = ({ onClose, type, programID }) => {
-  const [formData, setFormData] = useState({})
+const Form = ({ onClose, type, ID }) => {
+  const [formDatas, setFormDatas] = useState({})
   const [file, setFile] = useState(null)
+  const userID = localStorage.getItem("userID")
 
   useEffect(() => {
     console.log(type)
-    console.log(programID)
-  }, [programID])
+    console.log(ID)
+  }, [ID])
 
   const handleFieldChange = (e) => {
     const { name, value } = e.target
-    setFormData((prevData) => ({
+    setFormDatas((prevData) => ({
       ...prevData,
       [name]: value,
     }))
@@ -21,7 +22,7 @@ const Form = ({ onClose, type, programID }) => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]
-    setFile(file);
+    setFile(file)
   }
 
   const handleSubmission = async (e) => {
@@ -32,14 +33,17 @@ const Form = ({ onClose, type, programID }) => {
   
       if (type === 'program') {
         endpoint = '/programs/create-programs'
-        response = await api.post(endpoint, { title: formData.name, description: formData.description })
+        response = await api.post(endpoint, { title: formDatas.title, description: formDatas.description})
       } else if (type === 'course') {
-        response = await api.post(`/courses/programs/${programID}/create-course`, { title: formData.name })
+        response = await api.post(`/courses/programs/${ID}/create-course`, { title: formDatas.title })
       } else if (type === 'learning-material') {
-        endpoint = '/learning-materials/create-learning-materials'
-        response = await api.post(endpoint, { title: formData.name, author: formData.author, file: formData.file })
+        endpoint = `/learning-materials/courses/${ID}/${userID}`
+        let formData = new FormData()
+        formData.append('title', formDatas.title)
+        formData.append('author', formDatas.author)
+        formData.append('file', file)
+        response = await api.post(endpoint, formData)
       }
-  
 
       if (response.status === 201) {
         alert('Data has been submitted successfully')
@@ -53,19 +57,20 @@ const Form = ({ onClose, type, programID }) => {
       }
     }
   }
+  
 
   let fields
   if (type === 'program') {
     fields = (
       <>
-        <input type="text" name="name" placeholder="Program Name" onChange={handleFieldChange} />
+        <input type="text" name="title" placeholder="Program Name" onChange={handleFieldChange} />
         <input type="text" name="description" placeholder="Program Description" onChange={handleFieldChange} />
       </>
     )
   } else if (type === 'course') {
     fields = (
       <>
-        <input type="text" name="name" placeholder="Course Name" onChange={handleFieldChange} />
+        <input type="text" name="title" placeholder="Course Name" onChange={handleFieldChange} />
       </>
     )
   } else if (type === 'learning-material') {

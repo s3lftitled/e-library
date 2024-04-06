@@ -159,6 +159,7 @@ header .header-content {
   width: 100%;
   min-height: 100vh;
   background-color: #000;
+  overflow: hidden;
 }
 
 .pdf-viewer {
@@ -234,6 +235,52 @@ header .header-content {
 }
 }
 
+.note-taker {
+  position: fixed;
+  top: 50%;
+  left: 10%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+
+.note-taker.show {
+  display: block;
+}
+
+.note-taker textarea {
+  width: 100%;
+  height: 100px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  resize: none;
+}
+
+.note-taker button {
+  padding: 5px 10px;
+  background-color: #4E7133;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.note-taker .close-button {
+  padding: 5px 10px;
+  background-color: #4E7133;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  position: absolute;
+  top: 1%;
+  right: 1%;
+}
+
 @media only screen and (max-width: 768px) {
   .pdf-viewer {
     max-width: 90%;
@@ -246,6 +293,7 @@ header .header-content {
     font-size: 10px;
   }
 }
+
 
 @media only screen and (max-width: 480px) {
   .pdf-viewer {

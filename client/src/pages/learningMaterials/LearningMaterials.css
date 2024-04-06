@@ -1,3 +1,6 @@
+@import "react-pdf/dist/esm/Page/TextLayer.css";
+@import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+
 .learning-materials-container {
   height: 100%;
   min-width: 100%;
@@ -145,12 +148,20 @@ header .header-content {
 }
 
 .react-pdf__Page__textContent {
-  display: none;
+  user-select: auto;
+  display: block;
 }
 
 .react-pdf__Page__annotations {
   display: none;
 }
+
+.react-pdf__Page__textContent .textLayer {
+  pointer-events: auto;
+  user-select: auto;
+  z-index: 100;
+}
+
 
 .pdf-viewer-container {
   display: flex;

@@ -61,11 +61,11 @@ const PdfViewer = ({ pdfUrl }) => {
         <button onClick={toggleNoteTaker}>Take Note</button>
       </div>
       <div className="pdf-viewer">
-        <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-          <Page pageNumber={pageNumber} scale={scale} />
+        <Document file={pdfUrl} renderTextLayer={true} onLoadSuccess={onDocumentLoadSuccess}>
+          <Page pageNumber={pageNumber} scale={scale}/>
         </Document>
       </div>
-      <div className="set-page-toolbar">
+      <div className="set-page-toolbar"> 
         <input 
           type="number" 
           value={inputPageNumber} 

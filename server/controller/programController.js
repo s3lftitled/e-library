@@ -172,9 +172,11 @@ const getProgramImageURL = async (req, res, programRepository) => {
     if (!program) {
       return res.status(404).json({ error: 'Program not found' })
     }
+    // Create a non-root reference using child
+    const storageRef = ref(storage, program.imageURL)
 
     // Get the download URL of the file from Firebase Storage
-    const downloadUrl = await getDownloadURL(ref(storage, program.imageURL))
+    const downloadUrl = await getDownloadURL(storageRef)
     
     // Cache the material details in Redis
     await redisClient.set(`image:${programID}${userID}`, JSON.stringify(downloadUrl), "EX", DEFAULT_EXP)

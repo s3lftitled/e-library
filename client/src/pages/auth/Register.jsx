@@ -4,21 +4,16 @@ import api from '../../../utils/api'
 
 export const Register = () => {
   const [registrationData, setRegistrationData] = useState({
-    email: '',
-    password: '',
-    passwordConfirmation: '',
     selectedRole: '',
     selectedDepartment: '',
-    selectedProgram: ''
+    selectedProgram:''
   })
-
   const [uiState, setUiState] = useState({
     isButtonDisabled: false,
     loginText: '',
     currentIndex: 0,
     loginTextOrigin: 'Register'
   })
-
   const [departments, setDepartments] = useState([])
   const [programs, setPrograms] = useState([])
   const navigate = useNavigate()
@@ -119,11 +114,19 @@ export const Register = () => {
     }
   }
 
-  const handleChange = (e, field) => {
-    const value = e.target.value
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    let formattedValue = value
+  
+    try {
+      formattedValue = JSON.parse(value)
+    } catch (error) {
+      // Ignore parsing errors
+    }
+  
     setRegistrationData(prevData => ({
       ...prevData,
-      [field]: value
+      [name]: formattedValue
     }))
   }
 
@@ -133,26 +136,27 @@ export const Register = () => {
       <form>
         <input
           type='text'
+          name='email'
           placeholder='Email'
-          value={registrationData.email}
-          onChange={(e) => handleChange(e, 'email')}
+          onChange={handleChange}
         />
         <input
           type='password'
           placeholder='Password'
-          value={registrationData.password}
-          onChange={(e) => handleChange(e, 'password')}
+          name='password'
+          onChange={handleChange}
         />
         <input
           type='password'
           placeholder='Confirm Password'
-          value={registrationData.passwordConfirmation}
-          onChange={(e) => handleChange(e, 'passwordConfirmation')}
+          name='passwordConfirmation'
+          onChange={handleChange}
         />
         <select
-          value={registrationData.selectedRole}
-          onChange={(e) => handleChange(e, 'selectedRole')}
+          name='selectedRole'
+          onChange={handleChange}
           className="role-selection"
+          value={registrationData.selectedRole}
         >
           <option value='' disabled>Select your role</option>
           <option>Student</option>
@@ -161,9 +165,10 @@ export const Register = () => {
         </select>
         {registrationData.selectedRole === 'Student' && (
           <select
-            value={registrationData.selectedDepartment}
-            onChange={(e) => handleChange(e, 'selectedDepartment')}
+            name='selectedDepartment'
+            onChange={handleChange}
             className="department-selection"
+            value={registrationData.selectedDepartment}
           >
             <option value='' disabled>Select your department</option>
             {departments.length > 0 &&
@@ -176,9 +181,10 @@ export const Register = () => {
         )}
         {registrationData.selectedDepartment && (
           <select
-            value={registrationData.selectedProgram}
-            onChange={(e) => handleChange(e, 'selectedProgram')}
+            name='selectedProgram'
+            onChange={handleChange}
             className="program-selection"
+            value={registrationData.selectedProgram}
           >
             <option value='' disabled>Select your Program</option>
             {programs.length > 0 &&
@@ -194,4 +200,3 @@ export const Register = () => {
     </>
   )
 }
-  

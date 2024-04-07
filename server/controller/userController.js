@@ -89,6 +89,7 @@ const studentRegistration = async (req, res, userRepository) => {
   const { email, password, passwordConfirmation, chosenDepartment, chosenRole, chosenProgram } = req.body
 
   try {
+    console.log(req.body)
     // Validate user data
     validateUserData(req.body)
 

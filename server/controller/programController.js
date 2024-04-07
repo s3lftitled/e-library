@@ -13,19 +13,13 @@ const storage = getStorage(app)
  */
 const clearAllProgramsCache = async () => {
   try {
-    // Retrieve all user IDs
-    const allUserIds = await User.find({}, '_id');
-
-    // Iterate over each user ID and clear cached programs
-    for (const userIdObj of allUserIds) {
-      const userId = userIdObj._id.toString();
-      await redisClient.del(`programs:${userId}`)
+    const keys = await redisClient.keys('courses:*')
+    if (keys.length > 0) {
+      await redisClient.del(keys)
     }
-
-     // Clear global programs cache
-    await redisClient.del("programs")
+    console.log('All courses cache cleared')
   } catch (error) {
-    console.error('Error clearing programs cache for all users:', error)
+    throw new Error(`Error clearing courses cache: ${error.message}`)
   }
 }
 

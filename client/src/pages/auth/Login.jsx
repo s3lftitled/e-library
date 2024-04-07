@@ -4,8 +4,7 @@ import { useAuth } from "../../../context/AuthContext"
 import api from "../../../utils/api"
 
 export const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [formDatas, setFormDatas] = useState({})
   const navigate = useNavigate()
   const { login } = useAuth()
 
@@ -23,9 +22,26 @@ export const Login = () => {
     }
   }, [currentIndex, loginTextOrigin])
 
+  const handleFieldChange = (e) => {
+    const { name, value } = e.target
+    let formattedValue = value
+  
+    try {
+      formattedValue = JSON.parse(value)
+    } catch (error) {
+      // Ignore parsing errors
+    }
+  
+    setFormDatas((prevData) => ({
+      ...prevData,
+      [name]: formattedValue,
+    }))
+  }
+
   const handleSubmission = async () => {
     try {
-      const result = await api.post('users/login', { email, password }, { withCredentials: true })
+
+      const result = await api.post('users/login', { email: formDatas.email, password: formDatas.password } , { withCredentials: true })
 
       const { userID, role, accessToken } = result.data
 
@@ -41,7 +57,7 @@ export const Login = () => {
         alert(err.response.data.error)
         navigate(`/verify/${email}`)
       } else {
-        alert(err.response.data.error)
+        alert('An error occurred. Please try again.')
       }
     }
   }
@@ -58,15 +74,15 @@ export const Login = () => {
       <form>
         <input
           type='text'
+          name='email'
           placeholder='Email'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleFieldChange}
         />
         <input
           type='password'
+          name='password'
           placeholder='Password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleFieldChange}
           onKeyPress={handleKeyPress} // event listener :) 
         />
       </form>

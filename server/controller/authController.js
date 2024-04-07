@@ -15,8 +15,7 @@ const { validateEmail } = require('../validators/inputValidation')
  */
 const logIn = async (req, res, userRepository, logRepository) => {
   try {
-    // Sanitize user input
-    req.body = mongoSanitize.sanitize(req.body)
+    console.log(req.body)
 
     // Destructure request body
     const { email, password } = req.body 

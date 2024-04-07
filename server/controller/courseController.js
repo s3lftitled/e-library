@@ -1,21 +1,15 @@
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
-const User = require('../models/user')
+const mongoSanitize = require('express-mongo-sanitize')
 
 const clearAllCoursesCache = async () => {
   try {
-    // Retrieve all user IDs
-    const allUserIds = await User.find({}, '_id');
-
-    // Iterate over each user ID and clear cached programs
-    for (const userIdObj of allUserIds) {
-      const userId = userIdObj._id.toString();
-      await redisClient.del(`courses:${userId}`)
+    const keys = await redisClient.keys('courses:*')
+    if (keys.length > 0) {
+      await redisClient.del(keys)
     }
-
-     // Clear global programs cache
-    await redisClient.del("courses")
+    console.log('All courses cache cleared')
   } catch (error) {
-    console.error('Error clearing programs cache for all users:', error)
+    throw new Error(`Error clearing courses cache: ${error.message}`)
   }
 }
 
@@ -30,11 +24,9 @@ const clearAllCoursesCache = async () => {
  */
 const createCourse = async (req, res, courseRepository, programRepository) => {
   const { programID }  = req.params
-  const { title }  = req.body
-
+  const { title } = req.body
+  
   try {
-
-    console.log(title)
     // Validate input data
     if (!title || typeof title !== 'string') {
       return res.status(400).json({ error: 'Title is required and must be a string' });
@@ -111,7 +103,7 @@ const getCoursesWithInPrograms = async (req, res, programRepository) => {
     }
 
     // Extract the courses from the program and respond
-    const courses = program.courses
+    const courses = program.courses.sort((a, b) => a.title.localeCompare(b.title))
     // Cache the retrieved courses for the given user ID in Redis with expiration time
     await redisClient.set(`courses:${programId}${userID}`, JSON.stringify(courses), "EX", DEFAULT_EXP)
     // Respond with the retrieved courses

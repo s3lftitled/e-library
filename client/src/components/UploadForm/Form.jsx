@@ -14,9 +14,18 @@ const Form = ({ onClose, type, ID }) => {
 
   const handleFieldChange = (e) => {
     const { name, value } = e.target
+    let formattedValue = value
+  
+    // Check if the value needs to be parsed as JSON
+    try {
+      formattedValue = JSON.parse(value)
+    } catch (error) {
+      // Ignore parsing errors
+    }
+  
     setFormDatas((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: formattedValue,
     }))
   }
 
@@ -36,6 +45,7 @@ const Form = ({ onClose, type, ID }) => {
         response = await api.post(endpoint, { title: formDatas.title, description: formDatas.description})
       } else if (type === 'course') {
         response = await api.post(`/courses/programs/${ID}/create-course`, { title: formDatas.title })
+        console.log(response)
       } else if (type === 'learning-material') {
         endpoint = `/learning-materials/courses/${ID}/${userID}`
         let formData = new FormData()

@@ -89,8 +89,6 @@ const studentRegistration = async (req, res, userRepository) => {
   const { email, password, passwordConfirmation, chosenDepartment, chosenRole, chosenProgram } = req.body
 
   try {
-    // Sanitize user input
-    mongoSanitize(req.body)
     // Validate user data
     validateUserData(req.body)
 
@@ -166,12 +164,9 @@ const studentRegistration = async (req, res, userRepository) => {
  * @returns {void}
  */
 const staffRegistration = async (req, res, userRepository) => {
-   // Extracts necessary details from request body
-  const { email, password, passwordConfirmation, chosenRole } = req.body
-
   try {
-     // Sanitize user input
-    req.body = mongoSanitize.sanitize(req.body)
+    // Extracts necessary details from request body
+    const { email, password, passwordConfirmation, chosenRole } = req.body
 
      // Validate email format
     validateEmail(req.body.email)
@@ -436,6 +431,8 @@ const getPrograms = async (req, res, userRepository, programRepository) => {
 
     // Assign userProgram to recommendedPrograms
     const recommendedPrograms = userProgram
+
+    restOfPrograms.sort((a, b) => a.title.localeCompare(b.title))
 
     // Construct response object with recommended programs and the rest of the programs
     const response = {

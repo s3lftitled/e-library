@@ -5,6 +5,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const helmet = require('helmet')
 const xss = require('xss-clean')
+const mongoSanitize = require('express-mongo-sanitize')
 dotenv.config()
 
 // Import the connectDB function to establish a connection with MongoDB
@@ -35,6 +36,7 @@ app.use(cookieParser())
 // Configure Express to parse JSON requests with a maximum size limit of 50mb
 app.use(express.json({ limit: '100mb' }))
 app.use(express.urlencoded({ extended: true, limit: '100mb', parameterLimit: 1000000 }))
+app.use(mongoSanitize())
 app.use(helmet())
 app.use(xss())
 app.use(express.static(path.join(__dirname, 'files')))

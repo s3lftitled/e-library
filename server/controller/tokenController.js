@@ -22,8 +22,6 @@ const refreshAccessToken = async (req, res) => {
     // Verify refresh token
     const decoded = jwt.verify(refreshToken, process.env.SECRET_KEY)
 
-    console.log('decoded:', decoded)
-
     // Generate a new access token
     const newAccessToken = jwt.sign(
       { id: decoded.id, role: decoded.role },

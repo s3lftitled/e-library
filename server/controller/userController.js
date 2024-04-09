@@ -54,21 +54,37 @@ const getUserData = async (req, res, userRepository, departmentRepository, progr
     // For non-staff and non-librarian users, find department and program details
     if (user.role !== ROLES.STAFF && user.role !== ROLES.LIBRARIAN) {
       // Find the departments and programs for non-staff and non-librarian users
-      userDepartments = await departmentRepository.findDepartmentsByIds(user.departmentID);
-      userPrograms = await programRepository.findProgramsByIds(user.programID);
+      // Find the department and program for non-staff and non-librarian users
+      [userDepartment, userProgram] = await Promise.all([
+        departmentRepository.findDepartmentsByIds(user.departmentID),
+        programRepository.findProgramsByIds(user.programID)
+      ])
 
       // Check if departments or programs are not found
-      if (!userDepartments.length || !userPrograms.length) {
+      if (!userDepartment || !userProgram) {
         return res.status(404).json({ error: 'User departments or programs are not found' });
       }
+    }
+
+    // Initialize department and program titles
+    let departmentTitle = 'N/A'
+    let programTitle = 'N/A'
+
+    // If departments and programs are found, extract their titles
+    if (userDepartment.length > 0) {
+      departmentTitle = userDepartment[0].title 
+    }
+
+    if (userProgram.length > 0) {
+      programTitle = userProgram[0].title 
     }
 
      // Prepare current user object
     const currentUser = ({
       email: user.email,
       username: user.username,
-      departmentName: userDepartment ? userDepartment.title : 'N/A',
-      programName: userProgram ? userProgram.title : 'N/A',
+      departmentName: departmentTitle,
+      programName: programTitle,
       profilePic: user.profilePic,
       role: user.role,
     })

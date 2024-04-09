@@ -14,6 +14,7 @@ const useUserData = () => {
           `/users/get-user/${userID}`,
           { withCredentials: true }
         )
+        console.log(response.data.currentUser)
         setUser(response.data.currentUser)
       } catch (error) {
         console.log(error)

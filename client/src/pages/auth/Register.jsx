@@ -78,7 +78,7 @@ export const Register = () => {
 
       let response
       if (registrationData.selectedRole === 'Student') {
-        response = await api.post('users/student-registration', {
+        response = await api.post('auth/student-registration', {
           email: registrationData.email,
           password: registrationData.password,
           passwordConfirmation: registrationData.passwordConfirmation,
@@ -87,7 +87,7 @@ export const Register = () => {
           chosenProgram: registrationData.selectedProgram
         })
       } else {
-        response = await api.post('users/staff-registration', {
+        response = await api.post('auth/staff-registration', {
           email: registrationData.email,
           password: registrationData.password,
           passwordConfirmation: registrationData.passwordConfirmation,

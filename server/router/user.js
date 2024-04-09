@@ -4,20 +4,13 @@ const router = express.Router() // Creating a router object to handle routes
 
 // Importing repositories, middleware, and controllers
 const UserRepository = require('../repositories/userRepository')
-const LogRepository = require('../repositories/logRepository')
 const ProgramRepository = require('../repositories/programRepository')
 const LearningMaterialRepository = require('../repositories/learningMaterialsRepository')
+const DepartmentRepository = require('../repositories/departmentRepository')
 const { checkRole, ROLES } = require('../middleware/auth-middleWare')
 const { verifyToken } = require('../middleware/verifyToken')
-const limiter = require('../middleware/rateLimiter')
+
 const { 
-  logIn, 
-  verifyEmail, 
-  logOut 
-} = require('../controller/authController')
-const { 
-  studentRegistration,
-  staffRegistration,
   getUserData,
   uploadUserProfilePic,
   getPrograms,
@@ -29,39 +22,16 @@ const {
 
 // Define UserRepository Instance
 const userRepository = new UserRepository()
-// Define LogRepository Instance
-const logRepository = new LogRepository()
 // Define ProgramRepository Instance
 const programRepository = new ProgramRepository()
 // Define LearningMaterialRepository Instance
 const learningMaterialRepository = new LearningMaterialRepository()
-
-// Student Registration endpoint
-router.post('/student-registration', limiter, (req, res) =>
-  studentRegistration(req, res, userRepository)
-)
-
-// Staff Registration endpoint
-router.post('/staff-registration', (req, res) =>
-  staffRegistration(req, res, userRepository)
-)
-
-// Email Verification endpoint
-router.post('/verify-email', (req, res) =>
-  verifyEmail(req, res, userRepository)
-)
-
-// User Log In endpoint
-router.post('/login', (req, res) =>
-  logIn(req, res, userRepository, logRepository)
-)
-
-// User Log Out endpoint
-router.delete('/logout/:userID', logOut)
+// Define DepartmentRepository Instance
+const departmentRepository = new DepartmentRepository()
 
 // Get User Data endpoint
 router.get('/get-user/:userID', verifyToken, (req, res) =>
-  getUserData(req, res, userRepository, logRepository)
+  getUserData(req, res, userRepository, departmentRepository, programRepository )
 )
 
 // Upload User Profile Pic endpoint

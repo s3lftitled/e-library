@@ -49,7 +49,7 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
 
   const handleLogOut = async () => {
     try {
-      const response = await api.delete(`users/logout/${userID}`)
+      const response = await api.delete(`auth/logout/${userID}`)
 
       if (response.status === 200) {
         localStorage.clear()

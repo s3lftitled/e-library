@@ -37,6 +37,15 @@ class ProgramRepository {
     }
   }
 
+  // Method to find programs by IDs
+  async findProgramsByIds(programIds) {
+    try {
+      return await Program.find({ _id: { $in: programIds } })
+    } catch (error) {
+      throw new Error(`Error finding programs by IDs: ${error.message}`)
+    }
+  }
+
   // Method to fetch all programs
   async getAllPrograms() {
     try {

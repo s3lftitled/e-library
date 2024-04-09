@@ -41,7 +41,7 @@ export const Login = () => {
   const handleSubmission = async () => {
     try {
 
-      const result = await api.post('users/login', { email: formDatas.email, password: formDatas.password } , { withCredentials: true })
+      const result = await api.post('auth/login', { email: formDatas.email, password: formDatas.password } , { withCredentials: true })
 
       const { userID, role, accessToken } = result.data
 

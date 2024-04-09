@@ -37,6 +37,15 @@ class DepartmentRepository {
     }
   }
 
+  // Method to find departments by IDs
+  async findDepartmentsByIds(departmentIds) {
+    try {
+      return await Department.find({ _id: { $in: departmentIds } })
+    } catch (error) {
+      throw new Error(`Error finding departments by IDs: ${error.message}`)
+    }
+  }
+
    // Method to check if a program exists in a department
   async findExistingProgramInADept(programID) {
     try { 

@@ -12,6 +12,7 @@ dotenv.config()
 const connectDB = require('./db/connect')
 
 // Import user and e-library routes
+const auth = require('./router/auth')
 const users = require('./router/user')
 const departments = require('./router/departments')
 const programs = require('./router/programs')
@@ -45,6 +46,7 @@ app.use(express.static(path.join(__dirname, 'files')))
 const port = process.env.PORT || 5001
 
 // Use the user and e-library routes in the application
+app.use('/auth', auth)
 app.use('/users', users)
 app.use('/department', departments)
 app.use('/programs', programs)

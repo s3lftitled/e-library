@@ -1,4 +1,3 @@
-const { Department, Program } = require('../models/e-book')
 const sharp = require('sharp')
 require('dotenv').config() // Loading environment variables
 const {  ROLES } = require('../middleware/auth-middleWare')

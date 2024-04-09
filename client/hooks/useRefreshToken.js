@@ -17,13 +17,10 @@ const useTokenRefresh = () => {
         { withCredentials: true }
       )
 
-      console.log('new access token', refreshResponse.data.newAccessToken)
-
       const newAccessToken = refreshResponse.data.newAccessToken
 
       await login({ accessToken: newAccessToken })
 
-      console.log("New token:", newAccessToken)
       return newAccessToken
     } catch (refreshError) {
       console.error("Error refreshing token:", refreshError)

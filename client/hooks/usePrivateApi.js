@@ -28,7 +28,6 @@ const usePrivateApi = () => {
 
           try {
             const newAccessToken = await refreshAccessToken()
-            console.log(newAccessToken)
             login({ accessToken: newAccessToken })
             prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
             return privateAxios(prevRequest)

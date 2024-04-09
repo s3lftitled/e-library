@@ -18,6 +18,7 @@ const FileUploadComponent = lazy(() => import('./pages/learningMaterials/UploadL
 const LearningMaterials = lazy(() => import('./pages/learningMaterials/LearningMaterials'))
 const SelectedPdfPage = lazy(() => import('./pages/learningMaterials/PDFShower'))
 const AdminDashboard = lazy(() => import('./pages/dashboard/AdminDashboard'))
+const NotFound = lazy(() => import('./components/NotFound/NotFound'))
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
               <Route element={<ProtectedRoute allowedRoles={['Student']} />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
               </Route>
+              <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
         </Suspense>

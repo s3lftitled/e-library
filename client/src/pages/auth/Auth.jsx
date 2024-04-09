@@ -13,7 +13,7 @@ const Authentication = () => {
       <div className="auth-container">
         <div className="left-side">
         <div className="logo-part">
-          <img src="PU_ELIB_LOGO3.webp" alt="PU Library Logo" class="logo-image "></img>
+          <img src="PU_ELIB_LOGO3.webp" alt="PU Library Logo" className="logo-image "></img>
           </div>
           <div className="Form-part">
           {form ? (

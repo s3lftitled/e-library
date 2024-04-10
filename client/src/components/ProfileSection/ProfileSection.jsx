@@ -3,11 +3,13 @@ import useUserData from "../../../hooks/useUserData"
 import { memo } from "react"
 import { useNavigate } from "react-router-dom"
 import api from "../../../utils/api"
+import Form from '../../components/UploadForm/Form'
 import './ProfileSection.css'
 
 export const ProfileSection = memo(({ showProfileSection, setShowProfileSection }) => {
   const [isUploading, setIsUploading] = useState(false)
   const [base64Image, setBase64Image] = useState('')
+  const [showForm, setShowForm] = useState(false)
   const { user } = useUserData()
   const userID = localStorage.getItem("userID")
   const navigate = useNavigate() 
@@ -27,6 +29,14 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
     } catch (err) {
       console.error("Error uploading profile picture:", err)
     }
+  }
+
+  const openForm = () => {
+    setShowForm(true)
+  }
+
+  const closeForm = () => {
+    setShowForm(false)
   }
 
   const convertToBase64 = (e) => {
@@ -120,7 +130,7 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
               <div className="separator-underline"></div>
               
               <div className="log-out-section">
-                <a>Change password?</a>
+                <a onClick={openForm}>Change password?</a>
                 <button onClick={() => handleLogOut()}>LOG OUT</button>
               </div>
             </div>
@@ -131,6 +141,7 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
           >
             x
           </button>
+          {showForm && <Form onClose={closeForm} type="change-password" programID={null} />}
         </div>
       )}
     </>

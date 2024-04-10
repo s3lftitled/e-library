@@ -5,23 +5,30 @@ const router = express.Router() // Creating a router object to handle routes
 // Importing repositories, middleware, and controllers
 const UserRepository = require('../repositories/userRepository')
 const LogRepository = require('../repositories/logRepository')
+const DepartmentRepository = require('../repositories/departmentRepository')
+const ProgramRepository = require('../repositories/programRepository')
 const limiter = require('../middleware/rateLimiter')
 const { 
   studentRegistration,
   staffRegistration,
   logIn, 
   verifyEmail, 
-  logOut 
+  logOut,
+  changePassword
 } = require('../controller/authController')
 
 // Define UserRepository Instance
 const userRepository = new UserRepository()
 // Define LogRepository Instance
 const logRepository = new LogRepository()
+// Define DepartmentRepository Instance
+const departmentRepository = new DepartmentRepository()
+// Define ProgramRepository Instance
+const programRepository = new ProgramRepository()
 
 // Student Registration endpoint
 router.post('/student-registration', limiter, (req, res) =>
-  studentRegistration(req, res, userRepository)
+  studentRegistration(req, res, userRepository, departmentRepository, programRepository)
 )
 
 // Staff Registration endpoint
@@ -38,6 +45,10 @@ router.post('/verify-email', (req, res) =>
 router.post('/login', (req, res) =>
   logIn(req, res, userRepository, logRepository)
 )
+
+router.put('/change-password/:userID', (req, res) => {
+  changePassword(req, res, userRepository)
+})
 
 // User Log Out endpoint
 router.delete('/logout/:userID', logOut)

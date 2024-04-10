@@ -34,6 +34,8 @@
 
 .form-container input[type="file"],
 
+.form-container input[type="password"],
+
 .form-container button {
   margin-top: 10px;
   margin-bottom: 10px;

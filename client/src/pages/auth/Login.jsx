@@ -57,7 +57,7 @@ export const Login = () => {
         alert(err.response.data.error)
         navigate(`/verify/${email}`)
       } else {
-        alert('An error occurred. Please try again.')
+        alert(err.response.data.error)
       }
     }
   }

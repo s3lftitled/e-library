@@ -3,6 +3,7 @@ const { generateTokens } = require('../middleware/verifyToken')
 const bcrypt = require('bcrypt') // Importing bcrypt for password hashing
 const nodemailer = require('nodemailer') // Importing nodemailer for sending emails
 const crypto = require('crypto') // Importing crypto for generating random codes
+const { ROLES } = require('../middleware/auth-middleWare') // Importing ROLES for
 const { 
   validateUserData,
   validateEmail,
@@ -78,7 +79,7 @@ const hashPassword = async (password) => {
  * @param {UserRepository} userRepository - The user repository instance.
  * @returns {void}
  */
-const studentRegistration = async (req, res, userRepository) => {
+const studentRegistration = async (req, res, userRepository, departmentRepository, programRepository) => {
   // Extracts necessary details from request body
   const { email, password, passwordConfirmation, chosenDepartment, chosenRole, chosenProgram } = req.body
 
@@ -100,13 +101,13 @@ const studentRegistration = async (req, res, userRepository) => {
     }
 
     // Check if the chosen department exists
-    const department = await Department.findById(chosenDepartment);
+    const department = await departmentRepository.findDepartmentByID(chosenDepartment)
     if (!department) {
       return res.status(404).json({ error: 'Department doesn\t exist' })
     }
 
     // Check if the chosen program exists
-    const program = await Program.findById(chosenProgram);
+    const program = await programRepository.findProgramByID(chosenProgram)
     if (!program) {
       return res.status(404).json({ error: 'Program doesn\t exist' })
     }
@@ -398,4 +399,43 @@ const verifyEmail = async (req, res, userRepository) => {
   }
 }
 
-module.exports = { studentRegistration, staffRegistration, logIn, logOut, verifyEmail }
+const changePassword = async (req, res, userRepository) => {
+  try {
+    const { currentPassword, newPassword, newPasswordConfirmation } = req.body
+    const { userID } = req.params
+
+    if (!currentPassword || !newPassword || !newPasswordConfirmation ) {
+      return res.status(404).json({ error: "Please fill in all the required fields" })
+    }
+
+    if (!userID) {
+      return res.status(404).json({ error: 'User ID is not found' })
+    }
+
+    const user = await userRepository.getUserById(userID)
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password)
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: 'Incorrect password. Please try again.'})
+    }
+
+    if (newPassword !== newPasswordConfirmation) {
+      return res.status(400).json({ error: "Passwords doesnt match" })
+    }
+
+    const hashedPassword = await hashPassword(newPassword, 10)
+    await userRepository.updateUser(userID, { password: hashedPassword })
+
+    res.status(200).json({ msg: 'Password changed successfully' })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+
+module.exports = { studentRegistration, staffRegistration, logIn, logOut, verifyEmail, changePassword }

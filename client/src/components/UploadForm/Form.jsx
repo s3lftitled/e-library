@@ -53,10 +53,20 @@ const Form = ({ onClose, type, ID }) => {
         formData.append('author', formDatas.author)
         formData.append('file', file)
         response = await api.post(endpoint, formData)
+      } else if (type === 'change-password') {
+        endpoint = `/auth/change-password/${userID}`
+        response = await api.put(endpoint, { 
+          currentPassword: formDatas.currentPassword, 
+          newPassword: formDatas.newPassword,
+          newPasswordConfirmation: formDatas.newPasswordConfirmation
+        })
       }
 
       if (response.status === 201) {
         alert('Data has been submitted successfully')
+        onClose()
+      } else if (response.status === 200) {
+        alert(response.data.msg)
         onClose()
       }
     } catch (err) {
@@ -91,13 +101,21 @@ const Form = ({ onClose, type, ID }) => {
         <input type="file" name="file" placeholder="Upload file" onChange={handleFileChange}/>
       </>
     )
+  } else if (type === 'change-password') {
+    fields = (
+      <>
+        <input type='password' name='currentPassword' placeholder='Current password' onChange={handleFieldChange} />
+        <input type='password' name='newPassword' placeholder='New password' onChange={handleFieldChange} />
+        <input type='password' name='newPasswordConfirmation' placeholder='Confirm new password' onChange={handleFieldChange} />
+      </>
+    )
   }
 
   return (
     <>
       <div className="overlay" onClick={onClose} /> 
       <div className="form-container">
-        <h2>Add {type}</h2>
+        <h2>{type === 'change-password' ? 'Change Password' : `Add ${type}`}</h2>
         <form onSubmit={handleSubmission}>
           {fields}
           <button type="submit">Submit</button>

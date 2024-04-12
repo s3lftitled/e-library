@@ -47,8 +47,12 @@ const Courses = () => {
   const fetchProgramImage = async () => {
     try {
       const response = await api.get(`/programs/get-image/${programID}/${userID}`)
-      console.log(response)
-      setProgramImage(response.data.downloadUrl)
+
+      console.log(response.data)
+      if (response.data.downloadUrl) {
+        setProgramImage(response.data.downloadUrl)
+        console.log()
+      }    
     } catch (err) {
       console.log(console.error())
     }
@@ -95,7 +99,7 @@ const Courses = () => {
             {programCourses.map((course) => (
               <div className="course-card" key={course._id} onClick={() => navigateToLearningMaterials(course._id, course.title)} >            
                 <div className="image-container">
-                  <img className="course-img" src={programImage ? programID : '/pu-logo-2.png'} alt="program image" />
+                  <img className="course-img" src={programImage ? programImage : '/pu-logo-2.png'} alt="program image" />
                     <p className="attribution-text">
                       Free resources from <a href="https://free3dicon.com/" target="_blank" rel="noopener noreferrer">free3dicon.com</a>
                     </p>

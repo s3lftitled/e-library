@@ -81,7 +81,7 @@ export const Programs = () => {
       />
       {!loading && data.recommendedProgram && (
         <>
-          <h2>Recommended</h2>
+          <h2>For You</h2>
           <RecommendedProgram
             program={data.recommendedProgram}
             onClick={() => navigateToCourses(data.recommendedProgram._id, data.recommendedProgram.title)}

@@ -1,5 +1,3 @@
-
-const User = require('../models/user')
 const { redisClient, DEFAULT_EXP } = require('../utils/redisClient')
 const { getDownloadURL, getStorage, ref } = require('firebase/storage')
 const { app } = require('../config/firebase.config')
@@ -53,7 +51,7 @@ const createProgram =  async (req, res, programRepository) => {
     const program = await programRepository.createProgram(title, description)
 
     // Clear programs cache for all users
-    await clearAllProgramsCache()
+    clearAllProgramsCache()
 
     // Respond with the created program
     res.status(201).json({ program, msg: 'Program has been created succesfully' })
@@ -171,6 +169,10 @@ const getProgramImageURL = async (req, res, programRepository) => {
     // If material not found, return error
     if (!program) {
       return res.status(404).json({ error: 'Program not found' })
+    }
+
+    if (!program.imageURL) {
+      return res.status(200).json({ msg: 'Program currently dont have an image url'})
     }
     // Create a non-root reference using child
     const storageRef = ref(storage, program.imageURL)

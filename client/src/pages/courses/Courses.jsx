@@ -93,18 +93,13 @@ const Courses = () => {
         ) : (
           <div className="courses">
             {programCourses.map((course) => (
-              <div className="course-card" key={course._id} onClick={() => navigateToLearningMaterials(course._id, course.title)} >
-                { programImage !== null ? (
-                 <div className="image-container">
-                  <img className="course-img" src={programImage} alt="program image" />
+              <div className="course-card" key={course._id} onClick={() => navigateToLearningMaterials(course._id, course.title)} >            
+                <div className="image-container">
+                  <img className="course-img" src={programImage ? programID : '/pu-logo-2.png'} alt="program image" />
                     <p className="attribution-text">
                       Free resources from <a href="https://free3dicon.com/" target="_blank" rel="noopener noreferrer">free3dicon.com</a>
                     </p>
-                  </div>
-                  ) : (
-                    <img className="course-img" src='/pu-logo-2.png' alt="pu-logo"/>
-                  ) 
-                }                   
+                </div>                  
                 <p className="course-title">{course.title}</p>
               </div>
             ))}

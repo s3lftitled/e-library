@@ -11,11 +11,11 @@ const storage = getStorage(app)
  */
 const clearAllProgramsCache = async () => {
   try {
-    const keys = await redisClient.keys('courses:*')
+    const keys = await redisClient.keys('programs:*')
     if (keys.length > 0) {
       await redisClient.del(keys)
     }
-    console.log('All courses cache cleared')
+    console.log('All programs cache cleared')
   } catch (error) {
     throw new Error(`Error clearing courses cache: ${error.message}`)
   }

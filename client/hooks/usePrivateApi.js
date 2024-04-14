@@ -11,6 +11,7 @@ const usePrivateApi = () => {
     const requestIntercept = privateAxios.interceptors.request.use(
       (config) => {
         if (!config.headers['Authorization']) {
+          console.log('token request', login.accessToken)
           config.headers['Authorization'] = `Bearer ${login?.accessToken}`
         }
         return config
@@ -23,18 +24,12 @@ const usePrivateApi = () => {
       async (error) => {
         const prevRequest = error?.config
 
-        if (error?.response?.status === 403 && !prevRequest?.sent) {
+        if (!prevRequest?.sent && (error?.response?.status === 401 || error?.response?.status === 403)) {
           prevRequest.sent = true
-
-          try {
-            const newAccessToken = await refreshAccessToken()
-            login({ accessToken: newAccessToken })
-            prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
-            return privateAxios(prevRequest)
-          } catch (refreshError) {
-            console.error('Failed to refresh access token:', refreshError)
-            return Promise.reject(error)
-          }
+          const newAccessToken = await refreshAccessToken()
+          prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
+          console.log('token response', newAccessToken)
+          return privateAxios(prevRequest)
         }
 
         return Promise.reject(error)
@@ -45,7 +40,7 @@ const usePrivateApi = () => {
       privateAxios.interceptors.response.eject(responseIntercept)
       privateAxios.interceptors.request.eject(requestIntercept)
     }
-  }, [refreshAccessToken, login])
+  }, [refreshAccessToken])
 
   return privateAxios
 }

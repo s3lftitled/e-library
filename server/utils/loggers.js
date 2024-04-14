@@ -26,16 +26,5 @@ const errorLogger = winston.createLogger({
   ]
 })
 
-const requestHandler = (path) => {
-  const profiler = logger.startTimer()
-  const ONE_BILLION = 1000000000
 
-  for (let i = 0; i < ONE_BILLION; i++) {
-    j = i * 2
-  }
-
-  profiler.done({ message: `Handled request for ${path}` })
-}
-
-
-module.exports = { logger, errorLogger, requestHandler }
+module.exports = { logger, errorLogger }

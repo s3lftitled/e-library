@@ -9,7 +9,6 @@ import FloatingButton from '../../../components/FloatingButton/FloatingButton'
 import Form from '../../../components/UploadForm/Form'
 
 export const Programs = () => {
-  const { user } = useUserData()
   const privateAxios = usePrivateApi()
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
@@ -46,7 +45,7 @@ export const Programs = () => {
     }
 
     fetchPrograms()
-  }, [user, user._id, privateAxios, navigate])
+  }, [])
 
   const navigateToCourses = (programID, programTitle) => {
     navigate(`/courses/${programID}/${programTitle}`)

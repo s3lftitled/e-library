@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const { logger } = require('../utils/loggers')
 require('dotenv').config()
 
 /**
@@ -29,6 +30,7 @@ const refreshAccessToken = async (req, res) => {
       { expiresIn: '30m' }
     )
 
+    logger.info(`Token refreshed succesfully: ${newAccessToken}`)
     // Set the new access token in cookies
     res.cookie('accessToken', newAccessToken, { httpOnly: true, secure: true, sameSite: 'none' })
     // Set the new access token in the response header

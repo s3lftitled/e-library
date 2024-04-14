@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt') // Importing bcrypt for password hashing
 const nodemailer = require('nodemailer') // Importing nodemailer for sending emails
 const crypto = require('crypto') // Importing crypto for generating random codes
 const { ROLES } = require('../middleware/auth-middleWare') // Importing ROLES for
-const { logger, errorLogger } = require('../logger/loggers')
+const { logger, errorLogger } = require('../utils/loggers')
 const { 
   validateUserData,
   validateEmail,

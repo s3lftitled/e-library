@@ -22,7 +22,7 @@ const PersistLogin = () => {
       }
     }
     !login?.accessToken ? verifyToken() : setIsLoading(false)
-  }, [refreshAccessToken, login])
+  }, [])
 
   return (
     <>

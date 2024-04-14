@@ -190,6 +190,67 @@
   margin: 2px;
 }
 
+/* Media Queries for Responsiveness */
+
+@media screen and (max-width: 1100px) {
+  .profile-section {
+    width: 100%;
+  }
+
+  .log-out-section {
+    margin-top: 50px;
+  }
+}
+
+@media screen and (max-width: 780px) {
+  .user-pic {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .user-greeting {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+  }
+  
+  .user-email {
+    font-size: 0.7rem;
+    padding: 5px;
+    margin: 3px;
+    font-weight: 700;
+  }
+  
+  .user-role {
+    font-size: 1rem;
+    margin: 4px;
+  }
+
+  .user-department {
+    font-size: 0.8rem;
+  }
+  
+  .user-department p {
+    font-size: 0.8rem;
+  }
+
+  .user-content-section h2 {
+    font-size: 0.8rem;
+  }
+  .upload-pic-form button,
+  .change-pic-btn,
+  .log-out-section button,
+  .hide-profile-section {
+    padding: 6px; 
+    font-size: 0.6rem; 
+  }
+  .log-out-section {
+    margin-top: 80px;
+  }
+  .log-out-section a {
+    font-size: 0.8rem;
+  }
+}
 
 @media screen and (max-width: 664px) {
   .user-icon {
@@ -211,4 +272,3 @@
     height: 30px;
   }  
 }
-

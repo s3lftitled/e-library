@@ -25,8 +25,8 @@ header .header-content {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
   margin-left: 80px;
+  
 }
 
 main {
@@ -38,9 +38,9 @@ main {
   margin: 0;
 }
 
-header h1 {
+.header-content h1 {
   font-size: 1.7rem;
-  margin-left: 2vh;
+  margin-left: 10px;
 }
 
 ion-icon {
@@ -87,6 +87,10 @@ ion-icon:hover{
   box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.2), 0px 10px 10px rgba(0, 0, 0, 0.2);
 }
 
+.image-container {
+  height: 100px;
+}
+
 .course-img {
   width: auto;
   height: 100px;
@@ -96,7 +100,7 @@ ion-icon:hover{
 
 .attribution-text {
   position: absolute;
-  bottom: 23%;
+  bottom: 25%;
   left: 0;
   padding: 5px;
   background-color: rgba(255, 255, 255, 0.8);
@@ -104,6 +108,14 @@ ion-icon:hover{
   font-size: 10px;
   z-index: 10;
   font-size: 0.5rem;
+}
+
+.course-title-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 100%;
 }
 
 .course-title {
@@ -120,6 +132,11 @@ ion-icon:hover{
     height: 150px;
     width: 250px;
   }
+
+  .course-img {
+    height: 90px;
+  }
+
 }
 
 @media screen and (max-width: 898px) {
@@ -131,7 +148,7 @@ ion-icon:hover{
     font-size: 0.9rem;
     font-weight: 700;
   }  
-  header h1 {
+  .header-content h1 {
     font-size: 1.6rem;
   }
 }
@@ -143,7 +160,7 @@ ion-icon:hover{
     width: 200px;
   }
   .course-title {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 700;
   }  
 }
@@ -154,9 +171,12 @@ ion-icon:hover{
     width: 180px;
   }
   .course-title {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     font-weight: 700;
   }  
+  .course-img {
+    height:  80px;
+  }
 }
 
 @media screen and (max-width: 664px) {
@@ -168,9 +188,8 @@ ion-icon:hover{
     font-size: 0.7rem;
     font-weight: 700;
   }  
-  header h1 {
+  .header-content h1 {
     font-size: 1.4rem;
-    margin-left: 1vh;
   }
   ion-icon {
     font-size: 20px;
@@ -184,7 +203,13 @@ ion-icon:hover{
   }
   header .header-content {
     margin-top: 10px;
-    margin-left: 20px;
+    margin-left: 40px;
+  }
+}
+
+@media screen and (max-width: 554px) {
+  .header-content {
+    margin-left: 10px;
   }
 }
 
@@ -197,9 +222,12 @@ ion-icon:hover{
     font-size: 0.6rem;
     font-weight: 700;
   }  
-  header h1 {
+  header .header-content {
+    margin-left: 30px;
+  }
+  .header-content h1 {
     font-size: 1.2rem;
-    margin-left: 1vh;
+    margin-left: 10px;
   }
   ion-icon {
     font-size: 16px;
@@ -208,6 +236,10 @@ ion-icon:hover{
     width: 30px;
     height: 30px;
   } 
+  .attribution-text {
+    bottom: 25%;
+    font-size: 0.4rem;
+  }
 }
 
 @media screen and (max-width: 386px) {
@@ -216,12 +248,12 @@ ion-icon:hover{
     width: 130px;
   }
   .course-title {
-    font-size: 0.6rem;
+    font-size: 0.5rem;
     font-weight: 700;
   }  
-  header h1 {
-    font-size: 1.2rem;
-    margin-left: 1vh;
+  .header-content h1 {
+    font-size: 1.1rem;
+    margin-left: 10px;
   }
   ion-icon {
     font-size: 16px;

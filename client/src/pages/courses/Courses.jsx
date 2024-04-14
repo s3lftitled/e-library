@@ -103,8 +103,10 @@ const Courses = () => {
                     <p className="attribution-text">
                       Free resources from <a href="https://free3dicon.com/" target="_blank" rel="noopener noreferrer">free3dicon.com</a>
                     </p>
-                </div>                  
-                <p className="course-title">{course.title}</p>
+                </div>         
+                <div className="course-title-div">
+                  <p className="course-title">{course.title}</p>
+                </div>           
               </div>
             ))}
           </div>

@@ -168,7 +168,7 @@
   top: calc(100% + 5px);
   left: 80%;
   right: 0;
-  z-index: 1; 
+  z-index: 10; 
   background-color: white; 
   border: 1px solid #ccc;
   border-top: none;
@@ -186,6 +186,12 @@
 
 .search-results li:hover {
   background-color: #f0f0f0;
+}
+
+@media screen and (max-width: 1250px) {
+  .search-results {
+    left: 0;
+  }
 }
 
 @media screen and (max-width: 915px) {
@@ -227,7 +233,7 @@
   }
 
   .program-card {
-    height: 140px;
+    height: 120px;
     width: 280px;
   }
 
@@ -247,6 +253,10 @@
 @media screen and (max-width: 640px) {
   .welcome-greetings {
     margin-left: 50px;
+  }
+
+  .recommended-programs {
+    margin-left: 0;
   }
 
   .program-card {
@@ -285,8 +295,8 @@
   }
 
   .program-card {
-    height: 130px;
-    width: 230px;
+    height: 120px;
+    width: 220px;
   }
 
   .program-title {
@@ -300,11 +310,22 @@
   .programs h2 {
     font-size: 1rem;
   }
+
+  .search-input {
+    height: 26px;
+    width: 140px;
+  }
+  
+  .search-icon {
+    height: 22px;
+    width: 40px;
+    font-size: 16px;
+  }
 }
 
 @media screen and (max-width: 500px) {
   .program-card {
-    height: 120px;
+    height: 100px;
     width: 210px;
   }
 
@@ -341,7 +362,7 @@
 
   .program-card {
     height: 115px;
-    width: 200px;
+    width: 195px;
   }
 
   .program-title {
@@ -371,16 +392,16 @@
   }
 
   .program-card {
-    height: 115px;
-    width: 180px;
+    height: 90px;
+    width: 175px;
   }
 
   .program-title {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
   }
   
   .program-description {
-    font-size: 0.5rem;
+    font-size: 0.4rem;
   }
   
   .book-img {
@@ -391,8 +412,8 @@
 
 @media screen and (max-width: 402px) {
   .program-card {
-    height: 110px;
-    width: 170px;
+    height: 80px;
+    width: 165px;
   }
 
   .program-title {
@@ -411,7 +432,7 @@
 
 @media screen and (max-width: 380px) {
   .program-card {
-    height: 100px;
+    height: 75px;
     width: 160px;
   }
 

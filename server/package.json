@@ -21,6 +21,7 @@
     "express-rate-limit": "^7.2.0",
     "firebase": "^10.9.0",
     "helmet": "^7.1.0",
+    "install": "^0.13.0",
     "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.2",
     "mongo-sanitize": "^1.1.0",
@@ -29,8 +30,12 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.9",
     "nodemon": "^3.0.3",
+    "npm": "^10.5.2",
     "redis": "^4.6.13",
     "sharp": "^0.33.2",
+    "winston": "^3.13.0",
+    "winston-daily-rotate-file": "^5.0.0",
+    "winston-transport": "^4.7.0",
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {

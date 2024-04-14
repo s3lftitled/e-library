@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt') // Importing bcrypt for password hashing
 const nodemailer = require('nodemailer') // Importing nodemailer for sending emails
 const crypto = require('crypto') // Importing crypto for generating random codes
 const { ROLES } = require('../middleware/auth-middleWare') // Importing ROLES for
+const { logger, errorLogger } = require('../logger/loggers')
 const { 
   validateUserData,
   validateEmail,
@@ -140,12 +141,14 @@ const studentRegistration = async (req, res, userRepository, departmentRepositor
 
     // Send verification email
     await sendVerificationEmail(email, verificationCode)
+
+    logger.info(`User ${email} registered successfully.`)
     
      // Respond with success message
     res.status(200).json({ msg: 'Verification code sent. Please check your email'})
   } catch (error) {
      // Handle errors
-    console.error('Student registration error:', error.message)
+    errorLogger.error(`Student registration error: ${error.message}`)
     res.status(500).json({ error: `Failed to register student. ${error.message} ` })
   }
 }
@@ -221,11 +224,13 @@ const staffRegistration = async (req, res, userRepository) => {
     // Send verification code
     await sendVerificationEmail(email, verificationCode)
 
+    logger.info(`User ${user.email} logged in successfully.`)
+
     // Respond with success message
     res.status(200).json({ msg: 'Verification code sent. Check your email to complete registration' })
   } catch (error) {
     // Handle errors
-    console.error('Staff registration error:', error.message)
+    errorLogger.error(`Staff registration error: ${error.message}`)
     res.status(500).json({ error: 'Failed to register staff. Please try again later.' })
   }
 }
@@ -259,17 +264,20 @@ const logIn = async (req, res, userRepository, logRepository) => {
 
     // If user not found
     if (!user) {
+      errorLogger.error(`User not found for email: ${email}`)
       return res.status(404).json({ error: 'User not found' })
     }
 
     // Compare passwords
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
+      errorLogger.error(`Incorrect password for email: ${email}`)
       return res.status(400).json({ error: 'Incorrect password. Please try again.'})
     }
 
     // If user's email is not verified
     if(user.verificationCode !== null) {
+      errorLogger.error(`Unverified email attempted login: ${email}`)
       return res.status(400).json({ error: 'Please verify your email first'})
     }
 
@@ -315,6 +323,8 @@ const logIn = async (req, res, userRepository, logRepository) => {
     res.cookie('refreshToken', refreshToken, { httpOnly: true })
     res.cookie('accessToken', accessToken, { httpOnly: true })
 
+    logger.info(`User ${user.email} logged in successfully.`)
+
     // Send response with tokens and user information
     res.status(200).json({
       accessToken,
@@ -324,8 +334,7 @@ const logIn = async (req, res, userRepository, logRepository) => {
       msg: 'User logged in successfully'
     })
   } catch (error) {
-    // Handle errors
-    console.error('Error logging in:', error);
+    errorLogger.error(`Error logging in: ${error.message}`)
     res.status(500).json({ error : `Error logging in. ${error.message} ` })
   }
 }
@@ -351,11 +360,13 @@ const logOut = async (req, res) => {
     await redisClient.del(`materials:${userID}`)
     await redisClient.del(`material:${userID}`)
 
+    logger.info(`User ${userID} logged out successfully.`)
+
     // Send success message
     res.status(200).json({ msg: 'Logged out successfully' })
   } catch (error) {
     // Handle errors
-    console.error('Error logging out:', error)
+    errorLogger.error(`Error logging out: ${error.message}`)
     res.status(500).json({ error : 'Error logging out. Please try again later.' })
   }
 }
@@ -382,6 +393,7 @@ const verifyEmail = async (req, res, userRepository) => {
 
     // If verification code is incorrect
     if (user.verificationCode !== verificationCode) {
+      errorLogger.error(`Incorrect verification code for ${email}`)
       return res.status(400).json({ error: 'Incorrect verification code' })
     }
 
@@ -390,11 +402,13 @@ const verifyEmail = async (req, res, userRepository) => {
     user.verificationCode = null
     await user.save()
 
+    logger.info(`User ${user.email} has been verified succesfully.`)
+
     // Respond with success message
     res.status(200).json({ msg: 'Email verified successfully. User registered.' })
   } catch (error) {
     // Handle errors
-    console.error('Error verifying email:', error)
+    errorLogger.error(`Error verifying email: ${error.message}`)
     res.status(500).json({ error : 'Error verifying email. Please try again later.' })
   }
 }

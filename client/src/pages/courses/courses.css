@@ -39,7 +39,7 @@ main {
 }
 
 .header-content h1 {
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   margin-left: 10px;
 }
 
@@ -226,7 +226,7 @@ ion-icon:hover{
     margin-left: 30px;
   }
   .header-content h1 {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-left: 10px;
   }
   ion-icon {

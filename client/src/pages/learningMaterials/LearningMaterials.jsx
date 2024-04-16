@@ -75,7 +75,6 @@ const LearningMaterials = () => {
       const response = await privateAxios.post(`/users/${userID}/add-to-bookmark/${materialID}`, {}, { withCredentials: true })
      
       if (response.status === 200) {
-        alert(response.data.msg)
         setBookshelf(prevBookshelf => [...prevBookshelf, { _id: materialID }])
         setLearningMaterials(prevMaterials => {
           return prevMaterials.map(material => {
@@ -99,7 +98,6 @@ const LearningMaterials = () => {
       const response = await privateAxios.delete(`/users/${userID}/delete-from-bookshelf/${materialID}`, { withCredentials: true })
 
       if (response.status === 200) {
-        alert(response.data.msg)
         setBookshelf(prevBookshelf => prevBookshelf.filter(item => item._id !== materialID))
         setLearningMaterials(prevMaterials => {
           return prevMaterials.map(material => {

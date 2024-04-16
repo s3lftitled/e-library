@@ -81,7 +81,7 @@ const getCourseLearningMaterial = async (req, res, courseRepository, learningMat
 
   try {
      // Check if the learning materials for the course are cached in Redis
-    const cachedMaterials = await redisClient.get(`materials:${courseID}${userID}`)
+    const cachedMaterials = await redisClient.get(`materials:${userID}:${courseID}`)
 
     // If cached materials exist, parse and return them
     if (cachedMaterials) {
@@ -121,7 +121,7 @@ const getCourseLearningMaterial = async (req, res, courseRepository, learningMat
     }
 
     // Cache the retrieved learning materials in Redis
-    await redisClient.set(`materials:${courseID}${userID}`, JSON.stringify(learningMaterials), "EX", DEFAULT_EXP)
+    await redisClient.set(`materials:${userID}:${courseID}`, JSON.stringify(learningMaterials), "EX", DEFAULT_EXP)
 
     // Respond with the retrieved learning materials
     res.status(200).json({ learningMaterials })
@@ -146,7 +146,7 @@ const getMaterial = async (req, res, learningMaterialRepository) => {
 
   try {
     // Check if the material details are cached in Redis
-    const cachedMaterials = await redisClient.get(`material:${materialID}${userID}`)
+    const cachedMaterials = await redisClient.get(`material:${userID}:${materialID}`)
 
     // If cached materials exist, parse and return them
     if (cachedMaterials) {
@@ -181,7 +181,7 @@ const getMaterial = async (req, res, learningMaterialRepository) => {
     const materialWithUrl = { ...material.toObject(), downloadUrl }
     
     // Cache the material details in Redis
-    await redisClient.set(`material:${materialID}${userID}`, JSON.stringify(materialWithUrl), "EX", DEFAULT_EXP)
+    await redisClient.set(`material:${userID}:${materialID}`, JSON.stringify(materialWithUrl), "EX", DEFAULT_EXP)
     
     // Respond with the material details
     res.status(200).json({ material: materialWithUrl })

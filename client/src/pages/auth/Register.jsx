@@ -16,6 +16,10 @@ export const Register = () => {
   })
   const [departments, setDepartments] = useState([])
   const [programs, setPrograms] = useState([])
+
+  const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(null)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -95,12 +99,12 @@ export const Register = () => {
         })
       }
       if (response.status === 200) {
-        alert('Registered successfully, verification code sent to your email')
+        setSuccess(response.data.msg)
         navigate(`/verify/${registrationData.email}`)
       }
     } catch (err) {
       if (err.response && err.response.data) {
-        alert(err.response.data.error || 'An error occurred. Please try again.')
+        setError(err.response.data.error)
       } else {
         alert('An error occurred. Please try again.')
       }
@@ -196,6 +200,10 @@ export const Register = () => {
           </select>
         )}
       </form>
+      <div className="msg-div">
+        {error && <p className="error-msg">{error}</p>}
+        {success && <p className="success-msg">{success}</p>}
+      </div>
       <button onClick={handleSubmission} disabled={uiState.isButtonDisabled}>Register</button>
     </>
   )

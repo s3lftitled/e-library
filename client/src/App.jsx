@@ -3,9 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from '../context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import './App.css'
-import Spinner from './components/Spinner/Spinner'
-import Notes from './pages/notes/Notes'
-import Bookshelf from './pages/bookshelf/Bookshelf'
 
 // Lazy load components
 const Authentication = lazy(() => import('./pages/auth/Auth'))
@@ -19,6 +16,9 @@ const LearningMaterials = lazy(() => import('./pages/learningMaterials/LearningM
 const SelectedPdfPage = lazy(() => import('./pages/learningMaterials/PDFShower'))
 const AdminDashboard = lazy(() => import('./pages/dashboard/AdminDashboard'))
 const NotFound = lazy(() => import('./components/NotFound/NotFound'))
+const Spinner = lazy(() => import('./components/Spinner/Spinner'))
+const Notes = lazy(() => import('./pages/notes/Notes'))
+const Bookshelf = lazy(() => import('./pages/bookshelf/Bookshelf'))
 
 function App() {
   return (

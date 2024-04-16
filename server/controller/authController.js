@@ -354,11 +354,18 @@ const logOut = async (req, res) => {
     res.clearCookie('refreshToken')
 
     // Delete user-related data from Redis
+    const keysMaterial = await redisClient.keys(`material:${userID}:*`)
+    const keysMaterials = await redisClient.keys(`materials:${userID}:*`)
+    const keysImages = await redisClient.keys(`image:${userID}:*`)
+    const keysCourses = await redisClient.keys(`courses:${userID}:*`)
+
+    const allKeys = [...keysMaterial,...keysMaterials, ...keysImages, ...keysCourses]
+    if (allKeys.length > 0) {
+      await redisClient.del(allKeys)
+    }
+
     await redisClient.del(`user-details:${userID}`)
     await redisClient.del(`programs:${userID}`)
-    await redisClient.del(`courses:${userID}`)
-    await redisClient.del(`materials:${userID}`)
-    await redisClient.del(`material:${userID}`)
 
     logger.info(`User ${userID} logged out successfully.`)
 

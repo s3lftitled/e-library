@@ -143,7 +143,7 @@ const getProgramImageURL = async (req, res, programRepository) => {
 
   try {
     // Check if the material details are cached in Redis
-    const cachedProgramImage = await redisClient.get(`image:${programID}${userID}`)
+    const cachedProgramImage = await redisClient.get(`image:${userID}:${programID}`)
 
     // If cached materials exist, parse and return them
     if (cachedProgramImage) {
@@ -181,7 +181,7 @@ const getProgramImageURL = async (req, res, programRepository) => {
     const downloadUrl = await getDownloadURL(storageRef)
     
     // Cache the material details in Redis
-    await redisClient.set(`image:${programID}${userID}`, JSON.stringify(downloadUrl), "EX", DEFAULT_EXP)
+    await redisClient.set(`image:${userID}:${programID}`, JSON.stringify(downloadUrl), "EX", DEFAULT_EXP)
     
     // Respond with the downloadUrl
     res.status(200).json({ downloadUrl })

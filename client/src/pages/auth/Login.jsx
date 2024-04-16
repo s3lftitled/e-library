@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../../../context/AuthContext"
+import './styles.css'
 import api from "../../../utils/api"
 
 export const Login = () => {
@@ -11,6 +12,9 @@ export const Login = () => {
   const [loginText, setLoginText] = useState('')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loginTextOrigin, setLoginTextOrigin] = useState('Login')
+
+  const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(null)
 
   useEffect(() => {
     if (currentIndex < loginTextOrigin.length) {
@@ -50,14 +54,14 @@ export const Login = () => {
       localStorage.setItem('userID', userID)
       localStorage.setItem('userRole', role)
 
-      alert('Logged in successfully')
+      setSuccess('Logged in successfully')
       navigate('/welcome')
     } catch (err) {
       if (err.response && err.response.data.error === 'Please verify your email first') {
-        alert(err.response.data.error)
+        setError(err.response.data.error)
         navigate(`/verify/${email}`)
       } else {
-        alert(err.response.data.error)
+        setError(err.response.data.error)
       }
     }
   }
@@ -86,6 +90,10 @@ export const Login = () => {
           onKeyPress={handleKeyPress} // event listener :) 
         />
       </form>
+      <div className="msg-div">
+        {error && <p className="error-msg">{error}</p>}
+        {success && <p className="success-msg">{success}</p>}
+      </div>
       <img src="book_button_icon2.webp" alt="Login Icon"
         className="login_icon" onClick={handleSubmission} />
     </>

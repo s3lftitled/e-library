@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
 import api from '../../../utils/api'
+import SuccessAlert from "../Alerts/SuccessAlert/SuccessAlerts"
+import ErrorAlert from "../Alerts/ErrorAlert/ErrorAlerts"
 import './Form.css'
 
 const Form = ({ onClose, type, ID }) => {
   const [formDatas, setFormDatas] = useState({})
   const [file, setFile] = useState(null)
+  const [ successMsg, setSuccessMsg ] = useState(null)
+  const [ errorMsg, setErrorMsg ] = useState(null)
   const userID = localStorage.getItem("userID")
 
   useEffect(() => {
@@ -63,17 +67,17 @@ const Form = ({ onClose, type, ID }) => {
       }
 
       if (response.status === 201) {
-        alert('Data has been submitted successfully')
+        setSuccessMsg('Data has been submitted successfully')
         onClose()
       } else if (response.status === 200) {
-        alert(response.data.msg)
+        setSuccessMsg(response.data.msg)
         onClose()
       }
     } catch (err) {
       if (err.response && err.response.data) {
-        alert(err.response.data.error || 'An error occurred. Please try again.')
+        setErrorMsg(err.response.data.error || 'An error occurred. Please try again.')
       } else {
-        alert('An error occurred. Please try again.')
+        setErrorMsg('An error occurred. Please try again.')
       }
     }
   }
@@ -113,6 +117,8 @@ const Form = ({ onClose, type, ID }) => {
 
   return (
     <>
+      { successMsg && <SuccessAlert message={successMsg} onClose={() => setSuccessMsg(null)} /> }
+      { errorMsg && <ErrorAlert message={errorMsg} onClose={() => setErrorMsg(null)} />}
       <div className="overlay" onClick={onClose} /> 
       <div className="form-container">
         <h2>{type === 'change-password' ? 'Change Password' : `Add ${type}`}</h2>

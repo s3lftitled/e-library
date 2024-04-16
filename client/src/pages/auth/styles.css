@@ -56,15 +56,13 @@
 .logo-part {
   flex: 1; 
   display: flex;
-  overflow: visible;
   margin-bottom: 0;
   align-items: center;
   padding-top: 45px;
-  z-index: 102;
 }
 
 .logo-image {
-  width: 280px; height: 280px;
+  width: 250px; height: 240px;
   align-items: center;
 }
 
@@ -311,7 +309,7 @@ input {
     padding-bottom: 165px;
   }
   .logo-image {
-    width: 290px; height: 290px;
+    width: 230px; height: 230px;
   }
   .login_icon {
     width: 100px; height: 100px;
@@ -320,23 +318,23 @@ input {
     font-size: 1.7em;
   }
   .left-side p {
-    font-size: 1.3em;
+    font-size: 1em;
   }
   .left-side input {
-    font-size: 1.7em;
+    font-size: 1em;
   }
   .auth-container button {
-    width: 230px; height: 45px;
-    font-size: 1.3em;
+    width: 230px; height: 40px;
+    font-size: 0.8em;
   }
 }
 
 @media screen and (max-width: 1152px) { /* 870 */
   .create-account {
-    padding-bottom: 90px;
+    padding-bottom: 50px;
   }
   .logo-image {
-    width: 260px; height: 260px;
+    width: 230px; height: 230px;
   }
 
 }
@@ -349,7 +347,7 @@ input {
     width: 220px; height: 220px;
   }
   .login_icon {
-    width: 70px; height: 70px;
+    width: 60px; height: 60px;
   }
   .left-side h2 {
     font-size: 1.5em;

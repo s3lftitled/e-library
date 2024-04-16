@@ -4,12 +4,16 @@ import { memo } from "react"
 import { useNavigate } from "react-router-dom"
 import api from "../../../utils/api"
 import Form from '../../components/UploadForm/Form'
+import SuccessAlert from "../Alerts/SuccessAlert/SuccessAlerts"
+import ErrorAlert from "../Alerts/ErrorAlert/ErrorAlerts"
 import './ProfileSection.css'
 
 export const ProfileSection = memo(({ showProfileSection, setShowProfileSection }) => {
-  const [isUploading, setIsUploading] = useState(false)
-  const [base64Image, setBase64Image] = useState('')
-  const [showForm, setShowForm] = useState(false)
+  const [ isUploading, setIsUploading ] = useState(false)
+  const [ base64Image, setBase64Image ] = useState('')
+  const [ showForm, setShowForm ] = useState(false)
+  const [ successMsg, setSuccessMsg ] = useState(null)
+  const [ errorMsg, setErrorMsg ] = useState(null)
   const { user } = useUserData()
   const userID = localStorage.getItem("userID")
   const navigate = useNavigate() 
@@ -23,10 +27,11 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
       }, { withCredentials: true })
 
       if (response.status === 200) {
-        alert('Profile picture has been uploaded successfully. Refresh the page to see changes.')
+        setSuccessMsg('Profile picture changed succesfully. Refresh the page to see changes')
         setIsUploading(false)
       }
     } catch (err) {
+      setErrorMsg(err.response.data.error)
       console.error("Error uploading profile picture:", err)
     }
   }
@@ -76,6 +81,8 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
 
   return (
     <>
+      { successMsg && <SuccessAlert message={successMsg} onClose={() => setSuccessMsg(null)} /> }
+      { errorMsg && <ErrorAlert message={errorMsg} onClose={() => setErrorMsg(null)} />}
       {!showProfileSection ? (
         <div
           className='user-icon'

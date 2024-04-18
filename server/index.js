@@ -37,9 +37,12 @@ app.use(cookieParser())
 // Configure Express to parse JSON requests with a maximum size limit of 50mb
 app.use(express.json({ limit: '100mb' }))
 app.use(express.urlencoded({ extended: true, limit: '100mb', parameterLimit: 1000000 }))
+
+// Ensuring security measures 
 app.use(mongoSanitize())
 app.use(helmet())
 app.use(xss())
+
 app.use(express.static(path.join(__dirname, 'files')))
 
 // Set the port for the server to run on, using the specified PORT or default to 5000

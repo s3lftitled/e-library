@@ -40,7 +40,7 @@ router.post('/staff-registration', (req, res) => {
 
 // Email Verification endpoint
 router.post('/verify-email', (req, res) => {
-    verifyEmail(req, res)
+    verifyEmail(req, res, userRepository)
 }
 )
 

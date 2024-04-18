@@ -14,6 +14,7 @@ const VerificationCodeInput = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      console.log(email)
       await api.post('auth/verify-email',
       {email, verificationCode}
       )

@@ -85,7 +85,7 @@ const studentRegistration = async (req, res, userRepository, departmentRepositor
   const { email, password, passwordConfirmation, chosenDepartment, chosenRole, chosenProgram } = req.body
 
   try {
-    // Validate user data
+    console.log(req.body)
     validateUserData(req.body)
 
     // Check if user already exists

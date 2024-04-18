@@ -20,7 +20,7 @@ const validatePassword = (password) => {
 const validateUserData = (userData) => {
   const { email, password, passwordConfirmation, chosenRole, chosenDepartment, chosenProgram } = userData
 
-  if (!email || !password || ! passwordConfirmation || !chosenRole || !chosenDepartment || !chosenProgram) {
+  if (!email || !password || !passwordConfirmation || !chosenRole || !chosenDepartment || !chosenProgram) {
     throw new Error('Please fill in all the required fields')
   }
 
@@ -29,10 +29,16 @@ const validateUserData = (userData) => {
   }
 
   // Validate email format
-  validateEmail(email)
+  const emailValidation = validateEmail(email);
+  if (!emailValidation.isValid) {
+    throw new Error(emailValidation.errorMessage);
+  }
 
   // Validate password format
-  validatePassword(password)
+  const passwordValidation = validatePassword(password);
+  if (!passwordValidation.isValid) {
+    throw new Error(passwordValidation.errorMessage);
+  }
 
   return true
 }

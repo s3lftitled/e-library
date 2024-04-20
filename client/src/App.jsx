@@ -28,6 +28,7 @@ function App() {
         <Suspense fallback={<Spinner text="Loading..." />}>
           <Routes>
             <Route path="/auth" element={<Authentication />} />
+            <Route path="/helloworld" element={<HelloWorld />} />
             <Route path="/welcome" element={<Spinner text="Welcome to our E-Library..." />} />
             <Route element={<PersistLogin />}>
               <Route path="/" element={<Home />} />
@@ -38,7 +39,6 @@ function App() {
               <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />
               <Route path="/notes" element={<Notes />}/>
               <Route path="/bookshelf" element={<Bookshelf />} />
-              <Route path="/helloworld" element={<HelloWorld />} />
               <Route element={<ProtectedRoute allowedRoles={['Librarian']} />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
               </Route>

@@ -17,7 +17,6 @@ const SelectedPdfPage = lazy(() => import('./pages/learningMaterials/PDFShower')
 const AdminDashboard = lazy(() => import('./pages/dashboard/AdminDashboard'))
 const NotFound = lazy(() => import('./components/NotFound/NotFound'))
 const Spinner = lazy(() => import('./components/Spinner/Spinner'))
-const Notes = lazy(() => import('./pages/notes/Notes'))
 const Bookshelf = lazy(() => import('./pages/bookshelf/Bookshelf'))
 
 function App() {
@@ -35,7 +34,6 @@ function App() {
               <Route path="/learning-materials/:programID/:programTitle/:courseID/:courseTitle" element={<LearningMaterials />} />
               <Route path="/upload-learning-material" element={<FileUploadComponent />} />
               <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />
-              <Route path="/notes" element={<Notes />}/>
               <Route path="/bookshelf" element={<Bookshelf />} />
               <Route element={<ProtectedRoute allowedRoles={['Librarian']} />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />

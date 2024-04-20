@@ -58,6 +58,11 @@ app.use('/learning-materials', learningMaterials)
 app.use('/token', token)
 app.use('/admin-dashboard', adminDashboard)
 
+// Serve React app on all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+})
+
 // Function to start the server
 const start = async () => {
   try {

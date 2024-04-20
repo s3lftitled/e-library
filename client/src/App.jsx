@@ -19,6 +19,7 @@ const NotFound = lazy(() => import('./components/NotFound/NotFound'))
 const Spinner = lazy(() => import('./components/Spinner/Spinner'))
 const Notes = lazy(() => import('./pages/notes/Notes'))
 const Bookshelf = lazy(() => import('./pages/bookshelf/Bookshelf'))
+const HelloWorld = lazy(() => import('./pages/hello/HelloWorld'))
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
               <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />
               <Route path="/notes" element={<Notes />}/>
               <Route path="/bookshelf" element={<Bookshelf />} />
+              <Route path="/helloworld" element={<HelloWorld />} />
               <Route element={<ProtectedRoute allowedRoles={['Librarian']} />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
               </Route>

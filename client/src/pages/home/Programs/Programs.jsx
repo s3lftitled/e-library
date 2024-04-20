@@ -97,7 +97,7 @@ export const Programs = () => {
           />
         ))}
       </div>
-      { userRole=== 'Student' && <FloatingButton onClick={openForm} /> }
+      { userRole=== 'Librarian' && <FloatingButton onClick={openForm} /> }
       {showForm && <Form onClose={closeForm} type="program" programID={null} />}
     </div>
   )

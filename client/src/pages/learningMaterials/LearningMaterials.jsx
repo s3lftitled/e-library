@@ -158,7 +158,7 @@ const LearningMaterials = () => {
           <p>No learning materials found</p>
         )}
       </div>
-      { userRole=== 'Student' && <FloatingButton onClick={openForm} /> }
+      { userRole=== 'Librarian' && <FloatingButton onClick={openForm} /> }
       {showForm && <Form onClose={closeForm} type="learning-material" ID={courseID} />}
     </div>
   )

@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin-dashboard/
+
+# Allow search engines to access important pages
+Allow: /auth/
+Allow: /404
+Allow: /500
+
+Sitemap: https://secretlibrary.website/sitemap.xml

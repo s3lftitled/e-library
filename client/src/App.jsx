@@ -19,7 +19,6 @@ const NotFound = lazy(() => import('./components/NotFound/NotFound'))
 const Spinner = lazy(() => import('./components/Spinner/Spinner'))
 const Notes = lazy(() => import('./pages/notes/Notes'))
 const Bookshelf = lazy(() => import('./pages/bookshelf/Bookshelf'))
-const HelloWorld = lazy(() => import('./pages/hello/HelloWorld'))
 
 function App() {
   return (
@@ -28,7 +27,6 @@ function App() {
         <Suspense fallback={<Spinner text="Loading..." />}>
           <Routes>
             <Route path="/auth" element={<Authentication />} />
-            <Route path="/helloworld" element={<HelloWorld />} />
             <Route path="/welcome" element={<Spinner text="Welcome to our E-Library..." />} />
             <Route element={<PersistLogin />}>
               <Route path="/" element={<Home />} />

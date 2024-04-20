@@ -92,7 +92,7 @@ form {
   background-color: #dedede;
 }
 
-.left-side h2 {
+.left-side h1 {
   font-size: 2em;
   color: #4E7133;
   text-align: center;
@@ -287,7 +287,7 @@ input {
   .login_icon {
     width: 80px; height: 80px;
   }
-  .left-side h2 {
+  .left-side h1 {
     font-size: 1.5em;
   }
   .left-side input {
@@ -314,7 +314,7 @@ input {
   .login_icon {
     width: 100px; height: 100px;
   }
-  .left-side h2 {
+  .left-side h1 {
     font-size: 1.7em;
   }
   .left-side p {
@@ -349,7 +349,7 @@ input {
   .login_icon {
     width: 60px; height: 60px;
   }
-  .left-side h2 {
+  .left-side h1 {
     font-size: 1.5em;
   }
   .left-side input {
@@ -381,7 +381,7 @@ input {
   .left-side p {
     font-size: 0.8em;
   }
-  .left-side h2 {
+  .left-side h1 {
     font-size: 1.3em;
   }
   .auth-container button {

@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import useUserData from "../../../hooks/useUserData"
 import { memo } from "react"
 import { useNavigate } from "react-router-dom"
-import api from "../../../utils/api"
+import api, { privateAxios } from "../../../utils/api"
 import Form from '../../components/UploadForm/Form'
 import SuccessAlert from "../Alerts/SuccessAlert/SuccessAlerts"
 import ErrorAlert from "../Alerts/ErrorAlert/ErrorAlerts"
@@ -22,7 +22,7 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
     e.preventDefault()
 
     try {
-      const response = await api.post(`/users/profile/upload-image/${userID}`, {
+      const response = await privateAxios.post(`/users/profile/upload-image/${userID}`, {
         base64Image: base64Image
       }, { withCredentials: true })
 
@@ -64,7 +64,7 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
 
   const handleLogOut = async () => {
     try {
-      const response = await api.delete(`auth/logout/${userID}`)
+      const response = await privateAxios.delete(`auth/logout/${userID}`)
 
       if (response.status === 200) {
         localStorage.clear()

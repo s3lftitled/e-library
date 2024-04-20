@@ -1,5 +1,5 @@
 import { useState } from "react"
-import api from "../../../utils/api"
+import { privateAxios } from "../../../utils/api"
 
 const UploadLearningMaterial = () => {
   const [title, setTitle] = useState("")
@@ -12,7 +12,7 @@ const UploadLearningMaterial = () => {
     formData.append("file", file)
     console.log(title, file)
 
-    const result = await api.post(
+    const result = await privateAxios.post(
       '/learning-materials/courses/65dc210929c86d61e0305dd5',
       formData,
       {

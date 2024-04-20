@@ -136,7 +136,7 @@ export const Register = () => {
 
   return (
     <>
-      <h2>{uiState.loginText}</h2>
+      <h1>{uiState.loginText}</h1>
       <form>
         <input
           type='text'

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import api from '../../../utils/api'
+import api, { privateAxios } from '../../../utils/api'
 import SuccessAlert from "../Alerts/SuccessAlert/SuccessAlerts"
 import ErrorAlert from "../Alerts/ErrorAlert/ErrorAlerts"
 import './Form.css'
@@ -46,9 +46,9 @@ const Form = ({ onClose, type, ID }) => {
   
       if (type === 'program') {
         endpoint = '/programs/create-programs'
-        response = await api.post(endpoint, { title: formDatas.title, description: formDatas.description})
+        response = await privateAxios.post(endpoint, { title: formDatas.title, description: formDatas.description})
       } else if (type === 'course') {
-        response = await api.post(`/courses/programs/${ID}/create-course`, { title: formDatas.title })
+        response = await privateAxios.post(`/courses/programs/${ID}/create-course`, { title: formDatas.title })
         console.log(response)
       } else if (type === 'learning-material') {
         endpoint = `/learning-materials/courses/${ID}/${userID}`
@@ -56,10 +56,10 @@ const Form = ({ onClose, type, ID }) => {
         formData.append('title', formDatas.title)
         formData.append('author', formDatas.author)
         formData.append('file', file)
-        response = await api.post(endpoint, formData)
+        response = await privateAxios.post(endpoint, formData)
       } else if (type === 'change-password') {
         endpoint = `/auth/change-password/${userID}`
-        response = await api.put(endpoint, { 
+        response = await privateAxios.put(endpoint, { 
           currentPassword: formDatas.currentPassword, 
           newPassword: formDatas.newPassword,
           newPasswordConfirmation: formDatas.newPasswordConfirmation

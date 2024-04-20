@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import api from '../../../utils/api'
+import { privateAxios } from '../../../utils/api'
 import { Pie } from 'react-chartjs-2'
 import ChartComponent from './BarChart'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
@@ -24,7 +24,7 @@ const AdminDashboard = () => {
 
   const fetchPieChartData = async () => {
     try {
-      const response = await api.get('/admin-dashboard/get-statistics')
+      const response = await privateAxios.get('/admin-dashboard/get-statistics')
       setElibraryStats(response.data.elibraryStats)
       setTotalUserCount(response.data.totalCount)
     } catch (error) {
@@ -34,7 +34,7 @@ const AdminDashboard = () => {
 
   const fetchBarChartData = async () => {
     try {
-      const response = await api.get('/admin-dashboard/api/visitors')
+      const response = await privateAxios.get('/admin-dashboard/api/visitors')
       console.log(response.data)
       setVisitorData(response.data)
     } catch (error) {

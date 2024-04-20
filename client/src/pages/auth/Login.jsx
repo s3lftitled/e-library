@@ -74,7 +74,7 @@ export const Login = () => {
 
   return (
     <>
-      <h2>{loginText}</h2>
+      <h1>{loginText}</h1>
       <form>
         <input
           type='text'

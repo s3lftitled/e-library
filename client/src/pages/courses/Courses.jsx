@@ -46,7 +46,7 @@ const Courses = () => {
 
   const fetchProgramImage = async () => {
     try {
-      const response = await api.get(`/programs/get-image/${programID}/${userID}`)
+      const response = await privateAxios.get(`/programs/get-image/${programID}/${userID}`)
 
       console.log(response.data)
       if (response.data.downloadUrl) {

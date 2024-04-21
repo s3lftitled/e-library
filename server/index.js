@@ -58,9 +58,8 @@ app.use('/learning-materials', learningMaterials)
 app.use('/token', token)
 app.use('/admin-dashboard', adminDashboard)
 
-// Serve React app on all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+app.use('/helloworld', (_, res) => {
+  res.send('<h1>Hello World</h1>')
 })
 
 // Function to start the server

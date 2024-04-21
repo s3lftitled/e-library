@@ -15,7 +15,7 @@ const Authentication = () => {
         <div className="logo-part">
           <img src="PU_ELIB_LOGO3.webp" alt="PU Library Logo" className="logo-image "></img>
           </div>
-          <div className="Form-part">
+          <div className="form-part">
           {form ? (
             <Register/>
           ) : (

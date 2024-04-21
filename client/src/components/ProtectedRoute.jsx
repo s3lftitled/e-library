@@ -1,15 +1,24 @@
-import { Route, Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
-const ProtectedRoute = ({  allowedRoles }) => {
+const ProtectedRoute = ({ allowedRoles }) => {
+  const { accessToken } = useAuth();
   const userRole = localStorage.getItem('userRole')
 
-  console.log(userRole)
+  // Check if access token is present and user has the required role
+  const isAuthorized = accessToken && allowedRoles.includes(userRole)
 
-  const isAuthorized = allowedRoles.includes(userRole)
+  // Redirect to authentication if there's no access token
+  if (!accessToken) {
+    return <Navigate to="/auth" />
+  }
 
-  return (
-    isAuthorized ? <Outlet /> : <Navigate to='/'/>
-  )
+  // Redirect to home if user role is not allowed
+  if (!isAuthorized) {
+    return <Navigate to="/" />
+  }
+
+  return <Outlet />
 }
 
 export default ProtectedRoute

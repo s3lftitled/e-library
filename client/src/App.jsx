@@ -28,13 +28,15 @@ function App() {
             <Route path="/auth" element={<Authentication />} />
             <Route path="/welcome" element={<Spinner text="Welcome to our E-Library..." />} />
             <Route element={<PersistLogin />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/courses/:programID/:programTitle" element={<Courses />} />
-              <Route path="/verify/:email" element={<VerificationCodeInput />} />         
-              <Route path="/learning-materials/:programID/:programTitle/:courseID/:courseTitle" element={<LearningMaterials />} />
-              <Route path="/upload-learning-material" element={<FileUploadComponent />} />
-              <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />
-              <Route path="/bookshelf" element={<Bookshelf />} />
+              <Route element={<ProtectedRoute allowedRoles={['Librarian', 'Student', 'Staff']} />}>  
+                <Route path="/" element={<Home />} />
+                <Route path="/courses/:programID/:programTitle" element={<Courses />} />
+                <Route path="/verify/:email" element={<VerificationCodeInput />} />         
+                <Route path="/learning-materials/:programID/:programTitle/:courseID/:courseTitle" element={<LearningMaterials />} />
+                <Route path="/upload-learning-material" element={<FileUploadComponent />} />
+                <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />
+                <Route path="/bookshelf" element={<Bookshelf />} />
+              </Route>
               <Route element={<ProtectedRoute allowedRoles={['Librarian']} />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
               </Route>

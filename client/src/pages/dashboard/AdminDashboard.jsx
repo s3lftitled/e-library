@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { privateAxios } from '../../../utils/api'
+import usePrivateApi from "../../../hooks/usePrivateApi"
 import { Pie } from 'react-chartjs-2'
 import ChartComponent from './BarChart'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
@@ -16,6 +16,7 @@ const AdminDashboard = () => {
   const [visitorData, setVisitorData] = useState(null)
   const [ showProfileSection, setShowProfileSection ] = useState(false)
   const navigate = useNavigate()
+  const privateAxios = usePrivateApi()
 
   useEffect(() => {
     fetchPieChartData()

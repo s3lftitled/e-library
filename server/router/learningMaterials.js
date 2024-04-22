@@ -29,7 +29,7 @@ router.get('/courses/:courseID/:userID', verifyToken,
 )
 
 // Route for getting specific material
-router.get('/get-material/:materialID/:userID', 
+router.get('/get-material/:materialID/:userID', verifyToken,
   (req,res) => getMaterial(req, res, learningMaterialRepository)
 )
 

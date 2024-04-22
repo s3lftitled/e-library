@@ -25,7 +25,10 @@ const programRepository = new ProgramRepository()
 const departmentRepository = new DepartmentRepository()
 
 // Route for creating a program
-router.post('/create-programs', (req, res) => createProgram(req, res, programRepository))
+router.post('/create-programs', verifyToken, checkRole([ROLES.LIBRARIAN]),
+  (req, res) => 
+   createProgram(req, res, programRepository)
+  )
 
 // Route for getting all programs
 router.get('/get-programs', 
@@ -42,7 +45,11 @@ router.get('/get-department-programs/:departmentID',
     getDepartmentPrograms(req, res, programRepository, departmentRepository)
 )
 
-router.get('/get-image/:programID/:userID', (req, res) => getProgramImageURL(req, res, programRepository))
+router.get('/get-image/:programID/:userID', 
+  verifyToken,
+  (req, res) => 
+    getProgramImageURL(req, res, programRepository)
+  )
 
 // Export the router for use in other files
 module.exports = router

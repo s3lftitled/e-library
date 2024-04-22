@@ -1,9 +1,8 @@
-import { useEffect, useCallback } from 'react'
 import api from "../utils/api"
-import { useAuth } from "../context/AuthContext"
+import useAuth from "./useAuth"
 
 const useTokenRefresh = () => {
-  const { login } = useAuth()
+  const { setAuth } = useAuth()
 
   const refreshAccessToken = async () => {
     try {
@@ -15,7 +14,9 @@ const useTokenRefresh = () => {
 
       const newAccessToken = refreshResponse.data.newAccessToken
 
-      await login({ accessToken: newAccessToken })
+      setAuth({ accessToken: newAccessToken })
+
+      console.log(newAccessToken)
 
       console.log('Token refreshed')
 

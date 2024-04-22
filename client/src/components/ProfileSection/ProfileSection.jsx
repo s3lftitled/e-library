@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import useUserData from "../../../hooks/useUserData"
 import { memo } from "react"
 import { useNavigate } from "react-router-dom"
-import api, { privateAxios } from "../../../utils/api"
+import usePrivateApi from "../../../hooks/usePrivateApi"
 import Form from '../../components/UploadForm/Form'
 import SuccessAlert from "../Alerts/SuccessAlert/SuccessAlerts"
 import ErrorAlert from "../Alerts/ErrorAlert/ErrorAlerts"
@@ -17,6 +17,7 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
   const { user } = useUserData()
   const userID = localStorage.getItem("userID")
   const navigate = useNavigate() 
+  const privateAxios = usePrivateApi()
 
   const handleSubmission = async (e) => {
     e.preventDefault()

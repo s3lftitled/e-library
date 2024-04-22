@@ -16,6 +16,7 @@ const {
   logOut,
   changePassword
 } = require('../controller/authController')
+const { verifyToken } = require('../middleware/verifyToken')
 
 // Define UserRepository Instance
 const userRepository = new UserRepository()
@@ -50,7 +51,7 @@ router.post('/login', (req, res) => {
   logIn(req, res, userRepository, logRepository)
 })
 
-router.put('/change-password/:userID', (req, res) => {
+router.put('/change-password/:userID', verifyToken, (req, res) => {
   changePassword(req, res, userRepository)
 })
 

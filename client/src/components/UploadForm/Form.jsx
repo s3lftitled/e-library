@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import api, { privateAxios } from '../../../utils/api'
+import usePrivateApi from "../../../hooks/usePrivateApi"
 import SuccessAlert from "../Alerts/SuccessAlert/SuccessAlerts"
 import ErrorAlert from "../Alerts/ErrorAlert/ErrorAlerts"
 import './Form.css'
@@ -10,6 +10,8 @@ const Form = ({ onClose, type, ID }) => {
   const [ successMsg, setSuccessMsg ] = useState(null)
   const [ errorMsg, setErrorMsg ] = useState(null)
   const userID = localStorage.getItem("userID")
+  const userRole = localStorage.getItem("userRole")
+  const privateAxios = usePrivateApi()
 
   useEffect(() => {
     console.log(type)
@@ -46,9 +48,9 @@ const Form = ({ onClose, type, ID }) => {
   
       if (type === 'program') {
         endpoint = '/programs/create-programs'
-        response = await privateAxios.post(endpoint, { title: formDatas.title, description: formDatas.description})
+        response = await privateAxios.post(endpoint, { userRole, title: formDatas.title, description: formDatas.description})
       } else if (type === 'course') {
-        response = await privateAxios.post(`/courses/programs/${ID}/create-course`, { title: formDatas.title })
+        response = await privateAxios.post(`/courses/programs/${ID}/create-course`, { userRole, title: formDatas.title })
         console.log(response)
       } else if (type === 'learning-material') {
         endpoint = `/learning-materials/courses/${ID}/${userID}`

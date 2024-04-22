@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { privateAxios } from "../../../utils/api"
-import api from "../../../utils/api"
+import usePrivateApi from "../../../hooks/usePrivateApi"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import FloatingButton from "../../components/FloatingButton/FloatingButton"
 import Spinner from "../../components/Spinner/Spinner"
@@ -18,6 +17,7 @@ const Courses = () => {
   const userID = localStorage.getItem("userID")
   const userRole = localStorage.getItem("userRole")
   const navigate = useNavigate()
+  const privateAxios = usePrivateApi()
 
   useEffect(() => {
     console.log('courses loaded')
@@ -113,7 +113,7 @@ const Courses = () => {
         )
         }
       </main>
-      { userRole=== 'Librarian' && <FloatingButton onClick={openForm} /> }
+      { userRole=== 'Student' && <FloatingButton onClick={openForm} /> }
       {showForm && <Form onClose={closeForm} type="course" ID={programID} />}
     </div>
   )

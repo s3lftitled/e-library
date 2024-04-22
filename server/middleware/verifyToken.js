@@ -13,14 +13,14 @@ const generateTokens = (user) => {
   const accessToken = jwt.sign(
     { id: user._id, role: user.role },
     secretKey,
-    { expiresIn: '30m' } 
+    { expiresIn: '10s' } 
   )
 
   // Generate refresh token with a 5-hour expiry
   const refreshToken = jwt.sign(
     { id: user._id, role: user.role },
     secretKey,
-    { expiresIn: '3h' } 
+    { expiresIn: '50s' } 
   )
 
   return { accessToken, refreshToken }
@@ -36,10 +36,10 @@ const verifyToken = (req, res, next) => {
   // Extract token from cookies
   const token = req.cookies.accessToken
 
-
+  console.log(token)
   // Handle missing token
   if (!token) {
-    return res.status(403).send("Unauthorized: Missing token")
+    return res.status(401).send("Unauthorized: Missing token")
   }
   
   // Retrieve the secret key from environment variables
@@ -61,11 +61,11 @@ const verifyToken = (req, res, next) => {
 
       // Handle expired token
       if (err.name === 'TokenExpiredError') {
-        return res.status(403).send("Forbidden: Token has expired")
+        return res.status(401).send("Forbidden: Token has expired")
       }
 
       // Handle other verification failures
-      return res.status(403).send("Forbidden: Token verification failed")
+      return res.status(401).send("Forbidden: Token verification failed")
     }
 
     // Store decoded token in request object

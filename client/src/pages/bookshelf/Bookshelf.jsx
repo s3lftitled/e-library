@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
-import { privateAxios } from "../../../utils/api"
+import usePrivateApi from "../../../hooks/usePrivateApi"
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md"
 import './bookshelf.css'
 
@@ -10,6 +10,7 @@ const Bookshelf = () => {
   const [ showProfileSection, setShowProfileSection ] = useState(false)
   const userID = localStorage.getItem("userID")
   const navigate = useNavigate()
+  const privateAxios = usePrivateApi()
 
   useEffect(() => {
     fetchUserBookshelf()

@@ -32,7 +32,10 @@ router.post('/:departmentID/programs/:programID',
 )
 
 // Route for getting all departments
-router.get('/get-departments', (req, res) => getAllDepartments(req, res, departmentRepository))
+router.get('/get-departments',
+  (req, res) => 
+    getAllDepartments(req, res, departmentRepository)
+  )
 
 // Export the router for use in other files
 module.exports = router

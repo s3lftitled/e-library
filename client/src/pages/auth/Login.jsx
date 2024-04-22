@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from "../../../context/AuthContext"
+import useAuth from "../../../hooks/useAuth"
 import './styles.css'
 import api from "../../../utils/api"
 
 export const Login = () => {
   const [formDatas, setFormDatas] = useState({})
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { setAuth } = useAuth()
 
   const [loginText, setLoginText] = useState('')
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -49,7 +49,7 @@ export const Login = () => {
 
       const { userID, role, accessToken } = result.data
 
-      login({ accessToken })
+      setAuth({ accessToken })
 
       localStorage.setItem('userID', userID)
       localStorage.setItem('userRole', role)

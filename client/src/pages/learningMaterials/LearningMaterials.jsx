@@ -5,7 +5,7 @@ import { MdBookmarkBorder, MdBookmark } from "react-icons/md"
 import FloatingButton from "../../components/FloatingButton/FloatingButton"
 import Spinner from "../../components/Spinner/Spinner"
 import Form from "../../components/UploadForm/Form"
-import privateAxios from "../../../utils/api"
+import usePrivateApi from "../../../hooks/usePrivateApi"
 import "./LearningMaterials.css"
 
 const LearningMaterials = () => {
@@ -18,6 +18,7 @@ const LearningMaterials = () => {
   const userID = localStorage.getItem("userID")
   const userRole = localStorage.getItem("userRole")
   const navigate = useNavigate()
+  const privateAxios = usePrivateApi()
 
   useEffect(() => {
     // Fetch user's bookmarks initially

@@ -1,19 +1,19 @@
 import { useState, useEffect, memo } from "react"
-import { privateAxios } from "../utils/api"
+import usePrivateApi from "./usePrivateApi"
 import { useNavigate } from "react-router-dom"
 
 const useUserData = () => {
   const [user, setUser] = useState({})
   const userID = localStorage.getItem('userID')
   const navigate = useNavigate()
+  const privateAxios = usePrivateApi()
 
   useEffect(() => {
     console.log(userID)
     const fetchUserData = async () => {
       try {
         const response = await privateAxios.get(
-          `/users/get-user/${userID}`,
-          { withCredentials: true }
+          `/users/get-user/${userID}`
         )
         console.log(response.data.currentUser)
         setUser(response.data.currentUser)

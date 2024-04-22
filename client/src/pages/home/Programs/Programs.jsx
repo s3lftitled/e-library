@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import useUserData from '../../../../hooks/useUserData'
 import usePrivateApi from '../../../../hooks/usePrivateApi'
 import ProgramSearch from './ProgramSearch'
 import { useNavigate } from 'react-router-dom'
@@ -27,7 +26,7 @@ export const Programs = () => {
       try {
         let response
         if (userRole === 'Student') {
-          response = await privateAxios.get(`/users/${userID}/programs`, userRole, { withCredentials: true })
+          response = await privateAxios.get(`/users/${userID}/programs`, userRole)
         } else if (userRole === 'Staff' || userRole === 'Librarian') {
           response = await privateAxios.get(`/programs/get-programs`, { params: { role: userRole } })
         }

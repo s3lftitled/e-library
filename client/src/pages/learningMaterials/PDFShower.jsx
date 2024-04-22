@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import PdfViewer from "./PDFViewer"
-import api from "../../../utils/api"
+import usePrivateApi from "../../../hooks/usePrivateApi"
 
 export const SelectedPdfPage = () => {
   const [selectedPdf, setSelectedPdf] = useState([])
   const { materialID } = useParams()
   const userID = localStorage.getItem("userID")
+  const privateAxios = usePrivateApi()
 
   useEffect(() => {
     const fetchSelectedPdf = async () => {
       try {
-        const response = await api.get(`/learning-materials/get-material/${materialID}/${userID}`)
+        const response = await privateAxios.get(`/learning-materials/get-material/${materialID}/${userID}`)
         setSelectedPdf(response.data.material)
         console.log(response.data.material.downloadUrl)
         console.log('FETCHED')

@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url('/E-LIB_HOME_PAGE.webp');
+  background-image: url('/E-LIB_HOME_PAGE2.webp');
   background-size: cover; 
   background-position: center;
   background-color: rgb(8, 33, 15);
@@ -346,8 +346,6 @@ input {
 }
 
 
-
-
 .buttons.dark-mode {
   background-color: #444; 
   color: #fff; 
@@ -526,7 +524,7 @@ input {
     padding-top: 10px;
   }
   .auth-container button {
-    width: 120px; height: 30px;
+    width: 130px; height: 30px;
     font-size: 0.6em;
     margin-top: 0;
   }

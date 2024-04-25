@@ -14,7 +14,8 @@ const {
   logIn, 
   verifyEmail, 
   logOut,
-  changePassword
+  changePassword,
+
 } = require('../controller/authController')
 const { verifyToken } = require('../middleware/verifyToken')
 
@@ -53,6 +54,14 @@ router.post('/login', (req, res) => {
 
 router.put('/change-password/:userID', verifyToken, (req, res) => {
   changePassword(req, res, userRepository)
+})
+
+router.put('/forgot-password/userID', verifyToken, (req, res) => {
+  forgotPassword(req, res, userRepository)
+})
+
+router.put('/reset-password/userID', verifyToken, (req, res) => {
+  resetPassword(req, res, userRepository)
 })
 
 // User Log Out endpoint

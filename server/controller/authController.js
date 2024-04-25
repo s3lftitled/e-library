@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer') // Importing nodemailer for sending ema
 const crypto = require('crypto') // Importing crypto for generating random codes
 const { ROLES } = require('../middleware/auth-middleWare') // Importing ROLES for
 const { logger, errorLogger } = require('../utils/loggers')
+const { generateResetToken, sendResetPasswordEmail } = require('../utils/passwordReset')
 const { 
   validateUserData,
   validateEmail,
@@ -458,5 +459,80 @@ const changePassword = async (req, res, userRepository) => {
   }
 }
 
+const forgotPassword = async (req, res, userRepository) => {
+  const { email } = req.body
 
-module.exports = { studentRegistration, staffRegistration, logIn, logOut, verifyEmail, changePassword }
+  try {
+    // Check if user exists with the provided email
+    const user = await userRepository.findUserByEmail(email)
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+
+    // Generate reset token
+    const resetToken = generateResetToken(user)
+
+    // Save the reset token to the user object
+    user.resetPasswordToken = resetToken
+    await user.save()
+
+    // Send reset password email
+    await sendResetPasswordEmail(email, resetToken)
+
+    return res.status(200).json({ message: 'Reset password email sent successfully' })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+const resetPassword = async (req, res, userRepository) => {
+  const { resetToken } = req.params
+  const { newPassword, newPasswordConfirmation } = req.body
+
+  try {
+    // Find user by reset token
+    const user = await userRepository.findUserByResetToken(resetToken)
+
+    if (!user) {
+      return res.status(404).json({ error: 'Invalid or expired reset token' })
+    }
+
+    // Check if reset token has expired
+    if (user.resetPasswordExpires < Date.now()) {
+      return res.status(400).json({ error: 'Reset token has expired' })
+    }
+
+    // Check if passwords are matched
+    if (newPassword !== newPasswordConfirmation) {
+      return res.status(400).json({ error: 'Passwords dont match'})
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+
+    // Update user's password
+    user.password = hashedPassword
+    // Clear reset token and expiration time
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpires = undefined
+    await user.save()
+
+    return res.status(200).json({ message: 'Password reset successfully' })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+module.exports = { 
+  studentRegistration, 
+  staffRegistration, 
+  logIn, 
+  logOut, 
+  verifyEmail, 
+  changePassword, 
+  forgotPassword,
+  resetPassword
+ }

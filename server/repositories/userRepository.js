@@ -78,6 +78,14 @@ class UserRepository {
     }
   }
 
+  async findUserByResetToken(resetToken) {
+    try {
+      return await User.findOne({ resetToken: resetToken })
+    } catch (error) {
+      throw new Error(`Error finding user by reset token: ${error.message}`)
+    }
+  }
+
   async addMaterialToBookShelf({ user, materialID }) {
     try {
       if (!user || !materialID) {

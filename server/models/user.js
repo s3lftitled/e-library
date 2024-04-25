@@ -18,6 +18,8 @@ const UserSchema = new mongoose.Schema({
   verified: { type: Boolean, default: false },
   notes: { type: String },
   bookshelf: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LearningMaterial' }],
+  resetPasswordToken: { type: String, default: undefined},
+  resetPasswordExpires: { type: Date, default: undefined }
 })
 
 module.exports = mongoose.model('User', UserSchema)

@@ -8,7 +8,7 @@ import SuccessAlert from "../Alerts/SuccessAlert/SuccessAlerts"
 import ErrorAlert from "../Alerts/ErrorAlert/ErrorAlerts"
 import './ProfileSection.css'
 
-export const ProfileSection = memo(({ showProfileSection, setShowProfileSection }) => {
+export const ProfileSection = memo(({ showProfileSection, setShowProfileSection, isDarkMode }) => {
   const [ isUploading, setIsUploading ] = useState(false)
   const [ base64Image, setBase64Image ] = useState('')
   const [ showForm, setShowForm ] = useState(false)
@@ -92,7 +92,7 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
           <img className="user-icon" src={ user?.profilePic || "pfp.avif"} alt="user-profile"/>
         </div>
       ) : (
-        <div className='profile-section'>
+        <div className={`profile-section ${isDarkMode ? 'dark-mode' : ''}`}>
             <div className="user-details">
               <img
                 src={ user?.profilePic || "pfp.avif"}
@@ -127,14 +127,14 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
               <h4 className="user-role">{user?.role}</h4>
               { user.departmentName && <h4 className="user-department"><p>Department:</p> {user?.departmentName}</h4>}
               { user.programName && <h4 className="user-department"><p>Program:</p> {user?.programName}</h4>}
-              <div className="separator-underline"></div>
+              <div className={`separator-underline ${isDarkMode ? 'dark-mode' : ''}`}></div>
 
               <div className="user-content-section">
                 <h2 onClick={() => navigate('/bookshelf')}>BOOKSHELF</h2>
                 { user.role === 'Librarian' && <h2 onClick={() => navigateToDashboard()}>DASHBOARD</h2>}
               </div>
 
-              <div className="separator-underline"></div>
+              <div className={`separator-underline ${isDarkMode ? 'dark-mode' : ''}`}></div>
               
               <div className="log-out-section">
                 <a onClick={openForm}>Change password?</a>
@@ -154,4 +154,3 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection 
     </>
   )
 })
-

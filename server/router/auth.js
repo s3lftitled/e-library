@@ -53,6 +53,10 @@ router.post('/login', limiter, (req, res) => {
   logIn(req, res, userRepository, logRepository)
 })
 
+router.put('/change-password/:userID', verifyToken, (req, res) => {
+  changePassword(req, res, userRepository)	 
+})
+
 router.post('/forgot-password', limiter, (req, res) => {
   forgotPassword(req, res, userRepository)
 })

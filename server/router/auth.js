@@ -48,7 +48,7 @@ router.post('/verify-email', (req, res) => {
 )
 
 // User Log In endpoint
-router.post('/login', (req, res) => {
+router.post('/login', limiter, (req, res) => {
   // Call your login function passing necessary parameters
   logIn(req, res, userRepository, logRepository)
 })

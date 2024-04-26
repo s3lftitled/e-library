@@ -6,7 +6,6 @@ const crypto = require('crypto') // Importing crypto for generating random codes
 const { ROLES } = require('../middleware/auth-middleWare') // Importing ROLES for
 const { logger, errorLogger } = require('../utils/loggers')
 const { generateResetToken, sendResetPasswordEmail } = require('../utils/passwordReset')
-const updateUserLoginsExcel = require('../utils/updateExcel')
 const dotenv = require('dotenv')
 dotenv.config()
 const { 
@@ -313,8 +312,6 @@ const logIn = async (req, res, userRepository, logRepository) => {
     const refreshToken = tokens.refreshToken
     res.cookie('refreshToken', refreshToken, { httpOnly: true })
     res.cookie('accessToken', accessToken, { httpOnly: true })
-
-    updateUserLoginsExcel(email, logData.timestamp)
 
     logger.info(`User ${user.email} logged in successfully.`)
 

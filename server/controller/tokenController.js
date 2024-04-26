@@ -27,7 +27,7 @@ const refreshAccessToken = async (req, res) => {
     const newAccessToken = jwt.sign(
       { id: decoded.id, role: decoded.role },
       process.env.SECRET_KEY,
-      { expiresIn: '10m' }
+      { expiresIn: '30m' }
     )
 
     // Set the new access token in cookies

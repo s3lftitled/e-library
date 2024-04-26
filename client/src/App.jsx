@@ -18,6 +18,8 @@ const AdminDashboard = lazy(() => import('./pages/dashboard/AdminDashboard'))
 const NotFound = lazy(() => import('./components/NotFound/NotFound'))
 const Spinner = lazy(() => import('./components/Spinner/Spinner'))
 const Bookshelf = lazy(() => import('./pages/bookshelf/Bookshelf'))
+const ForgotPassword = lazy(() => import('./pages/forgot-password/ForgotPassword'))
+const ResetPassword = lazy(() => import('./pages/password-reset/PasswordResetForm'))
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
           <Routes>
             <Route path="/auth" element={<Authentication />} />
             <Route path="/welcome" element={<Spinner text="Welcome to our E-Library..." />} />
+            <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='/reset-password/:resetToken' element={<ResetPassword />} />
             <Route element={<PersistLogin />}>
               <Route element={<ProtectedRoute allowedRoles={['Librarian', 'Student', 'Staff']} />}>  
                 <Route path="/" element={<Home />} />

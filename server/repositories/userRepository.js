@@ -80,7 +80,7 @@ class UserRepository {
 
   async findUserByResetToken(resetToken) {
     try {
-      return await User.findOne({ resetToken: resetToken })
+      return await User.findOne({ resetPasswordToken: resetToken })
     } catch (error) {
       throw new Error(`Error finding user by reset token: ${error.message}`)
     }

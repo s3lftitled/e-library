@@ -15,7 +15,8 @@ const {
   verifyEmail, 
   logOut,
   changePassword,
-
+  forgotPassword,
+  resetPassword
 } = require('../controller/authController')
 const { verifyToken } = require('../middleware/verifyToken')
 
@@ -35,7 +36,7 @@ router.post('/student-registration', limiter, (req, res) => {
 )
 
 // Staff Registration endpoint
-router.post('/staff-registration', (req, res) => {
+router.post('/staff-registration', limiter, (req, res) => {
   staffRegistration(req, res, userRepository, departmentRepository, programRepository)
 }
 )
@@ -52,15 +53,11 @@ router.post('/login', (req, res) => {
   logIn(req, res, userRepository, logRepository)
 })
 
-router.put('/change-password/:userID', verifyToken, (req, res) => {
-  changePassword(req, res, userRepository)
-})
-
-router.put('/forgot-password/userID', verifyToken, (req, res) => {
+router.post('/forgot-password', limiter, (req, res) => {
   forgotPassword(req, res, userRepository)
 })
 
-router.put('/reset-password/userID', verifyToken, (req, res) => {
+router.put('/reset-password/:resetToken', (req, res) => {
   resetPassword(req, res, userRepository)
 })
 

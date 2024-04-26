@@ -6,6 +6,8 @@ const crypto = require('crypto') // Importing crypto for generating random codes
 const { ROLES } = require('../middleware/auth-middleWare') // Importing ROLES for
 const { logger, errorLogger } = require('../utils/loggers')
 const { generateResetToken, sendResetPasswordEmail } = require('../utils/passwordReset')
+const dotenv = require('dotenv')
+dotenv.config()
 const { 
   validateUserData,
   validateEmail,
@@ -480,7 +482,7 @@ const forgotPassword = async (req, res, userRepository) => {
     // Send reset password email
     await sendResetPasswordEmail(email, resetToken)
 
-    return res.status(200).json({ message: 'Reset password email sent successfully' })
+    return res.status(200).json({ message: 'Reset password email sent successfully. Please check your email' })
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal server error' })
@@ -492,8 +494,11 @@ const resetPassword = async (req, res, userRepository) => {
   const { newPassword, newPasswordConfirmation } = req.body
 
   try {
+    console.log(resetToken)
     // Find user by reset token
     const user = await userRepository.findUserByResetToken(resetToken)
+
+    console.log(user)
 
     if (!user) {
       return res.status(404).json({ error: 'Invalid or expired reset token' })
@@ -502,6 +507,11 @@ const resetPassword = async (req, res, userRepository) => {
     // Check if reset token has expired
     if (user.resetPasswordExpires < Date.now()) {
       return res.status(400).json({ error: 'Reset token has expired' })
+    }
+
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({ error: 'Password should have capital letters, numbers, and symbols' }) 
     }
 
     // Check if passwords are matched

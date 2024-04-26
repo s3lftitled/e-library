@@ -41,7 +41,7 @@ function App() {
                 <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />
                 <Route path="/bookshelf" element={<Bookshelf />} />
               </Route>
-              <Route element={<ProtectedRoute allowedRoles={['Librarian']} />}>
+              <Route element={<ProtectedRoute allowedRoles={['Student']} />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
               </Route>
               <Route path="*" element={<NotFound />} />

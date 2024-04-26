@@ -37,9 +37,10 @@ const sendResetPasswordEmail = async (email, resetToken) => {
       text: `You are receiving this email because you (or someone else) has requested the reset of the password for your account.\n\n`
         + `Please click on the following link, or paste this into your browser to complete the process:\n\n`
         + `${process.env.RESET_PASSWORD_URL}/${resetToken}\n\n`
-        + `If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+        + `If you did not request this, please ignore this email and your password will remain unchanged.\n\n`
+        + `IMPORTANT: Do not share this link with anyone else. It is unique to your account and should be kept confidential.`,
     }
-
+    
     // Send the email
     await transporter.sendMail(mailOptions);
   } catch (error) {

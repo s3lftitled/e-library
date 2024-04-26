@@ -6,7 +6,6 @@ const useTokenRefresh = () => {
 
   const refreshAccessToken = async () => {
     try {
-      console.log('Refreshing token...')
       const refreshResponse = await api.post(
         '/token/refresh', {},
         { withCredentials: true }
@@ -15,10 +14,6 @@ const useTokenRefresh = () => {
       const newAccessToken = refreshResponse.data.newAccessToken
 
       setAuth({ accessToken: newAccessToken })
-
-      console.log(newAccessToken)
-
-      console.log('Token refreshed')
 
       return newAccessToken
     } catch (refreshError) {

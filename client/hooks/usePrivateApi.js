@@ -11,7 +11,6 @@ const usePrivateApi = () => {
     const requestIntercept = privateAxios.interceptors.request.use(
       (config) => {
         if (!config.headers['Authorization']) {
-          console.log('token request', auth.accessToken)
           config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
         }
         return config
@@ -28,7 +27,6 @@ const usePrivateApi = () => {
           prevRequest.sent = true
           const newAccessToken = await refreshAccessToken()
           prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
-          console.log('token response', newAccessToken)
           return privateAxios(prevRequest)
         }
 

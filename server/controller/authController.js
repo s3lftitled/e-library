@@ -6,6 +6,7 @@ const crypto = require('crypto') // Importing crypto for generating random codes
 const { ROLES } = require('../middleware/auth-middleWare') // Importing ROLES for
 const { logger, errorLogger } = require('../utils/loggers')
 const { generateResetToken, sendResetPasswordEmail } = require('../utils/passwordReset')
+const updateUserLoginsExcel = require('../utils/updateExcel')
 const dotenv = require('dotenv')
 dotenv.config()
 const { 
@@ -287,7 +288,7 @@ const logIn = async (req, res, userRepository, logRepository) => {
     // Prepare log data
     const logData = {
       userId: user._id,
-      timestamp: new Date(),
+      timestamp: new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' }),
       action: 'login',
     }
 
@@ -298,19 +299,6 @@ const logIn = async (req, res, userRepository, logRepository) => {
     if (user.departmentID) {
       logData.userDepartmentId = user.departmentID;
     }
-
-    // Format timestamp
-    const options = {
-      timeZone: 'Asia/Manila',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour12: true,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    }
-    logData.timestamp = logData.timestamp.toLocaleString('en-PH', options)
 
     // Save login activity to the database only if program ID and department ID exist
     if (logData.userProgramId && logData.userDepartmentId) {
@@ -325,6 +313,8 @@ const logIn = async (req, res, userRepository, logRepository) => {
     const refreshToken = tokens.refreshToken
     res.cookie('refreshToken', refreshToken, { httpOnly: true })
     res.cookie('accessToken', accessToken, { httpOnly: true })
+
+    updateUserLoginsExcel(email, logData.timestamp)
 
     logger.info(`User ${user.email} logged in successfully.`)
 

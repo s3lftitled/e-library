@@ -557,4 +557,24 @@
     height: 50px;
     width: 50px;
   }
+
+  @media screen and (max-width: 368px) {
+    .program-card {
+      height: 75px;
+      width: 155px;
+    }
+  
+    .program-title {
+      font-size: 0.5rem;
+    }
+    
+    .program-description {
+      font-size: 0.4rem;
+    }
+    
+    .book-img {
+      height: 50px;
+      width: 50px;
+    }
+  }
 }

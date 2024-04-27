@@ -71,9 +71,8 @@ const ResetPassword = () => {
         </form>
 
         <p className='signup-link'>
-          Don't have an account?
           <a href='/auth' className='signup-link link'>
-            Sign up now
+            Go back to Login
           </a>
         </p>
       </div>

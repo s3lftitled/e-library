@@ -310,8 +310,18 @@ const logIn = async (req, res, userRepository, logRepository) => {
     // Set cookies with access and refresh tokens
     const accessToken = tokens.accessToken
     const refreshToken = tokens.refreshToken
-    res.cookie('refreshToken', refreshToken, { httpOnly: true })
-    res.cookie('accessToken', accessToken, { httpOnly: true })
+    
+    res.cookie('refreshToken', refreshToken, { 
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    })
+    
+    res.cookie('accessToken', accessToken, { 
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    })
 
     logger.info(`User ${user.email} logged in successfully.`)
 
@@ -456,7 +466,7 @@ const forgotPassword = async (req, res, userRepository) => {
     const user = await userRepository.findUserByEmail(email)
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' })
+      return res.status(404).json({ error: 'User email not found' })
     }
 
     // Generate reset token
@@ -518,7 +528,7 @@ const resetPassword = async (req, res, userRepository) => {
 
     return res.status(200).json({ message: 'Password reset successfully' })
   } catch (error) {
-    console.error(error);
+    console.error(error)
     return res.status(500).json({ error: 'Internal server error' })
   }
 }

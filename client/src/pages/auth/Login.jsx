@@ -95,7 +95,7 @@ export const Login = () => {
         {success && <p className="success-msg">{success}</p>}
       </div>
       <div className="login-options">
-        <a href="/forgot-password">Forgot Password?</a>
+        <a className="forgot-password" href="/forgot-password">Forgot Password?</a>
         <img src="book_button_icon2.webp" alt="Login Icon"
           className="login_icon" onClick={handleSubmission} />
       </div>

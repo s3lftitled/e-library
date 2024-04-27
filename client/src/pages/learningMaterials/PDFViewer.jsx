@@ -9,7 +9,7 @@ const PdfViewer = ({ pdfUrl }) => {
   const [pageNumber, setPageNumber] = useState(1)
   const [inputPageNumber, setInputPageNumber] = useState("")
   const [numPages, setNumPages] = useState(null)
-  const [scale, setScale] = useState(1.5)
+  const [scale, setScale] = useState(1)
   const [showNoteTaker, setShowNoteTaker] = useState(false)
 
   const onNextPage = () => {

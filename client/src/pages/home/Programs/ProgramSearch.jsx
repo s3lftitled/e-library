@@ -6,6 +6,7 @@ const ProgramSearch = ({ isDarkMode, searchQuery, setSearchQuery, searchResults,
         className={`search-input ${isDarkMode ? 'dark-mode' : ''}`}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
+        style={{ height: '26px'}}
       />
       <img src="search.svg" className={`search-icon ${isDarkMode ? 'dark-mode' : ''}`} alt="search" />
       {searchQuery && (

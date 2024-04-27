@@ -89,30 +89,30 @@ const Form = ({ onClose, type, ID }) => {
   if (type === 'program') {
     fields = (
       <>
-        <input type="text" name="title" placeholder="Program Name" onChange={handleFieldChange} />
-        <input type="text" name="description" placeholder="Program Description" onChange={handleFieldChange} />
+        <input type="text" name="title" placeholder="Program Name" onChange={handleFieldChange} style={{ width: '94%' }}/>
+        <input type="text" name="description" placeholder="Program Description" onChange={handleFieldChange} style={{ width: '94%' }}/>
       </>
     )
   } else if (type === 'course') {
     fields = (
       <>
-        <input type="text" name="title" placeholder="Course Name" onChange={handleFieldChange} />
+        <input type="text" name="title" placeholder="Course Name" onChange={handleFieldChange} style={{ width: '94%' }} />
       </>
     )
   } else if (type === 'learning-material') {
     fields = (
       <>
-        <input type="text" name="title" placeholder="Material Title" onChange={handleFieldChange} />
-        <input type="text" name="author" placeholder="Author" onChange={handleFieldChange} />
-        <input type="file" name="file" placeholder="Upload file" onChange={handleFileChange}/>
+        <input type="text" name="title" placeholder="Material Title" onChange={handleFieldChange} style={{ width: '94%' }}/>
+        <input type="text" name="author" placeholder="Author" onChange={handleFieldChange} style={{ width: '94%' }}/>
+        <input type="file" name="file" placeholder="Upload file" onChange={handleFileChange} style={{ width: '94%' }}/>
       </>
     )
   } else if (type === 'change-password') {
     fields = (
       <>
-        <input type='password' name='currentPassword' placeholder='Current password' onChange={handleFieldChange} />
-        <input type='password' name='newPassword' placeholder='New password' onChange={handleFieldChange} />
-        <input type='password' name='newPasswordConfirmation' placeholder='Confirm new password' onChange={handleFieldChange} />
+        <input type='password' name='currentPassword' placeholder='Current password' onChange={handleFieldChange}  style={{ width: '94%' }}/>
+        <input type='password' name='newPassword' placeholder='New password' onChange={handleFieldChange}  style={{ width: '94%' }} />
+        <input type='password' name='newPasswordConfirmation' placeholder='Confirm new password' onChange={handleFieldChange}  style={{ width: '94%' }} />
       </>
     )
   }
@@ -126,7 +126,7 @@ const Form = ({ onClose, type, ID }) => {
         <h2>{type === 'change-password' ? 'Change Password' : `Add ${type}`}</h2>
         <form onSubmit={handleSubmission}>
           {fields}
-          <button type="submit">Submit</button>
+          <button type="submit" style={{ width: '100%' }}>Submit</button>
         </form>
       </div>
     </>

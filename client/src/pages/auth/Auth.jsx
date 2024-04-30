@@ -3,6 +3,7 @@ import './styles.css'
 import { Login } from './Login'
 import { Register } from './Register'
 
+
 const Authentication = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const storedDarkMode = localStorage.getItem('isDarkMode')

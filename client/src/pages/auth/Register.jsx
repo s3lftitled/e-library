@@ -21,7 +21,7 @@ export const Register = () => {
 
   const [ successMsg, setSuccessMsg ] = useState(null)
   const [ errorMsg, setErrorMsg ] = useState(null)
-  
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -101,7 +101,7 @@ export const Register = () => {
         })
       }
       if (response.status === 200) {
-        setSuccessMsg(response.data.msg)
+        alert(response.data.msg)
         console.log(response.data.msg)
         navigate(`/verify/${registrationData.email}`)
       }

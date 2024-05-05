@@ -29,13 +29,13 @@ function App() {
           <Routes>
             <Route path="/auth" element={<Authentication />} />
             <Route path="/welcome" element={<Spinner text="Welcome to our E-Library..." />} />
+            <Route path="/verify/:email" element={<VerificationCodeInput />} />   
             <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='/reset-password/:resetToken' element={<ResetPassword />} />
             <Route element={<PersistLogin />}>
               <Route element={<ProtectedRoute allowedRoles={['Librarian', 'Student', 'Staff']} />}>  
                 <Route path="/" element={<Home />} />
-                <Route path="/courses/:programID/:programTitle" element={<Courses />} />
-                <Route path="/verify/:email" element={<VerificationCodeInput />} />         
+                <Route path="/courses/:programID/:programTitle" element={<Courses />} />      
                 <Route path="/learning-materials/:programID/:programTitle/:courseID/:courseTitle" element={<LearningMaterials />} />
                 <Route path="/upload-learning-material" element={<FileUploadComponent />} />
                 <Route path="/view-material/:materialID" element={<SelectedPdfPage />} />

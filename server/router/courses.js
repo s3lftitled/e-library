@@ -22,7 +22,7 @@ router.post('/programs/:programID/create-course', verifyToken, checkRole([ROLES.
 )
 
 // Route for getting courses within a program
-router.get('/:programId/courses/:userID', verifyToken,
+router.get('/:programId/courses/:userID', 
   (req, res) => getCoursesWithInPrograms(req, res, programRepository)
 )
 

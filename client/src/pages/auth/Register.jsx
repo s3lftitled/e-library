@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import SuccessAlert from '../../components/Alerts/SuccessAlert/SuccessAlerts'
+import ErrorAlert from '../../components/Alerts/ErrorAlert/ErrorAlerts'
 import api from '../../../utils/api'
 
 export const Register = () => {
@@ -17,9 +19,9 @@ export const Register = () => {
   const [departments, setDepartments] = useState([])
   const [programs, setPrograms] = useState([])
 
-  const [error, setError] = useState(null)
-  const [success, setSuccess] = useState(null)
-
+  const [ successMsg, setSuccessMsg ] = useState(null)
+  const [ errorMsg, setErrorMsg ] = useState(null)
+  
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -99,12 +101,13 @@ export const Register = () => {
         })
       }
       if (response.status === 200) {
-        setSuccess(response.data.msg)
+        setSuccessMsg(response.data.msg)
+        console.log(response.data.msg)
         navigate(`/verify/${registrationData.email}`)
       }
     } catch (err) {
       if (err.response && err.response.data) {
-        setError(err.response.data.error)
+        setErrorMsg(err.response.data.error)
       } else {
         alert('An error occurred. Please try again.')
       }
@@ -136,6 +139,8 @@ export const Register = () => {
 
   return (
     <>
+      { successMsg && <SuccessAlert message={successMsg} onClose={() => setSuccessMsg(null)} /> }
+      { errorMsg && <ErrorAlert message={errorMsg} onClose={() => setErrorMsg(null)} />}
       <h1>{uiState.loginText}</h1>
       <form>
         <input
@@ -200,10 +205,6 @@ export const Register = () => {
           </select>
         )}
       </form>
-      <div className="msg-div">
-        {error && <p className="error-msg">{error}</p>}
-        {success && <p className="success-msg">{success}</p>}
-      </div>
       <button onClick={handleSubmission} disabled={uiState.isButtonDisabled}>Register</button>
     </>
   )

@@ -479,7 +479,7 @@ const forgotPassword = async (req, res, userRepository) => {
     // Send reset password email
     await sendResetPasswordEmail(email, resetToken)
 
-    return res.status(200).json({ message: 'Reset password email sent successfully. Please check your email' })
+    return res.status(200).json({ message: 'Your request has been processed, please wait 5-10 mins for the email.' })
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal server error' })

@@ -10,7 +10,7 @@ class DepartmentRepository {
   }
 
   // Method to create a new department
-  async createDepartment() {
+  async createDepartment(title) {
     try {
       const department = new Department({ title })
       return await department.save() 

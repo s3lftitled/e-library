@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom"
 import './Spinner.css'
 
 const Spinner= ({ text }) => {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const storedDarkMode = localStorage.getItem('isDarkMode')
+    return storedDarkMode ? JSON.parse(storedDarkMode) : false
+  })
   const [typedText, setTypedText] = useState('')
   const navigate = useNavigate()
 
@@ -30,7 +34,7 @@ const Spinner= ({ text }) => {
   }, [])
 
   return (
-   <div className="spinner-div">
+   <div className={`spinner-div ${ isDarkMode ? 'dark-mode' : ''}`}>
       <div className="spinner">
       <div></div>
       <div></div>

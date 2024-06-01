@@ -4,8 +4,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 700px;
+  height: 100vh;
   flex-direction: column;
+}
+
+.spinner-div.dark-mode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  flex-direction: column;
+  background-color: #000;
 }
 
 .typewriter-text {

@@ -1,5 +1,5 @@
-const ProgramCard = ({ program, onClick }) => (
-  <div className="program-card" onClick={onClick}>
+const ProgramCard = ({ program, onClick, isDarkMode }) => (
+  <div className={`program-card ${isDarkMode ? 'dark-mode' : ''}`} onClick={onClick}>
     <div className="book-img-div">
       <img className="book-img" src="book.png" alt="books" />
     </div>

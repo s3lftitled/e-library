@@ -1,6 +1,6 @@
-const RecommendedProgram = ({ program, onClick }) => (
-  <div className="recommended-programs">
-    <div className="program-card recommended-program" onClick={onClick}>
+const RecommendedProgram = ({ program, onClick, isDarkMode }) => (
+  <div className="recommended-programs" onClick={onClick}>
+    <div className={`program-card ${isDarkMode ? 'dark-mode' : ''}`}>
       <div className="book-img-div">
         <img className="book-img" src="book.png" alt="books" />
       </div>

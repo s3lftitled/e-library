@@ -7,7 +7,7 @@ import ProgramCard from './ProgramCard'
 import FloatingButton from '../../../components/FloatingButton/FloatingButton'
 import Form from '../../../components/UploadForm/Form'
 
-export const Programs = () => {
+export const Programs = ({ isDarkMode }) => {
   const privateAxios = usePrivateApi()
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
@@ -83,6 +83,7 @@ export const Programs = () => {
           <RecommendedProgram
             program={data.recommendedProgram}
             onClick={() => navigateToCourses(data.recommendedProgram._id, data.recommendedProgram.title)}
+            isDarkMode={isDarkMode}
           />
         </>
       )}
@@ -93,6 +94,7 @@ export const Programs = () => {
             key={program._id}
             program={program}
             onClick={() => navigateToCourses(program._id, program.title)}
+            isDarkMode={isDarkMode}
           />
         ))}
       </div>

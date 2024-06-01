@@ -19,8 +19,8 @@ const programRepository = new ProgramRepository()
 
 // Route for creating a department
 router.post('/create-department', 
-  verifyToken, // Middleware to verify token
-  checkRole([ROLES.LIBRARIAN]), // Middleware to check role
+  // verifyToken, // Middleware to verify token
+  // checkRole([ROLES.LIBRARIAN]), // Middleware to check role
   (req, res) => createDepartment(req, res, departmentRepository)
 )
 

@@ -309,6 +309,12 @@ header .header-content {
   right: 1%;
 }
 
+@media only screen and (max-width: 1145px) {
+  .take-note-button {
+    display: none;
+  }
+}
+
 @media only screen and (max-width: 768px) {
   .header-content h1 {
     font-size: 1.5rem;

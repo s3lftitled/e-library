@@ -58,7 +58,7 @@ const PdfViewer = ({ pdfUrl }) => {
         <button onClick={onNextPage} disabled={pageNumber >= numPages}>Next Page</button>
         <button onClick={zoomIn}>Zoom In</button>
         <button onClick={zoomOut}>Zoom Out</button>
-        <button onClick={toggleNoteTaker}>Take Note</button>
+        <button className="take-note-button" onClick={toggleNoteTaker}>Take Note</button>
       </div>
       <div className="pdf-viewer">
         <Document file={pdfUrl} renderTextLayer={true} onLoadSuccess={onDocumentLoadSuccess}>

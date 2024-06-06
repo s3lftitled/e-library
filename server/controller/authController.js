@@ -178,8 +178,8 @@ const staffRegistration = async (req, res, userRepository) => {
     }
 
     // Check if the email is in the array of staff or librarian emails
-    const staffEmails = ['johnlino.demonteverde@panpacificu.edu.ph'] // Add staff emails to this array
-    const librarianEmails = ['johnlino.demonteverde@panpacificu.edu.ph'] // Add librarian emails to this array
+    const staffEmails = process.env.STAFF_EMAILS ? process.env.STAFF_EMAILS.split(',') : [];
+    const librarianEmails = process.env.LIBRARIAN_EMAILS ? process.env.LIBRARIAN_EMAILS.split(',') : [];    
 
     // Check if user role is authorized to register
     if ((chosenRole === ROLES.STAFF && !staffEmails.includes(email)) || (chosenRole === ROLES.LIBRARIAN && !librarianEmails.includes(email))) {
@@ -227,7 +227,7 @@ const staffRegistration = async (req, res, userRepository) => {
     // Send verification code
     await sendVerificationEmail(email, verificationCode)
 
-    logger.info(`User ${user.email} logged in successfully.`)
+    logger.info(`User ${email} registered successfully.`);
 
     // Respond with success message
     res.status(200).json({ msg: 'Verification code sent. Check your email to complete registration' })

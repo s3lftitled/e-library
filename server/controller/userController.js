@@ -46,15 +46,14 @@ const getUserData = async (req, res, userRepository, departmentRepository, progr
     if (!user) {
       return res.status(404).json({ error: 'User with that ID is not found' })
     }
-
+       
     // Initialize variables for user department and program
-    let userDepartment, userProgram
+    let userDepartment = []
+    let userProgram = []
 
-    
     // For non-staff and non-librarian users, find department and program details
     if (user.role !== ROLES.STAFF && user.role !== ROLES.LIBRARIAN) {
       // Find the departments and programs for non-staff and non-librarian users
-      // Find the department and program for non-staff and non-librarian users
       [userDepartment, userProgram] = await Promise.all([
         departmentRepository.findDepartmentsByIds(user.departmentID),
         programRepository.findProgramsByIds(user.programID)

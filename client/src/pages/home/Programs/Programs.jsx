@@ -27,10 +27,11 @@ export const Programs = ({ isDarkMode }) => {
         let response
         if (userRole === 'Student') {
           response = await privateAxios.get(`/users/${userID}/programs`, userRole)
+          setData({ recommendedProgram: response?.data?.response?.recommendedPrograms || null, programs: response?.data?.response?.restOfPrograms || [] })
         } else if (userRole === 'Staff' || userRole === 'Librarian') {
-          response = await privateAxios.get(`/programs/get-programs`, { params: { role: userRole } })
+          response = await privateAxios.get(`/programs/get-programs`, userRole )
+          setData({ programs: response?.data?.programs })
         }
-        setData({ recommendedProgram: response?.data?.response?.recommendedPrograms || null, programs: response?.data?.response?.restOfPrograms || [] })
         console.log(data)
       } catch (err) {
         console.log(err)

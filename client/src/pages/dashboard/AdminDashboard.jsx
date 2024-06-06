@@ -6,6 +6,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { ProfileSection } from '../../components/ProfileSection/ProfileSection'
 import { useNavigate } from 'react-router-dom'
 import './AdminDashboard.css'
+import ToggleDarkMode from '../../components/ToggleDarkMode'
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -17,6 +18,21 @@ const AdminDashboard = () => {
   const [ showProfileSection, setShowProfileSection ] = useState(false)
   const navigate = useNavigate()
   const privateAxios = usePrivateApi()
+
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const storedDarkMode = localStorage.getItem('isDarkMode')
+    return storedDarkMode ? JSON.parse(storedDarkMode) : false
+  })
+
+  const [formType, setFormType] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode))
+  }, [isDarkMode])
+
+  const handleToggleDarkMode = () => {
+    setIsDarkMode((prev) => !prev)
+  }
 
   useEffect(() => {
     fetchPieChartData()
@@ -148,7 +164,7 @@ const AdminDashboard = () => {
   return (
     <>
      <div className="dashboard-container">
-     <header>
+     <header className={`header ${isDarkMode ? 'dark-mode' : ''} `}>
         <ProfileSection 
           showProfileSection = {showProfileSection}
           setShowProfileSection = {setShowProfileSection}
@@ -176,6 +192,7 @@ const AdminDashboard = () => {
           </>
         )}
       </div>
+      <ToggleDarkMode isDarkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode}/>
     </div>
     </>
   )

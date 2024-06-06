@@ -5,6 +5,7 @@ import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import FloatingButton from "../../components/FloatingButton/FloatingButton"
 import Spinner from "../../components/Spinner/Spinner"
 import Form from "../../components/UploadForm/Form"
+import ToggleDarkMode from "../../components/ToggleDarkMode"
 import './courses.css'
 
 const Courses = () => {
@@ -18,6 +19,21 @@ const Courses = () => {
   const userRole = localStorage.getItem("userRole")
   const navigate = useNavigate()
   const privateAxios = usePrivateApi()
+
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const storedDarkMode = localStorage.getItem('isDarkMode')
+    return storedDarkMode ? JSON.parse(storedDarkMode) : false
+  })
+
+  useEffect(() => {
+    localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode))
+  }, [isDarkMode])
+       
+
+  const handleToggleDarkMode = () => {
+    console.log("Toggle Dark Mode") // for debug
+    setIsDarkMode((prev) => !prev)
+  }
 
   useEffect(() => {
     console.log('courses loaded')
@@ -80,7 +96,7 @@ const Courses = () => {
 
   return (
     <div className="courses-div">
-      <header>
+      <header className={`header ${ isDarkMode ? 'dark-mode' : ''}`}>
         <ProfileSection 
           showProfileSection = {showProfileSection}
           setShowProfileSection = {setShowProfileSection}
@@ -115,6 +131,7 @@ const Courses = () => {
       </main>
       { userRole=== 'Librarian' && <FloatingButton onClick={openForm} /> }
       {showForm && <Form onClose={closeForm} type="course" ID={programID} />}
+      <ToggleDarkMode isDarkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode} />
     </div>
   )
 }

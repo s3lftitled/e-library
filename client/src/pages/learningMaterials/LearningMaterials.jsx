@@ -7,6 +7,7 @@ import Spinner from "../../components/Spinner/Spinner"
 import Form from "../../components/UploadForm/Form"
 import usePrivateApi from "../../../hooks/usePrivateApi"
 import "./LearningMaterials.css"
+import ToggleDarkMode from "../../components/ToggleDarkMode"
 
 const LearningMaterials = () => {
   const [learningMaterials, setLearningMaterials] = useState([])
@@ -19,6 +20,21 @@ const LearningMaterials = () => {
   const userRole = localStorage.getItem("userRole")
   const navigate = useNavigate()
   const privateAxios = usePrivateApi()
+
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const storedDarkMode = localStorage.getItem('isDarkMode')
+    return storedDarkMode ? JSON.parse(storedDarkMode) : false
+  })
+
+  useEffect(() => {
+    localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode))
+  }, [isDarkMode])
+       
+
+  const handleToggleDarkMode = () => {
+    console.log("Toggle Dark Mode") // for debug
+    setIsDarkMode((prev) => !prev)
+  }
 
   useEffect(() => {
     // Fetch user's bookmarks initially
@@ -123,7 +139,7 @@ const LearningMaterials = () => {
 
   return (
     <div className="learning-materials-container"> 
-      <header>
+      <header className={`header ${isDarkMode ? 'dark-mode': ''}`}>
         <ProfileSection 
           showProfileSection={showProfileSection}
           setShowProfileSection={setShowProfileSection}
@@ -161,6 +177,7 @@ const LearningMaterials = () => {
       </div>
       { userRole=== 'Librarian' && <FloatingButton onClick={openForm} /> }
       {showForm && <Form onClose={closeForm} type="learning-material" ID={courseID} />}
+      <ToggleDarkMode isDarkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode} />
     </div>
   )
 }

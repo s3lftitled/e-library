@@ -4,6 +4,7 @@ import { ProfileSection } from "../../components/ProfileSection/ProfileSection"
 import usePrivateApi from "../../../hooks/usePrivateApi"
 import { MdBookmarkBorder, MdBookmark } from "react-icons/md"
 import './bookshelf.css'
+import ToggleDarkMode from "../../components/ToggleDarkMode"
 
 const Bookshelf = () => {
   const [ bookshelf, setBookshelf ] = useState({})
@@ -11,6 +12,21 @@ const Bookshelf = () => {
   const userID = localStorage.getItem("userID")
   const navigate = useNavigate()
   const privateAxios = usePrivateApi()
+
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const storedDarkMode = localStorage.getItem('isDarkMode')
+    return storedDarkMode ? JSON.parse(storedDarkMode) : false
+  })
+
+  useEffect(() => {
+    localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode))
+  }, [isDarkMode])
+       
+
+  const handleToggleDarkMode = () => {
+    console.log("Toggle Dark Mode") // for debug
+    setIsDarkMode((prev) => !prev)
+  }
 
   useEffect(() => {
     fetchUserBookshelf()
@@ -52,15 +68,14 @@ const Bookshelf = () => {
     }
   }
 
-
   return (
     <div className="bookshelf-container">
-       <header>
+       <header className={`header ${isDarkMode ? 'dark-mode': ''}`}>
         <ProfileSection 
             showProfileSection = {showProfileSection}
             setShowProfileSection = {setShowProfileSection}
           />
-        <div className="header-content">
+        <div className='header-content'>
           <ion-icon name="arrow-back" onClick={() => navigate('/')}></ion-icon>
           <h1>Bookshelf</h1>
         </div> 
@@ -82,6 +97,7 @@ const Bookshelf = () => {
         )
         } 
       </div>
+      <ToggleDarkMode isDarkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode}/>
     </div>
   )
 }

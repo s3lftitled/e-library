@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Programs } from './Programs/Programs'
 import './Home.css'
 import { ProfileSection } from '../../components/ProfileSection/ProfileSection'
+import ToggleDarkMode from '../../components/ToggleDarkMode'
 
 const Home = () => {
   const [showProfileSection, setShowProfileSection] = useState(false)
@@ -52,21 +53,7 @@ const Home = () => {
         </div>
 
         {/* dark mode toggle button */}
-        <div className="checkbox-wrapper-51">
-          <input
-            type="checkbox"
-            id="checkbox-wrapper-51"
-            checked={isDarkMode}
-            onChange={handleToggleDarkMode}
-          />
-          <label className="toggle" htmlFor="checkbox-wrapper-51">
-            <span>
-              <svg viewBox="0 0 10 10" height="10px" width="10px">
-                <path d="M5,1 L5,1 C2.790861,1 1,2.790861 1,5 L1,5 C1,7.209139 2.790861,9 5,9 L5,9 C7.209139,9 9,7.209139 9,5 L9,5 C9,2.790861 7.209139,1 5,1" />
-              </svg>
-            </span>
-          </label>
-        </div>
+        <ToggleDarkMode isDarkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode} />
       </div>
     </>
   )

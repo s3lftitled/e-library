@@ -17,8 +17,25 @@
   transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
 
+.courses-div header.dark-mode {
+  display: flex;
+  flex-direction: row;
+  height: 130px;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  background-color: #181c24;
+  min-width: 100%;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
 .courses-div header:hover{
   background-color: #0C359E;
+}
+
+.courses-div header:hover{
+  background-color: #28292e;
 }
 
 header .header-content {

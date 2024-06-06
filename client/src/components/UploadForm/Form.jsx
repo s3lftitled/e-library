@@ -70,10 +70,8 @@ const Form = ({ onClose, type, ID }) => {
 
       if (response.status === 201) {
         setSuccessMsg('Data has been submitted successfully')
-        onClose()
       } else if (response.status === 200) {
         setSuccessMsg(response.data.msg)
-        onClose()
       }
     } catch (err) {
       if (err.response && err.response.data) {

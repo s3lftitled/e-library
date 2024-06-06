@@ -74,6 +74,7 @@ const Bookshelf = () => {
         <ProfileSection 
             showProfileSection = {showProfileSection}
             setShowProfileSection = {setShowProfileSection}
+            isDarkMode={isDarkMode}
           />
         <div className='header-content'>
           <ion-icon name="arrow-back" onClick={() => navigate('/')}></ion-icon>

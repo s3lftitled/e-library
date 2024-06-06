@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import useUserData from "../../../hooks/useUserData"
 import { memo } from "react"
 import { useNavigate } from "react-router-dom"
@@ -8,7 +8,7 @@ import SuccessAlert from "../Alerts/SuccessAlert/SuccessAlerts"
 import ErrorAlert from "../Alerts/ErrorAlert/ErrorAlerts"
 import './ProfileSection.css'
 
-export const ProfileSection = memo(({ showProfileSection, setShowProfileSection, isDarkMode }) => {
+export const ProfileSection = memo(({ showProfileSection, setShowProfileSection }) => {
   const [ isUploading, setIsUploading ] = useState(false)
   const [ base64Image, setBase64Image ] = useState('')
   const [ showForm, setShowForm ] = useState(false)
@@ -18,6 +18,15 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection,
   const userID = localStorage.getItem("userID")
   const navigate = useNavigate() 
   const privateAxios = usePrivateApi()
+
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const storedDarkMode = localStorage.getItem('isDarkMode')
+    return storedDarkMode ? JSON.parse(storedDarkMode) : false
+  })
+
+  useEffect(() => {
+    localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode))
+  }, [isDarkMode])
 
   const handleSubmission = async (e) => {
     e.preventDefault()

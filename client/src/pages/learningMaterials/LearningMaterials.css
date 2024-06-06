@@ -37,7 +37,7 @@
   background-color: #0C359E;
 }
 
-.learning-materials-container header:hover{
+.learning-materials-container header.dark-mode:hover{
   background-color: #28292e;
 }
 

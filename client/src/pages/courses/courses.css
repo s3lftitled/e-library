@@ -34,7 +34,7 @@
   background-color: #0C359E;
 }
 
-.courses-div header:hover{
+.courses-div header.dark-mode:hover{
   background-color: #28292e;
 }
 

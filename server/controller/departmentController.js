@@ -55,8 +55,8 @@ const addProgramToDept = async (req, res, departmentRepository, programRepositor
     }
 
     // Find the program and department
-    const program = await programRepository.findProgramById(programID)
-    const department = await departmentRepository.findDepartmentById(departmentID)
+    const program = await programRepository.findProgramByID(programID)
+    const department = await departmentRepository.findDepartmentByID(departmentID)
 
      // If program or department not found, return an error
     if (!program || !department) {

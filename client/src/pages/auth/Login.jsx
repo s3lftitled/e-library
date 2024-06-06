@@ -59,7 +59,7 @@ export const Login = () => {
     } catch (err) {
       if (err.response && err.response.data.error === 'Please verify your email first') {
         setError(err.response.data.error)
-        navigate(`/verify/${email}`)
+        navigate(`/verify/${formDatas.email}`)
       } else {
         setError(err.response.data.error)
       }

@@ -11,7 +11,7 @@ const storage = getStorage(app)
  */
 const clearAllProgramsCache = async () => {
   try {
-    const keys = await redisClient.keys('programs:*')
+    const keys = await redisClient.keys('programs')
     if (keys.length > 0) {
       await redisClient.del(keys)
     }

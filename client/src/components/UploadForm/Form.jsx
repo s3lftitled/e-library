@@ -54,11 +54,15 @@ const Form = ({ onClose, type, ID }) => {
         console.log(response)
       } else if (type === 'learning-material') {
         endpoint = `/learning-materials/courses/${ID}/${userID}`
-        let formData = new FormData()
+        const formData = new FormData()
         formData.append('title', formDatas.title)
         formData.append('author', formDatas.author)
         formData.append('file', file)
-        response = await privateAxios.post(endpoint, formData)
+        response = await privateAxios.post(endpoint, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })    
       } else if (type === 'change-password') {
         endpoint = `/auth/change-password/${userID}`
         response = await privateAxios.put(endpoint, { 

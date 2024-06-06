@@ -55,7 +55,7 @@ const uploadMaterial = async (req, res, courseRepository, learningMaterialReposi
     // Add the learning material to the course's list of materials
     await courseRepository.addLearningMaterialToCourse(courseId, learningMaterial._id)
 
-    await redisClient.del(`materials:${userID}`)
+    await redisClient.del(`materials:${userID}:${courseId}`)
 
     // Respond with the created learning material
     res.status(201).json(learningMaterial)

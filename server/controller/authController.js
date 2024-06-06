@@ -178,8 +178,8 @@ const staffRegistration = async (req, res, userRepository) => {
     }
 
     // Check if the email is in the array of staff or librarian emails
-    const staffEmails = process.env.STAFF_EMAILS ? process.env.STAFF_EMAILS.split(',') : [];
-    const librarianEmails = process.env.LIBRARIAN_EMAILS ? process.env.LIBRARIAN_EMAILS.split(',') : [];    
+    const staffEmails = process.env.STAFF_EMAILS ? process.env.STAFF_EMAILS.split(',') : []
+    const librarianEmails = process.env.LIBRARIAN_EMAILS ? process.env.LIBRARIAN_EMAILS.split(',') : []  
 
     // Check if user role is authorized to register
     if ((chosenRole === ROLES.STAFF && !staffEmails.includes(email)) || (chosenRole === ROLES.LIBRARIAN && !librarianEmails.includes(email))) {

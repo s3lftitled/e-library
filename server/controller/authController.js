@@ -429,6 +429,11 @@ const changePassword = async (req, res, userRepository) => {
       return res.status(404).json({ error: "Please fill in all the required fields" })
     }
 
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({ error: 'Password should have capital letters, numbers, and symbols' })
+    }
+
     if (!userID) {
       return res.status(404).json({ error: 'User ID is not found' })
     }

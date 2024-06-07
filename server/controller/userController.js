@@ -214,7 +214,8 @@ const getPrograms = async (req, res, userRepository, programRepository) => {
     // Assign userProgram to recommendedPrograms
     const recommendedPrograms = userProgram
 
-    restOfPrograms.sort((a, b) => a.title.localeCompare(b.title))
+    // Sort programs by title
+    restOfPrograms.sort((a, b) => (a.title > b.title) ? 1 : (a.title < b.title) ? -1 : 0)
 
     // Construct response object with recommended programs and the rest of the programs
     const response = {

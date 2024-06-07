@@ -89,6 +89,9 @@ const getAllPrograms = async (req, res, programRepository) => {
     }
     // Retrieve all programs from the database
     const programs = await programRepository.getAllPrograms()
+
+    // Sort programs by title
+    programs.sort((a, b) => (a.title > b.title) ? 1 : (a.title < b.title) ? -1 : 0)
  
     // Cache programs in Redis
     await redisClient.set("programs", JSON.stringify(programs), "EX", DEFAULT_EXP)

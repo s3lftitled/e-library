@@ -188,7 +188,7 @@ export const Register = () => {
               ))}
           </select>
         )}
-        {registrationData.selectedDepartment && (
+        {registrationData.selectedDepartment && registrationData.selectedRole === 'Student' && (
           <select
             name='selectedProgram'
             onChange={handleChange}

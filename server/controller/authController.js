@@ -366,6 +366,7 @@ const logOut = async (req, res) => {
 
     await redisClient.del(`user-details:${userID}`)
     await redisClient.del(`programs:${userID}`)
+    await redisClient.del("programs")
 
     logger.info(`User ${userID} logged out successfully.`)
 

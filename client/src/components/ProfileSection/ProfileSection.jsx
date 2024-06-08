@@ -89,13 +89,13 @@ export const ProfileSection = memo(({ showProfileSection, setShowProfileSection,
           className='user-icon'
           onClick={() => setShowProfileSection(true)}
         >
-          <img className="user-icon" src={ user?.profilePic || "pfp.avif"} alt="user-profile"/>
+          <img className="user-icon" src={ user.profilePic ? user.profilePic : "/pfp.avif?url"} alt="user pfp" />
         </div>
       ) : (
         <div className={`profile-section ${isDarkMode ? 'dark-mode' : ''}`}>
             <div className="user-details">
               <img
-                src={ user?.profilePic || "pfp.avif"}
+                src={ user?.profilePic || "/pfp.avif?url"}
                 alt="user's profile picture"
                 className="user-pic"
               />

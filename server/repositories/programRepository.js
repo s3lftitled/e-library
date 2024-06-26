@@ -90,8 +90,21 @@ class ProgramRepository {
       throw new Error(`Error retrieving other programs: ${error.message}`)
     }
   }
+
+  // Method to change a program name
+  async updateProgramTitle(programID, newTitle) {
+    try {
+      const updatedProgram = await Program.findByIdAndUpdate(programID, { title: newTitle }, { new: true })
+
+      if (!updatedProgram) {
+        throw new Error('Program not found')
+      }
+
+      return updatedProgram
+    } catch (error) {
+      throw new Error(`Error updating program title: ${error.message}`)
+    }
+  }
 }
-
-
 
 module.exports = ProgramRepository

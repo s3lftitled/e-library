@@ -194,10 +194,44 @@ const getProgramImageURL = async (req, res, programRepository) => {
     res.status(500).json({ error: 'Failed to retrieve material. Please try again later.' })
   }
 }
+
+const changeProgramTitle = async (req, res, programRepository) => {
+  const { newProgramName } = req.body
+  const { programID } = req.params
+  try {
+    if (!programID) {
+      return res.status(400).json({ error: 'Program ID is required' });
+    }
+
+    const program = await programRepository.findProgramByID(programID)
+
+    if (!program) {
+      res.status(404).json({ error: 'Program not found'})
+    }
+
+    if (!newProgramName || typeof newProgramName !== 'string') {
+      return res.status(400).json({ error: 'Please provide a valid new name for the program' });
+    }
+
+    if (!newProgramName) {
+      res.status(404).json({ error: 'Please provide a new name for the program'})
+    }
+
+    await programRepository.updateProgramTitle(programID, newProgramName)
+
+    res.status(200).json({ msg: `Program name changed succesfully: ${program.title}`})
+
+  } catch (error) {
+    // Handle any errors and respond with an error message
+    console.error('Error changing program name:', error)
+    res.status(500).json({ error: 'Failed to change program name. Please try again later.' })
+  }
+}
  
 module.exports = { 
   createProgram,
   getAllPrograms,
   getDepartmentPrograms,
-  getProgramImageURL
+  getProgramImageURL,
+  changeProgramTitle
 }

@@ -314,9 +314,34 @@
   cursor: pointer;
 }
 
+.change-title-btn {
+  margin: 8px;
+  padding: 10px;
+  background-color: #4E7133;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.change-title-btn:active {
+  background-color: #223811;
+}
+
+.new-title-input {
+  width: 200px; 
+  height: 18px; 
+  padding: 8px; 
+  font-size: 16px;
+}
+
 @media screen and (max-width: 1250px) {
   .search-results {
     left: 0;
+  }
+
+  .change-title-btn {
+    display: none;
   }
 }
 

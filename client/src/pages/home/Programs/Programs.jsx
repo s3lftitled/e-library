@@ -70,6 +70,42 @@ export const Programs = ({ isDarkMode }) => {
     setShowForm(false)
   }
 
+  const onRename = async (newTitle, programID) => {
+    try {
+      console.log(newTitle, programID)
+      const response = await privateAxios.put(`programs/change-program-name/${programID}`,  { newProgramName: newTitle }, userRole)
+      if (response.status === 200) {
+        const updatedPrograms = data.programs.map(program => 
+          program._id === programID ? {...program, title: newTitle} : program
+        )
+        setData({...data, programs: updatedPrograms})
+
+        alert(response.data.msg)
+      }
+    } catch (err) {
+      if (err.response) {
+        const status = err.response.status
+        const error = err.response.data.error
+        
+        switch (status) {
+          case 400:
+            alert('Bad Request: ' + error)
+            break;
+          case 404:
+            alert('Not Found: ' + error)
+            break;
+          case 500:
+            alert('Server Error: ' + error)
+            break;
+          default:
+            alert('An unexpected error occurred')
+        }
+      } else {
+        alert('Network Error: Please check your connection.')
+      }
+    }
+  }
+
   return (
     <div className={`programs`}>
       <ProgramSearch
@@ -90,13 +126,18 @@ export const Programs = ({ isDarkMode }) => {
       )}
       {!loading && data.recommendedProgram && <h2>Others</h2>}
       <div className="other-programs">
-        {data.programs.map((program) => (
-          <ProgramCard
-            key={program._id}
-            program={program}
-            onClick={() => navigateToCourses(program._id, program.title)}
-            isDarkMode={isDarkMode}
-          />
+        {data.programs && data.programs.map((program) => (
+          program._id ? ( 
+            <ProgramCard
+              key={program._id}
+              program={program}
+              onClick={() => navigateToCourses(program._id, program.title)}
+              isDarkMode={isDarkMode}
+              onRename={(newTitle, programID) => onRename(newTitle, program._id)}
+            />
+          ) : (
+            <p>Program ID not available</p> 
+          )
         ))}
       </div>
       { userRole=== 'Librarian' && <FloatingButton onClick={openForm} /> }

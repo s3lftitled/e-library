@@ -3,6 +3,7 @@ import { useState } from "react"
 const ProgramCard = ({ program, onClick, isDarkMode, onRename }) => {
   const [ formData, setFormData ] = useState({ })
   const [ isEditing, setIsEditing ] = useState(false)
+  const userRole = localStorage.getItem('userRole')
 
   const handleSave = () => {
     console.log(formData.newTitle, program._id)
@@ -50,10 +51,12 @@ const ProgramCard = ({ program, onClick, isDarkMode, onRename }) => {
         )}
         <p className="program-description">{program.description}</p>
       </div>
-      <div>
-      {!isEditing && <button className="change-title-btn" onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}>Edit</button>}
-      {isEditing && <button className="change-title-btn" onClick={(e) => { e.stopPropagation(); setIsEditing(false); }}>Cancel</button>}
-      </div>
+      { userRole === 'Librarian' &&
+       <div>
+        {!isEditing && <button className="change-title-btn" onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}>Edit</button>}
+        {isEditing && <button className="change-title-btn" onClick={(e) => { e.stopPropagation(); setIsEditing(false); }}>Cancel</button>}
+       </div>
+      }
     </div>
   )
 }

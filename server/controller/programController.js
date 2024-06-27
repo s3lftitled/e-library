@@ -220,6 +220,8 @@ const changeProgramTitle = async (req, res, programRepository) => {
 
     await programRepository.updateProgramTitle(programID, newProgramName)
 
+    clearAllProgramsCache()
+
     res.status(200).json({ msg: `Program name changed succesfully: ${program.title}`})
 
   } catch (error) {

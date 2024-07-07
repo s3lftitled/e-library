@@ -79,13 +79,13 @@ export const Login = () => {
         <input
           type='text'
           name='email'
-          placeholder='Email'
+          placeholder='yourname@panpacificu.edu.ph'
           onChange={handleFieldChange}
         />
         <input
           type='password'
           name='password'
-          placeholder='Password'
+          placeholder='Password (e.g., Student123_)'
           onChange={handleFieldChange}
           onKeyPress={handleKeyPress} // event listener :) 
         />

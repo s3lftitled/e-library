@@ -146,12 +146,12 @@ export const Register = () => {
         <input
           type='text'
           name='email'
-          placeholder='Email'
+          placeholder='Enter your Panpacific Email'
           onChange={handleChange}
         />
         <input
           type='password'
-          placeholder='Password'
+          placeholder= 'Password (e.g., Student123_)'
           name='password'
           onChange={handleChange}
         />

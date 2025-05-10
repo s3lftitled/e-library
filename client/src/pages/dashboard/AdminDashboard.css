@@ -1,130 +1,320 @@
+/* Import Lexend font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+
+/* Dark mode styles */
+body.dark-mode {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+}
+
+/* Dashboard container */
 .dashboard-container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-family: "Lexend", sans-serif;
-  height: 100%;
-  min-width: 100%;
+  transition: all 0.3s ease;
 }
 
-.dashboard-container header {
+.light-mode {
+  --primary-color: #4E7133;
+  --primary-light: #6B9A45;
+  --primary-dark: #3A5526;
+  --text-color: #333;
+  --text-light: #666;
+  --bg-color: #f5f5f5;
+  --card-bg: #ffffff;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --chart-grid: rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode {
+  --primary-color: #5a8a3c;
+  --primary-light: #7BAD57;
+  --primary-dark: #3A5526;
+  --text-color: #f5f5f5;
+  --text-light: #cccccc;
+  --bg-color: #1a1a1a;
+  --card-bg: #2a2a2a;
+  --border-color: #3a3a3a;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --chart-grid: rgba(255, 255, 255, 0.1);
+}
+
+/* Header styles */
+.dashboard-header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem 2rem;
   display: flex;
-  flex-direction: row;
-  height: 130px;
-  align-items: center;
   justify-content: space-between;
-  color: #fff;
-  background-color: #4E7133;
-  min-width: 100%;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-
-.dashboard-container header.dark-mode {
-  display: flex;
-  flex-direction: row;
-  height: 130px;
   align-items: center;
-  justify-content: space-between;
-  color: #fff;
-  background-color: #181c24;
-  min-width: 100%;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.dashboard-container header:hover{
-  background-color: #0C359E;
-}
-
-.dashboard-container header.dark-mode:hover{
-  background-color: #28292e;
-}
-
-header .header-content {
+.header-left {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
-  margin-left: 80px;
+  gap: 1rem;
 }
 
-header h1 {
-  font-size: 1.7rem;
-  margin-left: 2vh;
-}
-
-ion-icon {
-  font-size: 25px;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  cursor: pointer;
-}
-
-ion-icon:hover{
-  transform: scale(1.3);
-}
-
-.stats-option {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 20%;
-}
-
-.stats-option button {
-  height: 30px;
-  width: 200px;
-  cursor: pointer;
-  font-family: "Lexend";
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+.back-button {
+  background: none;
   border: none;
-  margin: 16px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  transition: background-color 0.1s ease-in-out;
-}
-
-.stats-option button:hover {
-  background-color: rgb(103, 103, 103);
-}
-
-.chart-container {
-  width: 75%;
-  height: 65%; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  border-radius: 10px; 
-  padding: 20px; 
+  color: white;
+  cursor: pointer;
+  display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 0;
-  margin-bottom: 15px;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
 }
 
-.chart-container h2 {
-  font-size: 1.6rem; 
-  margin-top: 0;
-  margin-bottom: 8px;
+.back-button:hover {
+  background-color: var(--primary-dark);
 }
 
-.chart-container h3 {
+.dashboard-title {
+  font-size: 1.5rem;
+  font-weight: 600;
   margin: 0;
 }
 
-@media screen and (max-width: 768px) {
-  .chart-container {
-    width: 90%; 
-    height: 70%;
-  }
+.header-center {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-info {
+  text-align: center;
+}
+
+.stat-info h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.stat-info p {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.15);
+  transition: background-color 0.2s;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Main content area */
+.dashboard-main {
+  flex: 1;
+  padding: 2rem;
+  background-color: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Chart tabs */
+.chart-tabs {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.chart-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Lexend', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px var(--shadow-color);
+}
+
+.chart-tab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.chart-tab.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* Chart container */
+.chart-container {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px var(--shadow-color);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chart-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.chart-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chart-controls label {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.program-select {
+  font-family: 'Lexend', sans-serif;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.program-select:focus {
+  border-color: var(--primary-color);
+}
+
+/* Chart wrapper */
+.chart-wrapper {
+  flex: 1;
+  min-height: 400px;
+  position: relative;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-light);
+  font-size: 1rem;
+}
+
+/* Footer */
+.dashboard-footer {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 0.875rem;
 }
 
 
-@media screen and (max-width: 8px) {
-  .chart-container {
-    width: 90%; 
-    height: 70%;
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .header-center {
+    display: none;
   }
 }
 
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: 1rem;
+  }
+  
+  .dashboard-main {
+    padding: 1rem;
+  }
+  
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .chart-wrapper {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-title {
+    font-size: 1.25rem;
+  }
+  
+  .chart-tab {
+    padding: 0.5rem 1rem;
+  }
+  
+  .chart-tab span {
+    display: none;
+  }
+}

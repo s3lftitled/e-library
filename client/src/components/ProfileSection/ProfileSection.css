@@ -1,4 +1,3 @@
-/* Profile Section CSS */
 
 .profile-section {
   display: flex;
@@ -7,31 +6,54 @@
   height: 100vh;
   background-color: #ffff;
   color: #3c5c24;
-  box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.18);
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   z-index: 10;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
 }
 
 .profile-section.dark-mode {
   background-color: #181c24;
   color: #fff;
-  box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.profile-content-container {
+  height: 100%;
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
 }
 
 .user-details {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
-  margin-top: 15px;
+  width: 100%;
+  height: 100%;
 }
 
-.user-details.dark-mode {
-  background-color: black;
-  color: white;
+.profile-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.profile-pic-container {
+  position: relative;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .user-pic {
@@ -39,232 +61,549 @@
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin: 2px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border: 4px solid #fff;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .user-pic {
+  border-color: #2d3950;
+}
+
+.user-pic:hover {
+  transform: scale(1.03);
+}
+
+.change-pic-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background-color: #4E7133;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.change-pic-btn:hover {
+  background-color: #3a5a26;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.change-pic-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.btn-icon, .nav-icon, .metadata-icon, .link-icon {
+  margin-right: 6px;
+}
+
+.user-info {
+  width: 100%;
+  padding: 0 15px;
 }
 
 .user-greeting {
   font-weight: 700;
-  font-size: 1.4rem;
-  margin-bottom: 2px;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  text-align: center;
+  background: linear-gradient(45deg, #4E7133, #3a5a26);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .user-greeting {
+  background: linear-gradient(45deg, #6baf3c, #8cc44b);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+
+.user-metadata {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.metadata-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  background-color: rgba(78, 113, 51, 0.08);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.dark-mode .metadata-item {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.metadata-item:hover {
+  background-color: rgba(78, 113, 51, 0.12);
+  transform: translateX(2px);
+}
+
+.dark-mode .metadata-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.metadata-icon {
+  color: #4E7133;
+  margin-right: 10px;
+}
+
+.dark-mode .metadata-icon {
+  color: #8cc44b;
+}
+
+.department-icon, .program-icon {
+  width: 16px;
+  height: 16px;
+  background-color: #4E7133;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 3h20'/%3E%3Cpath d='M10 6h12'/%3E%3Cpath d='M10 12h12'/%3E%3Cpath d='M2 9h5'/%3E%3Cpath d='M2 15h5'/%3E%3Cpath d='M2 21h20'/%3E%3Cpath d='M10 18h12'/%3E%3C/svg%3E");
+  mask-size: cover;
+  margin-right: 10px;
+}
+
+.dark-mode .department-icon, .dark-mode .program-icon {
+  background-color: #8cc44b;
 }
 
 .user-email {
-  font-size: 1rem;
-  padding: 5px;
-  margin: 3px;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+  color: #3c5c24;
+}
+
+.dark-mode .user-email {
+  color: #ddd;
 }
 
 .user-role {
-  font-size: 1.3rem;
-  margin: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #3c5c24;
+}
+
+.dark-mode .user-role {
+  color: #ddd;
 }
 
 .user-department {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  font-size: 0.9rem;
   margin: 0;
+  display: flex;
+  align-items: center;
+  color: #3c5c24;
 }
 
-.user-department p {
+.dark-mode .user-department {
+  color: #ddd;
+}
+
+.user-department span {
   color: #4e7133ad;
-  margin: 5px;
+  margin-right: 5px;
+  font-weight: 600;
+}
+
+.dark-mode .user-department span {
+  color: #8cc44b;
 }
 
 .separator-underline {
-  border-top: 4px solid #17171754; 
-  margin-bottom: 15px; 
-  width: 95%;
-  margin-top: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(78, 113, 51, 0.5), transparent);
+  width: 90%;
+  margin: 20px 0;
+  border: none;
+}
+
+.dark-mode .separator-underline {
+  background: linear-gradient(90deg, transparent, rgba(140, 196, 75, 0.3), transparent);
 }
 
 .hide-profile-section {
   position: absolute;
-  top: 1%;
-  left: 92%;
-  z-index: 0;
+  top: 15px;
+  right: 15px;
+  z-index: 15;
   background-color: #4E7133;
-  padding: 8px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 50%;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
 }
 
-.upload-pic-form button,
-.change-pic-btn {
-  padding: 10px;
-  background-color: #4E7133;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 8px;
+.hide-profile-section:hover {
+  background-color: #3a5a26;
+  transform: rotate(90deg);
 }
 
 .user-content-section {
   width: 100%;
-  margin-top: 15px;
-  margin-bottom: 10px;
-  justify-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.user-content-section h2 {
-  padding: 10px;
+.nav-item {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s ease; 
-  font-weight: 800;
-  font-size: 1.1rem;
+  transition: all 0.2s ease;
 }
 
-.user-content-section h2:hover {
-  background-color: rgb(183, 162, 162);
+.nav-item:hover {
+  background-color: rgba(78, 113, 51, 0.1);
+  transform: translateX(3px);
+}
+
+.dark-mode .nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nav-item h2 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.nav-icon {
+  color: #4E7133;
+  margin-right: 12px;
+}
+
+.dark-mode .nav-icon {
+  color: #8cc44b;
 }
 
 .log-out-section {
+  margin-top: auto;
   display: flex;
   flex-direction: column;
-  margin-top: 60px;
+  width: 100%;
+  padding: 0 10px;
+  gap: 15px;
 }
 
-.log-out-section a {
-  margin-bottom: 16px;
+.change-password-link {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  color: #4E7133;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.change-password-link:hover {
+  background-color: rgba(78, 113, 51, 0.08);
+  transform: translateX(2px);
+}
+
+.dark-mode .change-password-link {
+  color: #8cc44b;
+}
+
+.dark-mode .change-password-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.link-icon {
+  color: #4E7133;
+  margin-right: 8px;
+}
+
+.dark-mode .link-icon {
+  color: #8cc44b;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: #4E7133;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logout-button:hover {
+  background-color: #3a5a26;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.logout-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* User icon when profile is closed */
+.user-icon-container {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 10;
   cursor: pointer;
 }
 
-.log-out-section a:hover {
-  text-decoration: underline;
+.user-icon-wrapper {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border: 3px solid #fff;
+  transition: all 0.3s ease;
 }
 
-.upload-pic-form button,
-.change-pic-btn,
-.log-out-section button,
-.hide-profile-section {
-  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+.user-icon-wrapper:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-.upload-pic-form button:hover,
-.change-pic-btn:hover,
-.log-out-section button:hover,
-.hide-profile-section:hover {
-  background-color: #0C359E;
+.user-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.upload-pic-form button:focus,
-.change-pic-btn:focus,
-.log-out-section button:focus,
-.hide-profile-section:focus {
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+.user-icon-overlay {
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 40px;
+  height: 40px;
+  background-color: #4E7133;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translate(50%, 50%) scale(0.5);
+  transition: all 0.3s ease;
+}
+
+.user-icon-wrapper:hover .user-icon-overlay {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+.user-icon-overlay svg {
+  color: white;
+}
+
+/* Upload form styling */
+.upload-pic-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.file-input-container {
+  width: 100%;
+}
+
+.file-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  background-color: rgba(78, 113, 51, 0.1);
+  color: #4E7133;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  width: 100%;
+  border: 1px dashed #4E7133;
+}
+
+.dark-mode .file-label {
+  background-color: rgba(140, 196, 75, 0.1);
+  color: #8cc44b;
+  border: 1px dashed #8cc44b;
+}
+
+.file-label:hover {
+  background-color: rgba(78, 113, 51, 0.15);
+  transform: translateY(-2px);
+}
+
+.dark-mode .file-label:hover {
+  background-color: rgba(140, 196, 75, 0.15);
 }
 
 .upload-btn-choices {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 3px;
+  gap: 10px;
+  width: 100%;
 }
 
-.log-out-section button {
+.upload-btn-choices button {
+  flex: 1;
   padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload-btn-choices button:first-child {
   background-color: #4E7133;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  color: white;
 }
 
-.show-profile-section {
-  position: absolute;
-  top: 1%;
-  left: 1%;
-  padding: 8px;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.upload-btn-choices button:first-child:hover {
+  background-color: #3a5a26;
 }
 
-.user-icon {
-  position: absolute;
-  top: 1%;
-  left: 0.5%;
-  z-index: 10;
-  cursor: pointer;
-  border: none;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin: 2px;
+.upload-btn-choices button:last-child {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.dark-mode .upload-btn-choices button:last-child {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ddd;
+}
+
+.upload-btn-choices button:last-child:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.dark-mode .upload-btn-choices button:last-child:hover {
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Media Queries for Responsiveness */
-
 @media screen and (max-width: 1100px) {
   .profile-section {
-    width: 100%;
-  }
-
-  .log-out-section {
-    margin-top: 50px;
+    width: 350px;
   }
 }
 
 @media screen and (max-width: 780px) {
+  .profile-section {
+    width: 100%;
+  }
+  
   .user-pic {
     width: 100px;
     height: 100px;
   }
   
   .user-greeting {
-    font-weight: 700;
-    font-size: 1.2rem;
-    margin-bottom: 2px;
+    font-size: 1.3rem;
   }
   
-  .user-email {
-    font-size: 0.7rem;
-    padding: 5px;
-    margin: 3px;
-    font-weight: 700;
+  .metadata-item {
+    padding: 6px 8px;
   }
   
-  .user-role {
-    font-size: 1rem;
-    margin: 4px;
-  }
-
-  .user-department {
-    font-size: 0.8rem;
+  .nav-item {
+    padding: 10px 14px;
   }
   
-  .user-department p {
-    font-size: 0.8rem;
-  }
-
-  .user-content-section h2 {
-    font-size: 0.8rem;
-  }
-  .upload-pic-form button,
-  .change-pic-btn,
-  .log-out-section button,
-  .hide-profile-section {
-    padding: 6px; 
-    font-size: 0.6rem; 
-  }
-  .log-out-section {
-    margin-top: 80px;
-  }
-  .log-out-section a {
-    font-size: 0.8rem;
+  .nav-item h2 {
+    font-size: 0.9rem;
   }
 }
 
-/* BUTTTTOONNN */
+@media screen and (max-width: 576px) {
+  .user-pic {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .user-greeting {
+    font-size: 1.1rem;
+  }
+  
+  .user-icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+}
 
+@media screen and (max-width: 500px) {
+  .user-icon-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .hide-profile-section {
+    width: 30px;
+    height: 30px;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .change-pic-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+  
+  .logout-button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Dark/Light mode toggle button remains the same */
 .checkbox-wrapper-51 {
   position: fixed;
   bottom: 20px; 
@@ -272,102 +611,7 @@
   z-index: 1000; 
 }
 
-
 .checkbox-wrapper-51 input[type="checkbox"] {
   visibility: hidden;
   display: none;
-}
-
-.checkbox-wrapper-51 .toggle {
-  position: relative;
-  display: block;
-  width: 42px;
-  height: 24px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transform: translate3d(0, 0, 0);
-}
-
-.checkbox-wrapper-51 .toggle:before {
-  content: "";
-  position: relative;
-  top: 1px;
-  left: 1px;
-  width: 40px;
-  height: 22px;
-  display: block;
-  background: #47a86f;
-  border-radius: 12px;
-  transition: background 0.2s ease;
-}
-
-.checkbox-wrapper-51 .toggle span {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 24px;
-  height: 24px;
-  display: block;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(154,153,153,0.75);
-  transition: all 0.2s ease;
-}
-
-.checkbox-wrapper-51 .toggle span svg {
-  margin: 7px;
-  fill: none;
-}
-
-.checkbox-wrapper-51 .toggle span svg path {
-  stroke: #c8ccd4;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 24;
-  stroke-dashoffset: 0;
-  transition: all 0.5s linear;
-}
-
-.checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle:before {
-  background: #2d3950;
-}
-
-.checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle span {
-  transform: translateX(18px);
-}
-
-.checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle span path {
-  stroke: #000000;
-  stroke-dasharray: 25;
-  stroke-dashoffset: 25;
-}
-
-.separator-underline.dark-mode {
-  border-top: 4px solid #fff; 
-  margin-bottom: 15px; 
-  width: 95%;
-  margin-top: 20px;
-}
-
-
-@media screen and (max-width: 664px) {
-  .user-icon {
-    width: 40px;
-    height: 40px;
-  }  
-}
-
-@media screen and (max-width: 576px) {
-  .user-icon {
-    width: 32px;
-    height: 32px;
-  }  
-}
-
-@media screen and (max-width: 500px) {
-  .user-icon {
-    width: 30px;
-    height: 30px;
-  }  
 }

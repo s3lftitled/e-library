@@ -1,62 +1,96 @@
 import { useState } from "react"
 
 const ProgramCard = ({ program, onClick, isDarkMode, onRename }) => {
-  const [ formData, setFormData ] = useState({ })
-  const [ isEditing, setIsEditing ] = useState(false)
+  const [formData, setFormData] = useState({ newTitle: program.title })
+  const [isEditing, setIsEditing] = useState(false)
   const userRole = localStorage.getItem('userRole')
 
-  const handleSave = () => {
-    console.log(formData.newTitle, program._id)
+  const handleSave = (e) => {
+    e.stopPropagation()
     onRename(formData.newTitle, program._id)
     setIsEditing(false)
   }
 
+  const handleCancel = (e) => {
+    e.stopPropagation()
+    setFormData({ newTitle: program.title }) // Reset to original title
+    setIsEditing(false)
+  }
+
   const handleFieldChange = (e) => {
+    e.stopPropagation()
     const { name, value } = e.target
-    let formattedValue = value
-  
-    try {
-      formattedValue = JSON.parse(value)
-    } catch (error) {
-      // Ignore parsing errors
-    }
-  
     setFormData((prevData) => ({
       ...prevData,
-      [name]: formattedValue,
+      [name]: value,
     }))
   }
 
+  const handleCardClick = (e) => {
+    // Only trigger onClick if we're not in edit mode
+    if (!isEditing) {
+      onClick(e)
+    }
+  }
+
+  const handleEditClick = (e) => {
+    e.stopPropagation()
+    setIsEditing(true)
+  }
+
   return (
-    <div className={`program-card ${isDarkMode ? 'dark-mode' : ''}`} onClick={onClick}>
+    <div 
+      className={`program-card ${isDarkMode ? 'dark-mode' : ''}`} 
+      onClick={handleCardClick}
+      tabIndex={0}
+      role="button"
+      aria-label={`View ${program.title} program`}
+    >
       <div className="book-img-div">
-        <img className="book-img" src="book.png" alt="books" />
+        <img className="book-img" src="book.png" alt="Program icon" />
       </div>
+      
       <div className="program-details">
         {isEditing ? (
-          <>
+          <div onClick={e => e.stopPropagation()}>
             <input
               type="text"
               name="newTitle"
               value={formData.newTitle}
               onChange={handleFieldChange} 
               autoFocus
-              onClick={(e) => e.stopPropagation()}
               className="new-title-input"
+              placeholder="Enter new title"
+              aria-label="Edit program title"
             />
-            <button className="change-title-btn" onClick={(e) => { e.stopPropagation(e); handleSave()}}>Save</button>
-          </>
+            <div>
+              <button className="change-title-btn" onClick={handleSave}>
+                Save
+              </button>
+              <button className="change-title-btn" onClick={handleCancel}>
+                Cancel
+              </button>
+            </div>
+          </div>
         ) : (
-          <h1 className="program-title">{program.title}</h1>
+          <>
+            <h1 className="program-title">{program.title}</h1>
+            <p className="program-description">{program.description}</p>
+          </>
         )}
-        <p className="program-description">{program.description}</p>
       </div>
-      { userRole === 'Librarian' &&
-       <div>
-        {!isEditing && <button className="change-title-btn" onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}>Edit</button>}
-        {isEditing && <button className="change-title-btn" onClick={(e) => { e.stopPropagation(); setIsEditing(false); }}>Cancel</button>}
-       </div>
-      }
+      
+      {userRole === 'Librarian' && !isEditing && (
+        <div onClick={e => e.stopPropagation()}>
+          <button 
+            className="change-title-btn" 
+            onClick={handleEditClick}
+            aria-label="Edit program title"
+          >
+            Edit
+          </button>
+        </div>
+      )}
     </div>
   )
 }

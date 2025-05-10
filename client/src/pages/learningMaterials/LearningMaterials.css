@@ -1,167 +1,743 @@
+/* === IMPORTS & FONT SETUP === */
 @import "react-pdf/dist/esm/Page/TextLayer.css";
 @import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
 
+/* === ROOT VARIABLES === */
+:root {
+  --primary-light: #6B9E47;
+  --primary: #4E7133;
+  --primary-dark: #3A5426;
+  --accent: #0C359E;
+  --accent-hover: #0A2A7C;
+  --light: #F7F9F4;
+  --dark: #181c24;
+  --dark-hover: #28292e;
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.2);
+  --shadow-hard: 0 15px 35px rgba(0, 0, 0, 0.3);
+  --transition-fast: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-medium: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-slow: 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --gradient-primary: linear-gradient(135deg, var(--primary-light), var(--primary), var(--primary-dark));
+  --gradient-dark: linear-gradient(135deg, #1d1f27, var(--dark), #121418);
+}
+
+/* === BASE STYLES === */
 .learning-materials-container {
   height: 100%;
   min-width: 100%;
-  font-family: 'Lexend';
+  font-family: 'Nunito', 'Lexend', sans-serif;
+  background-color: var(--light);
+  transition: background-color var(--transition-medium);
+  overflow-x: hidden;
 }
 
+.learning-materials-container.dark-mode {
+  background-color: #121418;
+  color: var(--light);
+}
+
+/* === HEADER STYLES === */
 .learning-materials-container header {
   display: flex;
   flex-direction: row;
-  height: 130px;
+  height: 140px;
   align-items: center;
   justify-content: space-between;
   color: #fff;
-  background-color: #4E7133;
+  background: var(--gradient-primary);
   min-width: 100%;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+  box-shadow: var(--shadow-medium);
+  transition: all var(--transition-medium);
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.learning-materials-container header:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+  z-index: -1;
 }
 
 .learning-materials-container header.dark-mode {
-  display: flex;
-  flex-direction: row;
-  height: 130px;
-  align-items: center;
-  justify-content: space-between;
-  color: #fff;
-  background-color: #181c24;
-  min-width: 100%;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+  background: var(--gradient-dark);
+  box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.5);
 }
 
-.learning-materials-container header:hover{
-  background-color: #0C359E;
+.learning-materials-container header:hover {
+  background: linear-gradient(135deg, #0A2A7C, var(--accent), #1442CD);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hard);
 }
 
-.learning-materials-container header.dark-mode:hover{
-  background-color: #28292e;
+.learning-materials-container header.dark-mode:hover {
+  background: linear-gradient(135deg, #171a21, var(--dark-hover), #22252f);
+  transform: translateY(-2px);
 }
 
 header .header-content {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   margin-left: 80px;
+  position: relative;
+}
+
+.header-content ion-icon {
+  font-size: 1.8rem;
+  color: white;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.header-content ion-icon:hover {
+  transform: scale(1.2);
 }
 
 .header-content h1 {
-  font-size: 1.7rem;
-  margin-left: 10px;
+  font-size: 1.9rem;
+  margin-left: 18px;
+  font-weight: 700;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  position: relative;
+  padding-bottom: 4px;
 }
 
+.header-content h1:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: white;
+  transition: width var(--transition-medium);
+}
+
+.header-content:hover h1:after {
+  width: 100%;
+}
+
+/* === MATERIALS CONTAINER === */
 .materials-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+  padding: 30px 15px;
+  position: relative;
+  perspective: 1000px;
+  transition: all var(--transition-medium);
 }
 
+.materials-container:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.learning-materials-container.dark-mode .materials-container:before {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2), transparent);
+}
+
+/* === MATERIAL CARD STYLES === */
 .material {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  align-self: flex-start;
+  justify-content: space-between;
   text-align: center;
-  height: 275px;
-  width: 180px;
-  margin: 20px;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  height: 290px;
+  width: 190px;
+  margin: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  transition: all var(--transition-medium);
   position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  padding: 15px 10px;
 }
 
-.bookmark-icon {
-  position: absolute;
-  top: 1%;
-  right: 1%;
+.learning-materials-container.dark-mode .material {
+  background: #1f2128;
   color: white;
-  border: 1px solid black;
-  padding: 5px;
-  border-radius: 50%;
-  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
-.bookmark-icon.bookmarked {
-  color: black;
-  border: 1px solid black;
+.material:before {
+  content: '';
+  position: absolute;
+  top: -75%;
+  left: -75%;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transition: opacity var(--transition-slow), transform var(--transition-slow);
+  transform: scale(0.5);
+  pointer-events: none;
+  z-index: 2;
 }
 
-.material-title {
-  height: 40px;
-  width: 100%;
-  font-size: auto;
-  font-weight: bolder;
-  justify-content: center;
-  text-align: center;
+.material:hover:before {
+  opacity: 1;
+  transform: scale(1);
 }
 
-.material-author {
-  height: 30px;
-  width: 100%;
-  font-size: 0.8rem;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.material:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(to right, var(--primary-light), var(--accent));
+  transform: scaleX(0);
+  transition: transform var(--transition-medium);
+  transform-origin: left;
+}
+
+.material:hover:after {
+  transform: scaleX(1);
 }
 
 .material:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.2), 0px 10px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(-12px) rotateY(3deg);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 0 10px 10px rgba(0, 0, 0, 0.1);
+}
+
+.learning-materials-container.dark-mode .material:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 10px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* == BOOKMARK ICON === */
+.bookmark-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: var(--primary);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: all var(--transition-fast);
+  z-index: 5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.learning-materials-container.dark-mode .bookmark-icon {
+  background: rgba(40, 44, 52, 0.9);
+  color: white;
+}
+
+.bookmark-icon:hover {
+  transform: scale(1.2);
+  background: white;
+  color: var(--accent);
+}
+
+.bookmark-icon.bookmarked {
+  color: var(--accent);
+  background: white;
+  animation: pulse 1s;
+}
+
+.learning-materials-container.dark-mode .bookmark-icon.bookmarked {
+  color: gold;
+  background: var(--dark);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* === MATERIAL CONTENT === */
+.material-title {
+  height: auto;
+  min-height: 40px;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 15px;
+  color: #333;
+  transition: color var(--transition-medium);
+}
+
+.learning-materials-container.dark-mode .material-title {
+  color: white;
+}
+
+.material-author {
+  height: auto;
+  min-height: 30px;
+  width: 100%;
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.learning-materials-container.dark-mode .material-author {
+  color: #bbb;
 }
 
 .underline {
-  height: 5px;
-  min-width: 95%;
-  border-top: 2px solid #17171754;
-  margin-bottom: 15px;
+  height: 2px;
+  width: 85%;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1), transparent);
+  margin: 15px 0;
+  border: none;
 }
 
-.pdf-container {
-  height: 100%;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+.learning-materials-container.dark-mode .underline {
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
 }
 
+/* === PDF BUTTON === */
 .pdf-button {
-  padding: 10px 10px; 
-  font-size: 10px;
-  background-color: #000;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--primary);
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all var(--transition-fast);
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pdf-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.pdf-button:hover:before {
+  transform: translateX(100%);
 }
 
 .pdf-button:hover {
-  background-color: #0f36e4;
+  background: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+.pdf-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* === PDF VIEWER === */
+.pdf-viewer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #121212, #000, #121212);
+  overflow: hidden;
+  position: relative;
+}
+
+.pdf-viewer-container:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pdf-viewer {
+  align-self: center;
+  justify-self: center;
+  margin-top: 20px;
+  max-width: 70%;
+  height: 100%;
+  z-index: 2;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  overflow: hidden;
+  transition: all var(--transition-medium);
+}
+
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 15px 20px;
+  border-radius: 50px;
+  min-width: 500px;
+  z-index: 10;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all var(--transition-medium);
+}
+
+.pdf-toolbar:hover {
+  background: rgba(30, 30, 30, 0.9);
+}
+
+.pdf-toolbar button, 
+.set-page-toolbar button {
+  padding: 10px 18px;
+  margin: 0 5px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.pdf-toolbar button:before, 
+.set-page-toolbar button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.pdf-toolbar button:hover:before, 
+.set-page-toolbar button:hover:before {
+  transform: translateX(100%);
+}
+
+.pdf-toolbar button:hover,
+.set-page-toolbar button:hover {
+  background: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.set-page-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 15px 20px;
+  border-radius: 50px;
+  z-index: 10;
+  max-width: 100%;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all var(--transition-medium);
+}
+
+.set-page-toolbar:hover {
+  background: rgba(30, 30, 30, 0.9);
+}
+
+.set-page-toolbar input[type="number"] {
+  padding: 10px 15px;
+  margin: 0 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 25px;
+  width: 100px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all var(--transition-fast);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.set-page-toolbar input[type="number"]:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(76, 113, 51, 0.5);
+}
+
+/* === NOTE TAKER === */
+.note-taker {
+  position: fixed;
+  top: 50%;
+  left: 10%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  display: none;
+  opacity: 0;
+  transition: all var(--transition-medium);
+  z-index: 100;
+  width: 350px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.note-taker.show {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.note-taker textarea {
+  width: 100%;
+  height: 150px;
+  margin: 20px 0 15px;
+  resize: none;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.note-taker textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(76, 113, 51, 0.2);
+}
+
+.note-taker button {
+  padding: 10px 20px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  margin: 5px;
+}
+
+.note-taker button:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.note-taker .close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  color: #777;
+  font-size: 1.2rem;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  transition: all var(--transition-fast);
+}
+
+.note-taker .close-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+  transform: rotate(90deg);
+  box-shadow: none;
+}
+
+/* === NO MATERIALS MESSAGE === */
+.materials-container p:only-child {
+  font-size: 1.3rem;
+  color: #888;
+  text-align: center;
+  margin: 60px auto;
+  max-width: 500px;
+  line-height: 1.6;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  animation: fadeIn 1s ease-out;
+  position: relative;
+}
+
+.learning-materials-container.dark-mode .materials-container p:only-child {
+  background: #1f2128;
+  color: #bbb;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === ANIMATIONS === */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.material:nth-child(odd) {
+  animation: float 6s ease-in-out infinite;
+}
+
+.material:nth-child(even) {
+  animation: float 7s ease-in-out infinite 0.5s;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* === FLOATING BUTTON === */
+.floating-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background: var(--gradient-primary);
+  background-size: 200% 200%;
+  animation: gradientShift 5s ease infinite;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 1000;
+}
+
+.floating-button:hover {
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.floating-button:active {
+  transform: scale(0.95);
+}
+
+/* === DARK MODE TOGGLE === */
+.dark-mode-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-fast);
+  overflow: hidden;
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.learning-materials-container.dark-mode .dark-mode-toggle {
+  background: var(--dark);
+}
+
+/* === PDF VIEWER COMPONENTS === */
 .react-pdf__Page {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
-  border: 1px solid #ccc;
-  margin: 0;
+  border: none;
+  margin: 20px 0;
+  background: white;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  transition: all var(--transition-medium);
+}
+
+.react-pdf__Page:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .react-pdf__Page__canvas {
-  max-height: 60%;
-  max-width: 130%;
+  max-height: 70%;
+  max-width: 140%;
+  border-radius: 5px;
 }
 
 .react-pdf__message {
-  font-size: 2rem;
-  margin: 20px auto;
+  font-size: 1.5rem;
+  margin: 40px auto;
   text-align: center;
-  color: #888;
+  color: white;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 20px 30px;
+  border-radius: 10px;
+  max-width: 80%;
+  backdrop-filter: blur(5px);
 }
 
 .react-pdf__Page__textContent {
@@ -179,242 +755,162 @@ header .header-content {
   z-index: 100;
 }
 
-
-.pdf-viewer-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-height: 100vh;
-  background-color: #000;
-  overflow: hidden;
-}
-
-.pdf-viewer {
-  align-self: center;
-  justify-self: center;
-  margin-top: 20px;
-  max-width: 60%;
-  height: 100%;
-}
-
-.pdf-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  border-radius: 5px;
-  min-width: 500px;
-  z-index: 10;
-}
-
-.pdf-toolbar button, 
-.set-page-toolbar button {
-  padding: 8px 13px;
-  margin: 0 5px;
-  font-size: 13px;
-  background-color: #4E7133;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.pdf-toolbar button:hover,
-.set-page-toolbar button:hover {
-  background-color: #0C359E;
-}
-
-.set-page-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  border-radius: 5px;
-  z-index: 10;
-  max-width: 100%;
-}
-
-.set-page-toolbar input[type="number"] {
-  padding: 5px 10px;
-  margin: 0 5px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100px;
-  text-align: center;
-}
-
-.set-page-toolbar input[type="number"] {
-  input[type="number"]:focus {
-  outline: none;
-  border-color: #0C359E;
-}
-}
-
-.note-taker {
-  position: fixed;
-  top: 50%;
-  left: 10%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  display: none;
-}
-
-.note-taker.show {
-  display: block;
-}
-
-.note-taker textarea {
-  width: 100%;
-  height: 100px;
-  margin-top: 15px;
-  margin-bottom: 10px;
-  resize: none;
-}
-
-.note-taker button {
-  padding: 5px 10px;
-  background-color: #4E7133;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.note-taker .close-button {
-  padding: 5px 10px;
-  background-color: #4E7133;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  position: absolute;
-  top: 1%;
-  right: 1%;
-}
-
+/* === RESPONSIVE STYLES === */
 @media only screen and (max-width: 1145px) {
   .take-note-button {
     display: none;
+  }
+  
+  .material {
+    transform-style: flat;
+  }
+  
+  .material:hover {
+    transform: translateY(-8px);
   }
 }
 
 @media only screen and (max-width: 768px) {
   .header-content h1 {
     font-size: 1.5rem;
-    margin-left: 10px;
+    margin-left: 15px;
   }
 
   header .header-content {
-    margin-left: 60px;
+    margin-left: 40px;
   }
   
   .pdf-viewer {
     max-width: 90%;
-  }
-
-  .pdf-toolbar button, 
-  .set-page-toolbar button {
-    padding: 8px 13px;
-    margin: 0 5px;
-    font-size: 10px;
-  }
-}
-
-@media only screen and (max-width: 683px) {
-  header .header-content {
-    margin-left: 20px;
-  }
-
-  .header-content h1 {
-    font-size: 1.4rem;
-    margin-left: 10px;
-  }
-  
-  .material {
-    height: 265px;
-    width: 160px;
-    margin: 20px;
-  }
-
-  .pdf-viewer {
-    max-width: 90%;
-  }
-
-  .pdf-toolbar button, 
-  .set-page-toolbar button {
-    padding: 8px 13px;
-    margin: 0 5px;
-    font-size: 10px;
-  }
-}
-
-@media only sceen and (max-width: 610px) { 
-
-  .header-content h1 {
-    font-size: 1.2rem;
-    margin-left: 5px;
-  }
-
-}
-
-
-@media only screen and (max-width: 480px) {
-  .header-content h1 {
-    font-size: 1rem;
-    margin-left: 5px;
-  }
-
-  .material {
-    height: 255px;
-    width: 150px;
-  }
-
-  .material-title {
-    font-size: 0.7;
-  }
-  
-  .material-author {
-    font-size: 0.5;
-  }
-
-  .pdf-viewer {
-    max-width: 95%;
   }
 
   .pdf-toolbar,
   .set-page-toolbar {
     min-width: 90%;
-    margin: 5px;
+    max-width: 90%;
+    border-radius: 15px;
+    padding: 12px 15px;
+  }
+
+  .pdf-toolbar button, 
+  .set-page-toolbar button {
+    padding: 8px 12px;
+    margin: 0 3px;
+    font-size: 0.8rem;
+  }
+  
+  .materials-container {
+    padding: 20px 10px;
+  }
+  
+  .material {
+    margin: 15px;
+    height: 270px;
+    width: 175px;
+  }
+  
+  .floating-button {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .header-content h1 {
+    font-size: 1.3rem;
+    margin-left: 10px;
+  }
+  
+  header .header-content {
+    margin-left: 20px;
+  }
+  
+  .material {
+    height: 260px;
+    width: 160px;
+    margin: 12px;
+  }
+  
+  .material-title {
+    font-size: 0.9rem;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .header-content h1 {
+    font-size: 1.1rem;
+    margin-left: 8px;
+  }
+  
+  .material {
+    height: 250px;
+    width: 145px;
+    margin: 10px;
+    padding: 10px 8px;
+  }
+  
+  .material-title {
+    font-size: 0.8rem;
+    margin-top: 10px;
+  }
+  
+  .material-author {
+    font-size: 0.75rem;
+  }
+  
+  .pdf-button {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+  
+  .pdf-toolbar button, 
+  .set-page-toolbar button {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+  
+  .set-page-toolbar input[type="number"] {
+    width: 70px;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+  
+  .floating-button {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
   }
 }
 
 @media only screen and (max-width: 400px) {
   .header-content h1 {
     font-size: 1rem;
-    margin-left: 5px;
   }
-
+  
   .material {
-    height: 250px;
-    width: 145px;
-    margin: 10px;
+    height: 240px;
+    width: 135px;
+    margin: 8px;
+  }
+  
+  .material-title {
+    font-size: 0.75rem;
+  }
+  
+  .material-author {
+    font-size: 0.7rem;
+    margin-top: 3px;
+  }
+  
+  .pdf-button {
+    padding: 6px 14px;
+    font-size: 0.75rem;
+  }
+  
+  .pdf-toolbar,
+  .set-page-toolbar {
+    padding: 10px;
   }
 }
-

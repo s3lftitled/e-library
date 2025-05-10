@@ -107,24 +107,33 @@ export const Programs = ({ isDarkMode }) => {
   }
 
   return (
-    <div className={`programs`}>
-      <ProgramSearch
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        searchResults={searchResults}
-        handleResultClick={handleResultClick}
-      />
+    <div className={`programs ${isDarkMode ? 'dark-mode' : ''}`}>
+      <div className="search-div">
+        <ProgramSearch
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          searchResults={searchResults}
+          handleResultClick={handleResultClick}
+          isDarkMode={isDarkMode}
+        />
+      </div>
+      
       {!loading && data.recommendedProgram && (
         <>
           <h2>For You</h2>
-          <RecommendedProgram
-            program={data.recommendedProgram}
-            onClick={() => navigateToCourses(data.recommendedProgram._id, data.recommendedProgram.title)}
-            isDarkMode={isDarkMode}
-          />
+          <div className="recommended-programs">
+            <RecommendedProgram
+              program={data.recommendedProgram}
+              onClick={() => navigateToCourses(data.recommendedProgram._id, data.recommendedProgram.title)}
+              isDarkMode={isDarkMode}
+            />
+          </div>
         </>
       )}
+      
       {!loading && data.recommendedProgram && <h2>Others</h2>}
+      {!loading && !data.recommendedProgram && <h2>Programs</h2>}
+      
       <div className="other-programs">
         {data.programs && data.programs.map((program) => (
           program._id ? ( 
@@ -133,16 +142,16 @@ export const Programs = ({ isDarkMode }) => {
               program={program}
               onClick={() => navigateToCourses(program._id, program.title)}
               isDarkMode={isDarkMode}
-              onRename={(newTitle, programID) => onRename(newTitle, program._id)}
+              onRename={(newTitle) => onRename(newTitle, program._id)}
             />
           ) : (
             <p>Program ID not available</p> 
           )
         ))}
       </div>
-      { userRole=== 'Librarian' && <FloatingButton onClick={openForm} /> }
+      
+      {userRole === 'Librarian' && <FloatingButton onClick={openForm} />}
       {showForm && <Form onClose={closeForm} type="program" programID={null} />}
     </div>
   )
 }
-

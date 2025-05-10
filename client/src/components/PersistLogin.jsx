@@ -17,11 +17,12 @@ const PersistLogin = () => {
         await refreshAccessToken()
       } catch (err) {
         console.log(err)
-        navigate('/auth')
+        navigate('/login')
       } finally {
         setIsLoading(false)
       }
     }
+    console.log('auth', auth.accessToken)
     !auth?.accessToken ? verifyToken() : setIsLoading(false)
   }, [])
 

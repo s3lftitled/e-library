@@ -49,7 +49,7 @@ export const Login = () => {
 
       const { userID, role, accessToken } = result.data
 
-      setAuth({ accessToken })
+       setAuth({ accessToken })
 
       localStorage.setItem('userID', userID)
       localStorage.setItem('userRole', role)

@@ -22,6 +22,7 @@
   background-color: #fafafa;
   transition: background-color var(--transition-smooth);
   position: relative;
+  overflow: hidden;
 }
 
 .courses-container.dark-mode {
@@ -41,10 +42,9 @@
   position: sticky;
   align-items: center;
   top: 0;
-  z-index: 5;
+  z-index: 2;
   transition: all var(--transition-smooth);
   padding: 0 20px;
-  overflow: hidden;
 }
 
 .courses-header::before {
@@ -254,7 +254,7 @@
   right: 0;
   bottom: 0;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 50%);
-  z-index: 1;
+  z-index: 2;
   transition: opacity var(--transition-smooth);
   opacity: 0;
 }

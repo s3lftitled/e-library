@@ -316,19 +316,12 @@ const logIn = async (req, res, userRepository, logRepository) => {
       secure: true,
       sameSite: 'none'
     })
-    
-    res.cookie('accessToken', accessToken, { 
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none'
-    })
 
     logger.info(`User ${user.email} logged in successfully.`)
 
     // Send response with tokens and user information
     res.status(200).json({
       accessToken,
-      refreshToken,
       userID: user._id,
       role: user.role,
       msg: 'User logged in successfully'

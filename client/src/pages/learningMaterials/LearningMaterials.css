@@ -30,7 +30,6 @@
   font-family: 'Nunito', 'Lexend', sans-serif;
   background-color: var(--light);
   transition: background-color var(--transition-medium);
-  overflow-x: hidden;
 }
 
 .learning-materials-container.dark-mode {
@@ -51,7 +50,6 @@
   box-shadow: var(--shadow-medium);
   transition: all var(--transition-medium);
   position: relative;
-  overflow: hidden;
   z-index: 10;
 }
 

@@ -545,3 +545,68 @@ input {
     font-size: 0.7rem;
   }
 } 
+
+.meet-team-btn {
+  margin-top: 10px !important;
+  background-color: transparent !important;
+  border: 1px dashed #4E7133 !important;
+  color: #4E7133 !important;
+  transition: all 0.3s ease !important;
+}
+
+.meet-team-btn:hover {
+  background-color: rgba(78, 113, 51, 0.1) !important;
+  color: #ffffff !important;
+}
+
+.left-side.dark-mode .meet-team-btn {
+  border: 1px dashed #6a9e49 !important;
+  color: #6a9e49 !important;
+}
+
+.left-side.dark-mode .meet-team-btn:hover {
+  background-color: rgba(106, 158, 73, 0.2) !important;
+  color: #ffffff !important;
+}
+
+/* Media Queries for Meet Our Team Button */
+@media screen and (max-width: 1366px) {
+  .meet-team-btn {
+    width: 150px !important;
+    height: 35px !important;
+    font-size: 0.8em !important;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .meet-team-btn {
+    width: 230px !important;
+    height: 40px !important;
+    font-size: 0.8em !important;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .meet-team-btn {
+    width: 150px !important;
+    height: 35px !important;
+    font-size: 0.8em !important;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .meet-team-btn {
+    width: 150px !important;
+    height: 35px !important;
+    font-size: 0.8em !important;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .meet-team-btn {
+    width: 130px !important;
+    height: 30px !important;
+    font-size: 0.6em !important;
+    margin-top: 5px !important;
+  }
+}

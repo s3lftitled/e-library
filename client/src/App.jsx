@@ -20,6 +20,7 @@ const Spinner = lazy(() => import('./components/Spinner/Spinner'))
 const Bookshelf = lazy(() => import('./pages/bookshelf/Bookshelf'))
 const ForgotPassword = lazy(() => import('./pages/forgot-password/ForgotPassword'))
 const ResetPassword = lazy(() => import('./pages/password-reset/PasswordResetForm'))
+const TeamPage = lazy(()  =>  import('./pages/team/Team'))
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/verify/:email" element={<VerificationCodeInput />} />   
             <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='/reset-password/:resetToken' element={<ResetPassword />} />
+            <Route path='team' element={<TeamPage />} />
             <Route element={<PersistLogin />}>
               <Route element={<ProtectedRoute allowedRoles={['Librarian', 'Student', 'Staff']} />}>  
                 <Route path="/" element={<Home />} />
